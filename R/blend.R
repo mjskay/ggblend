@@ -196,7 +196,7 @@ hide_layer = function(layer) {
 #' @return `blend` (invisibly)
 #' @noRd
 check_blend = function(blend) {
-  if (options("ggblend.check_blend", TRUE) && !isTRUE(blend %in% grDevices::dev.capabilities()$compositing)) {
+  if (getOption("ggblend.check_blend", TRUE) && !isTRUE(blend %in% grDevices::dev.capabilities()$compositing)) {
     warning0(
       'blend = ', deparse1(blend), ' does not appear to be supported by your graphics device.\n',
       ' - Blending output may not be as expected.\n',

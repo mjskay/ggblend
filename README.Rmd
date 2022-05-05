@@ -4,7 +4,8 @@ output: github_document
 
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
-  fig.path = "man/figures/README-"
+  fig.path = "man/figures/README-",
+  dev.args = list(png = list(type = "cairo"))
 )
 ```
 
@@ -29,6 +30,145 @@ You can install the development version of *ggblend* using:
 remotes::install_github("mjskay/ggblend")
 ```
 
-## Example
+## Blending within one geometry
 
-TODO
+We'll construct a simple dataset with two semi-overlapping point clouds. We'll
+have two versions of the dataset: one with all the `"a"` points listed first,
+and one with all the `"b"` points listed first.
+
+```{r data}
+library(ggplot2)
+library(ggblend)
+theme_set(theme_light())
+
+set.seed(1234)
+df_a = data.frame(x = rnorm(500, 0), y = rnorm(500, 1), set = "a")
+df_b = data.frame(x = rnorm(500, 1), y = rnorm(500, 2), set = "b")
+
+df_ab = rbind(df_a, df_b) |>
+  transform(order = "draw a then b")
+
+df_ba = rbind(df_b, df_a) |>
+  transform(order = "draw b then a")
+
+df = rbind(df_ab, df_ba)
+```
+
+A typical scatterplot of such data suffers from the problem that how many 
+points appear to be in each group depends on the drawing order (*a then b* 
+versus *b then a*):
+
+```{r scatter_noblend}
+df |>
+  ggplot(aes(x, y, color = set)) +
+  geom_point(size = 3) +
+  scale_color_brewer(palette = "Set2") +
+  facet_grid(~ order) +
+  ggtitle("Scatterplot without blending: draw order matters")
+```
+
+A *commutative* blend mode, like `"multiply"` or `"darken"`, is one potential
+solution that does not depend on drawing order. We can wrap `geom_point()` in
+a call to `blend()` to achieve this, using something like `blend(geom_point(...), "darken")`
+or equivalently `geom_point(...) |> blend("darken")`:
+
+```{r scatter_blend}
+df |>
+  ggplot(aes(x, y, color = set)) +
+  geom_point(size = 3) |> blend("darken") +
+  scale_color_brewer(palette = "Set2") +
+  facet_grid(~ order) +
+  ggtitle("Scatterplot with blend('darken'): draw order does not matter")
+```
+
+Now the output is identical no matter the draw order.
+
+## Blending multiple geometries
+
+We can also blend geometries together by passing a list of geometries to `blend()`.
+These lists can include already-blended geometries:
+
+```{r scatter_blend_geom}
+df |>
+  ggplot(aes(x, y, color = set)) +
+  blend(list(
+    geom_point(size = 3) |> blend("darken"),
+    geom_vline(xintercept = 0, color = "gray75", size = 1.5),
+    geom_hline(yintercept = 0, color = "gray75", size = 1.5)
+  ), "hard.light") +
+  scale_color_brewer(palette = "Set2") +
+  facet_grid(~ order) +
+  labs(title = "Blending multiple geometries together")
+```
+
+## Blending groups within one geometry
+
+Sometimes it's useful to have finer-grained control of blending within a given
+geometry. Here, we'll show how to use `blend()` with `stat_lineribbon()`
+from [ggdist](https://mjskay.github.io/ggdist/)
+to create overlapping gradient ribbons depicting uncertainty.
+
+We'll fit a model:
+
+```{r m_mpg}
+m_mpg = lm(mpg ~ hp * cyl, data = mtcars)
+```
+
+And generate some confidence distributions for the mean using [distributional](https://pkg.mitchelloharawild.com/distributional/):
+
+```{r lineribbon}
+grid = unique(mtcars[ c("cyl", "hp")])
+
+predictions = grid |>
+  cbind(predict(m_mpg, newdata = grid, se.fit = TRUE)) |>
+  transform(mu_hat = distributional::dist_student_t(df = df, mu = fit, sigma = se.fit))
+
+predictions
+```
+
+A basic plot based on examples in `vignette("freq-uncertainty-vis", package = "ggdist")` and
+`vignette("lineribbon", package = "ggdist")` may have issues when lineribbons overlap:
+
+```{r lineribbon_noblend}
+predictions |>
+  ggplot(aes(x = hp, fill = ordered(cyl), color = ordered(cyl))) +
+  ggdist::stat_lineribbon(
+    aes(ydist = mu_hat, fill_ramp = stat(.width)),
+    .width = ppoints(40)
+  ) +
+  geom_point(aes(y = mpg), data = mtcars) +
+  scale_fill_brewer(palette = "Set2") +
+  scale_color_brewer(palette = "Dark2") +
+  ggdist::scale_fill_ramp_continuous(range = c(1, 0)) +
+  labs(
+    title = "Overlapping lineribbons without blending", 
+    color = "cyl", fill = "cyl", y = "mpg"
+  ) +
+  ggdist::theme_ggdist()
+```
+
+Notice the overlap of the orange (`cyl = 6`) and purple (`cyl = 8`) lines.
+
+If we add a `blend_group = cyl` aesthetic mapping, we can blend the geometries
+for the different levels of `cyl` together with a `blend()` call around
+`ggdist::stat_lineribbon()`:
+
+```{r lineribbon_blend}
+predictions |>
+  ggplot(aes(x = hp, fill = ordered(cyl), color = ordered(cyl), blend_group = cyl)) +
+  ggdist::stat_lineribbon(
+    aes(ydist = mu_hat, fill_ramp = stat(.width)),
+    .width = ppoints(40)
+  ) |> blend("multiply") +
+  geom_point(aes(y = mpg), data = mtcars) +
+  scale_fill_brewer(palette = "Set2") +
+  scale_color_brewer(palette = "Dark2") +
+  ggdist::scale_fill_ramp_continuous(range = c(1, 0)) +
+  labs(
+    title = "Overlapping lineribbons with blending", 
+    color = "cyl", fill = "cyl", y = "mpg"
+  ) +
+  ggdist::theme_ggdist()
+```
+
+Now the overlapping ribbons are blended together.
