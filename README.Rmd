@@ -25,7 +25,7 @@ in that version of R.
 
 You can install the development version of *ggblend* using:
 
-``` r
+```r
 remotes::install_github("mjskay/ggblend")
 ```
 

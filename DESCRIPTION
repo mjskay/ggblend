@@ -8,10 +8,13 @@ Description: Support for compositing groups of data and geoms in ggplot2 using
   belnd modes like "multiply", "overlay", etc.
 License: MIT + file LICENSE
 Depends: R (>= 4.2)
+Imports: grid, ggplot2 (>= 3.3.5)
 Suggests: 
     covr,
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
+BugReports: https://github.com/mjskay/ggblend/issues/new
+URL: https://mjskay.github.io/ggblend/, https://github.com/mjskay/ggblend/
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.2
