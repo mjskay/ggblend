@@ -7,6 +7,9 @@
 experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 [![CRAN
 status](https://www.r-pkg.org/badges/version/ggblend)](https://CRAN.R-project.org/package=ggblend)
+[![Codecov test
+coverage](https://codecov.io/gh/mjskay/ggblend/branch/main/graph/badge.svg)](https://app.codecov.io/gh/mjskay/ggblend?branch=main)
+[![R-CMD-check](https://github.com/mjskay/ggblend/workflows/R-CMD-check/badge.svg)](https://github.com/mjskay/ggblend/actions)
 <!-- badges: end -->
 
 *ggblend* adds support for blend modes (like `"multiply"`, `"overlay"`,

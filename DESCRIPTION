@@ -9,6 +9,7 @@ Description: Support for compositing groups of data and geoms in ggplot2 using
 License: MIT + file LICENSE
 Depends: R (>= 4.2)
 Suggests: 
+    covr,
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
 Encoding: UTF-8
