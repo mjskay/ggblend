@@ -76,9 +76,164 @@
 <code class="sourceCode R"><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"mjskay/ggblend"</span><span class="op">)</span></code></pre></div>
 </div>
 <div class="section level2">
-<h2 id="example">Example<a class="anchor" aria-label="anchor" href="#example"></a>
+<h2 id="blending-within-one-geometry">Blending within one geometry<a class="anchor" aria-label="anchor" href="#blending-within-one-geometry"></a>
 </h2>
-<p>TODO</p>
+<p>We’ll construct a simple dataset with two semi-overlapping point clouds. We’ll have two versions of the dataset: one with all the <code>"a"</code> points listed first, and one with all the <code>"b"</code> points listed first.</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://mjskay.github.io/ggblend/" class="external-link">ggblend</a></span><span class="op">)</span>
+<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme_get.html" class="external-link">theme_set</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_light</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
+
+<span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1234</span><span class="op">)</span>
+<span class="va">df_a</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">500</span>, <span class="fl">0</span><span class="op">)</span>, y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">500</span>, <span class="fl">1</span><span class="op">)</span>, set <span class="op">=</span> <span class="st">"a"</span><span class="op">)</span>
+<span class="va">df_b</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">500</span>, <span class="fl">1</span><span class="op">)</span>, y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">500</span>, <span class="fl">2</span><span class="op">)</span>, set <span class="op">=</span> <span class="st">"b"</span><span class="op">)</span>
+
+<span class="va">df_ab</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span><span class="va">df_a</span>, <span class="va">df_b</span><span class="op">)</span> |&gt;
+  <span class="fu"><a href="https://rdrr.io/r/base/transform.html" class="external-link">transform</a></span><span class="op">(</span>order <span class="op">=</span> <span class="st">"draw a then b"</span><span class="op">)</span>
+
+<span class="va">df_ba</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span><span class="va">df_b</span>, <span class="va">df_a</span><span class="op">)</span> |&gt;
+  <span class="fu"><a href="https://rdrr.io/r/base/transform.html" class="external-link">transform</a></span><span class="op">(</span>order <span class="op">=</span> <span class="st">"draw b then a"</span><span class="op">)</span>
+
+<span class="va">df</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span><span class="va">df_ab</span>, <span class="va">df_ba</span><span class="op">)</span></code></pre></div>
+<p>A typical scatterplot of such data suffers from the problem that how many points appear to be in each group depends on the drawing order (<em>a then b</em> versus <em>b then a</em>):</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">df</span> |&gt;
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, color <span class="op">=</span> <span class="va">set</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">3</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_color_brewer</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Set2"</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_grid.html" class="external-link">facet_grid</a></span><span class="op">(</span><span class="op">~</span> <span class="va">order</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="st">"Scatterplot without blending: draw order matters"</span><span class="op">)</span></code></pre></div>
+<p><img src="reference/figures/README-scatter_noblend-1.png"><!-- --></p>
+<p>A <em>commutative</em> blend mode, like <code>"multiply"</code> or <code>"darken"</code>, is one potential solution that does not depend on drawing order. We can wrap <code><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point()</a></code> in a call to <code><a href="reference/blend.html">blend()</a></code> to achieve this, using something like <code>blend(geom_point(...), "darken")</code> or equivalently <code>geom_point(...) |&gt; blend("darken")</code>:</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">df</span> |&gt;
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, color <span class="op">=</span> <span class="va">set</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">3</span><span class="op">)</span> |&gt; <span class="fu"><a href="reference/blend.html">blend</a></span><span class="op">(</span><span class="st">"darken"</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_color_brewer</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Set2"</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_grid.html" class="external-link">facet_grid</a></span><span class="op">(</span><span class="op">~</span> <span class="va">order</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="st">"Scatterplot with blend('darken'): draw order does not matter"</span><span class="op">)</span></code></pre></div>
+<p><img src="reference/figures/README-scatter_blend-1.png"><!-- --></p>
+<p>Now the output is identical no matter the draw order.</p>
+</div>
+<div class="section level2">
+<h2 id="blending-multiple-geometries">Blending multiple geometries<a class="anchor" aria-label="anchor" href="#blending-multiple-geometries"></a>
+</h2>
+<p>We can also blend geometries together by passing a list of geometries to <code><a href="reference/blend.html">blend()</a></code>. These lists can include already-blended geometries:</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">df</span> |&gt;
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, color <span class="op">=</span> <span class="va">set</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="reference/blend.html">blend</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>
+    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">3</span><span class="op">)</span> |&gt; <span class="fu"><a href="reference/blend.html">blend</a></span><span class="op">(</span><span class="st">"darken"</span><span class="op">)</span>,
+    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html" class="external-link">geom_vline</a></span><span class="op">(</span>xintercept <span class="op">=</span> <span class="fl">0</span>, color <span class="op">=</span> <span class="st">"gray75"</span>, size <span class="op">=</span> <span class="fl">1.5</span><span class="op">)</span>,
+    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html" class="external-link">geom_hline</a></span><span class="op">(</span>yintercept <span class="op">=</span> <span class="fl">0</span>, color <span class="op">=</span> <span class="st">"gray75"</span>, size <span class="op">=</span> <span class="fl">1.5</span><span class="op">)</span>
+  <span class="op">)</span>, <span class="st">"hard.light"</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_color_brewer</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Set2"</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_grid.html" class="external-link">facet_grid</a></span><span class="op">(</span><span class="op">~</span> <span class="va">order</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"Blending multiple geometries together"</span><span class="op">)</span></code></pre></div>
+<p><img src="reference/figures/README-scatter_blend_geom-1.png"><!-- --></p>
+</div>
+<div class="section level2">
+<h2 id="blending-groups-within-one-geometry">Blending groups within one geometry<a class="anchor" aria-label="anchor" href="#blending-groups-within-one-geometry"></a>
+</h2>
+<p>Sometimes it’s useful to have finer-grained control of blending within a given geometry. Here, we’ll show how to use <code><a href="reference/blend.html">blend()</a></code> with <code>stat_lineribbon()</code> from <a href="https://mjskay.github.io/ggdist/" class="external-link">ggdist</a> to create overlapping gradient ribbons depicting uncertainty.</p>
+<p>We’ll fit a model:</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">m_mpg</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">mpg</span> <span class="op">~</span> <span class="va">hp</span> <span class="op">*</span> <span class="va">cyl</span>, data <span class="op">=</span> <span class="va">mtcars</span><span class="op">)</span></code></pre></div>
+<p>And generate some confidence distributions for the mean using <a href="https://pkg.mitchelloharawild.com/distributional/" class="external-link">distributional</a>:</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">grid</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">[</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"cyl"</span>, <span class="st">"hp"</span><span class="op">)</span><span class="op">]</span><span class="op">)</span>
+
+<span class="va">predictions</span> <span class="op">=</span> <span class="va">grid</span> |&gt;
+  <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">m_mpg</span>, newdata <span class="op">=</span> <span class="va">grid</span>, se.fit <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span> |&gt;
+  <span class="fu"><a href="https://rdrr.io/r/base/transform.html" class="external-link">transform</a></span><span class="op">(</span>mu_hat <span class="op">=</span> <span class="fu">distributional</span><span class="fu">::</span><span class="fu">dist_student_t</span><span class="op">(</span>df <span class="op">=</span> <span class="va">df</span>, mu <span class="op">=</span> <span class="va">fit</span>, sigma <span class="op">=</span> <span class="va">se.fit</span><span class="op">)</span><span class="op">)</span>
+
+<span class="va">predictions</span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a><span class="co">##                     cyl  hp      fit    se.fit df residual.scale</span></span>
+<span id="cb8-2"><a href="#cb8-2"></a><span class="co">## Mazda RX4             6 110 20.28825 0.7984429 28       2.973694</span></span>
+<span id="cb8-3"><a href="#cb8-3"></a><span class="co">## Datsun 710            4  93 25.74371 0.8818612 28       2.973694</span></span>
+<span id="cb8-4"><a href="#cb8-4"></a><span class="co">## Hornet Sportabout     8 175 15.56144 0.8638133 28       2.973694</span></span>
+<span id="cb8-5"><a href="#cb8-5"></a><span class="co">## Valiant               6 105 20.54952 0.8045354 28       2.973694</span></span>
+<span id="cb8-6"><a href="#cb8-6"></a><span class="co">## Duster 360            8 245 14.66678 0.9773475 28       2.973694</span></span>
+<span id="cb8-7"><a href="#cb8-7"></a><span class="co">## Merc 240D             4  62 28.58736 1.2184598 28       2.973694</span></span>
+<span id="cb8-8"><a href="#cb8-8"></a><span class="co">## Merc 230              4  95 25.56025 0.9024699 28       2.973694</span></span>
+<span id="cb8-9"><a href="#cb8-9"></a><span class="co">## Merc 280              6 123 19.60892 0.8423540 28       2.973694</span></span>
+<span id="cb8-10"><a href="#cb8-10"></a><span class="co">## Merc 450SE            8 180 15.49754 0.8332276 28       2.973694</span></span>
+<span id="cb8-11"><a href="#cb8-11"></a><span class="co">## Cadillac Fleetwood    8 205 15.17801 0.7674501 28       2.973694</span></span>
+<span id="cb8-12"><a href="#cb8-12"></a><span class="co">## Lincoln Continental   8 215 15.05021 0.7866649 28       2.973694</span></span>
+<span id="cb8-13"><a href="#cb8-13"></a><span class="co">## Chrysler Imperial     8 230 14.85849 0.8606705 28       2.973694</span></span>
+<span id="cb8-14"><a href="#cb8-14"></a><span class="co">## Fiat 128              4  66 28.22044 1.1218796 28       2.973694</span></span>
+<span id="cb8-15"><a href="#cb8-15"></a><span class="co">## Honda Civic           4  52 29.50466 1.4914670 28       2.973694</span></span>
+<span id="cb8-16"><a href="#cb8-16"></a><span class="co">## Toyota Corolla        4  65 28.31217 1.1451536 28       2.973694</span></span>
+<span id="cb8-17"><a href="#cb8-17"></a><span class="co">## Toyota Corona         4  97 25.37679 0.9280143 28       2.973694</span></span>
+<span id="cb8-18"><a href="#cb8-18"></a><span class="co">## Dodge Challenger      8 150 15.88096 1.0770037 28       2.973694</span></span>
+<span id="cb8-19"><a href="#cb8-19"></a><span class="co">## Porsche 914-2         4  91 25.92718 0.8665404 28       2.973694</span></span>
+<span id="cb8-20"><a href="#cb8-20"></a><span class="co">## Lotus Europa          4 113 23.90910 1.2628426 28       2.973694</span></span>
+<span id="cb8-21"><a href="#cb8-21"></a><span class="co">## Ford Pantera L        8 264 14.42394 1.1660619 28       2.973694</span></span>
+<span id="cb8-22"><a href="#cb8-22"></a><span class="co">## Ferrari Dino          6 175 16.89163 1.5508852 28       2.973694</span></span>
+<span id="cb8-23"><a href="#cb8-23"></a><span class="co">## Maserati Bora         8 335 13.51650 2.0458075 28       2.973694</span></span>
+<span id="cb8-24"><a href="#cb8-24"></a><span class="co">## Volvo 142E            4 109 24.27603 1.1625257 28       2.973694</span></span>
+<span id="cb8-25"><a href="#cb8-25"></a><span class="co">##                                         mu_hat</span></span>
+<span id="cb8-26"><a href="#cb8-26"></a><span class="co">## Mazda RX4           t(28, 20.28825, 0.7984429)</span></span>
+<span id="cb8-27"><a href="#cb8-27"></a><span class="co">## Datsun 710          t(28, 25.74371, 0.8818612)</span></span>
+<span id="cb8-28"><a href="#cb8-28"></a><span class="co">## Hornet Sportabout   t(28, 15.56144, 0.8638133)</span></span>
+<span id="cb8-29"><a href="#cb8-29"></a><span class="co">## Valiant             t(28, 20.54952, 0.8045354)</span></span>
+<span id="cb8-30"><a href="#cb8-30"></a><span class="co">## Duster 360          t(28, 14.66678, 0.9773475)</span></span>
+<span id="cb8-31"><a href="#cb8-31"></a><span class="co">## Merc 240D             t(28, 28.58736, 1.21846)</span></span>
+<span id="cb8-32"><a href="#cb8-32"></a><span class="co">## Merc 230            t(28, 25.56025, 0.9024699)</span></span>
+<span id="cb8-33"><a href="#cb8-33"></a><span class="co">## Merc 280             t(28, 19.60892, 0.842354)</span></span>
+<span id="cb8-34"><a href="#cb8-34"></a><span class="co">## Merc 450SE          t(28, 15.49754, 0.8332276)</span></span>
+<span id="cb8-35"><a href="#cb8-35"></a><span class="co">## Cadillac Fleetwood  t(28, 15.17801, 0.7674501)</span></span>
+<span id="cb8-36"><a href="#cb8-36"></a><span class="co">## Lincoln Continental t(28, 15.05021, 0.7866649)</span></span>
+<span id="cb8-37"><a href="#cb8-37"></a><span class="co">## Chrysler Imperial   t(28, 14.85849, 0.8606705)</span></span>
+<span id="cb8-38"><a href="#cb8-38"></a><span class="co">## Fiat 128              t(28, 28.22044, 1.12188)</span></span>
+<span id="cb8-39"><a href="#cb8-39"></a><span class="co">## Honda Civic          t(28, 29.50466, 1.491467)</span></span>
+<span id="cb8-40"><a href="#cb8-40"></a><span class="co">## Toyota Corolla       t(28, 28.31217, 1.145154)</span></span>
+<span id="cb8-41"><a href="#cb8-41"></a><span class="co">## Toyota Corona       t(28, 25.37679, 0.9280143)</span></span>
+<span id="cb8-42"><a href="#cb8-42"></a><span class="co">## Dodge Challenger     t(28, 15.88096, 1.077004)</span></span>
+<span id="cb8-43"><a href="#cb8-43"></a><span class="co">## Porsche 914-2       t(28, 25.92718, 0.8665404)</span></span>
+<span id="cb8-44"><a href="#cb8-44"></a><span class="co">## Lotus Europa          t(28, 23.9091, 1.262843)</span></span>
+<span id="cb8-45"><a href="#cb8-45"></a><span class="co">## Ford Pantera L       t(28, 14.42394, 1.166062)</span></span>
+<span id="cb8-46"><a href="#cb8-46"></a><span class="co">## Ferrari Dino         t(28, 16.89163, 1.550885)</span></span>
+<span id="cb8-47"><a href="#cb8-47"></a><span class="co">## Maserati Bora         t(28, 13.5165, 2.045807)</span></span>
+<span id="cb8-48"><a href="#cb8-48"></a><span class="co">## Volvo 142E           t(28, 24.27603, 1.162526)</span></span></code></pre></div>
+<p>A basic plot based on examples in <code><a href="http://mjskay.github.io/ggdist/articles/freq-uncertainty-vis.html" class="external-link">vignette("freq-uncertainty-vis", package = "ggdist")</a></code> and <code><a href="http://mjskay.github.io/ggdist/articles/lineribbon.html" class="external-link">vignette("lineribbon", package = "ggdist")</a></code> may have issues when lineribbons overlap:</p>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">predictions</span> |&gt;
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">hp</span>, fill <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">ordered</a></span><span class="op">(</span><span class="va">cyl</span><span class="op">)</span>, color <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">ordered</a></span><span class="op">(</span><span class="va">cyl</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu">ggdist</span><span class="fu">::</span><span class="fu">stat_lineribbon</span><span class="op">(</span>
+    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>ydist <span class="op">=</span> <span class="va">mu_hat</span>, fill_ramp <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes_eval.html" class="external-link">stat</a></span><span class="op">(</span><span class="va">.width</span><span class="op">)</span><span class="op">)</span>,
+    .width <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/ppoints.html" class="external-link">ppoints</a></span><span class="op">(</span><span class="fl">40</span><span class="op">)</span>
+  <span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">mpg</span><span class="op">)</span>, data <span class="op">=</span> <span class="va">mtcars</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_fill_brewer</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Set2"</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_color_brewer</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Dark2"</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu">ggdist</span><span class="fu">::</span><span class="fu">scale_fill_ramp_continuous</span><span class="op">(</span>range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">0</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>
+    title <span class="op">=</span> <span class="st">"Overlapping lineribbons without blending"</span>, 
+    color <span class="op">=</span> <span class="st">"cyl"</span>, fill <span class="op">=</span> <span class="st">"cyl"</span>, y <span class="op">=</span> <span class="st">"mpg"</span>
+  <span class="op">)</span> <span class="op">+</span>
+  <span class="fu">ggdist</span><span class="fu">::</span><span class="fu">theme_ggdist</span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<p><img src="reference/figures/README-lineribbon_noblend-1.png"><!-- --></p>
+<p>Notice the overlap of the orange (<code>cyl = 6</code>) and purple (<code>cyl = 8</code>) lines.</p>
+<p>If we add a <code>blend_group = cyl</code> aesthetic mapping, we can blend the geometries for the different levels of <code>cyl</code> together with a <code><a href="reference/blend.html">blend()</a></code> call around <code>ggdist::stat_lineribbon()</code>:</p>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">predictions</span> |&gt;
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">hp</span>, fill <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">ordered</a></span><span class="op">(</span><span class="va">cyl</span><span class="op">)</span>, color <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">ordered</a></span><span class="op">(</span><span class="va">cyl</span><span class="op">)</span>, blend_group <span class="op">=</span> <span class="va">cyl</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu">ggdist</span><span class="fu">::</span><span class="fu">stat_lineribbon</span><span class="op">(</span>
+    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>ydist <span class="op">=</span> <span class="va">mu_hat</span>, fill_ramp <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes_eval.html" class="external-link">stat</a></span><span class="op">(</span><span class="va">.width</span><span class="op">)</span><span class="op">)</span>,
+    .width <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/ppoints.html" class="external-link">ppoints</a></span><span class="op">(</span><span class="fl">40</span><span class="op">)</span>
+  <span class="op">)</span> |&gt; <span class="fu"><a href="reference/blend.html">blend</a></span><span class="op">(</span><span class="st">"multiply"</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">mpg</span><span class="op">)</span>, data <span class="op">=</span> <span class="va">mtcars</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_fill_brewer</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Set2"</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_color_brewer</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Dark2"</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu">ggdist</span><span class="fu">::</span><span class="fu">scale_fill_ramp_continuous</span><span class="op">(</span>range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">0</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>
+    title <span class="op">=</span> <span class="st">"Overlapping lineribbons with blending"</span>, 
+    color <span class="op">=</span> <span class="st">"cyl"</span>, fill <span class="op">=</span> <span class="st">"cyl"</span>, y <span class="op">=</span> <span class="st">"mpg"</span>
+  <span class="op">)</span> <span class="op">+</span>
+  <span class="fu">ggdist</span><span class="fu">::</span><span class="fu">theme_ggdist</span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<p><img src="reference/figures/README-lineribbon_blend-1.png"><!-- --></p>
+<p>Now the overlapping ribbons are blended together.</p>
 </div>
 </div>
   </div>
