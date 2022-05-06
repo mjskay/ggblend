@@ -16,16 +16,19 @@
 #'  `"color.dodge"`, `"color.burn"`, `"hard.light"`, `"soft.light"`,
 #'  `"difference"`, and `"exclusion"`
 #'
-#'  Blend modes like `"multiply"` and `"screen"` are particularly useful as they
+#'  Blend modes like `"multiply"`, `"darken"`, and `"lighten"` are particularly useful as they
 #'  are *commutative*: the result is the same whichever order they are applied in.
+#'
+#'  A warning is issued if the current graphics device does not appear to support
+#'  the requested blend mode. In some cases this warning may be spurious, so
+#'  it can be disabled by setting `options(ggblend.check_blend = FALSE)`.
 #' @param alpha A numeric between `0` and `1` (inclusive). The opacity of a
 #'  transparency mask applied to objects prior to blending.
 #' @param ... Additional arguments (currently unused).
 #'
 #' @details
-#'
 #' If `x` is a single layer / geometry and the `blend_group` aesthetic *is not* set, every
-#' graphical object (`grob()`) output by the geometry will be blended together
+#' graphical object ([grob()]) output by the geometry will be blended together
 #' using the `blend` blend mode. If `alpha != 1`, a transparency mask with the
 #' provided alpha level will be applied to each grob before blending.
 #'
@@ -41,18 +44,70 @@
 #' will be blended together using the `blend` blend mode.
 #'
 #' @return
-#' An object that can be added to a `ggplot()` object: if the input is a `ggplot2::Layer`,
-#' the result is a `ggplot2::Layer`; if the input is a `list` of `ggplot2::Layer`s,
-#' the output is a `list` of `ggplot2::Layer`s.
+#' An object that can be added to a [ggplot()] object: if the input is a `ggplot2::Layer`,
+#' the result is a `ggplot2::Layer`; if the input is a list of `ggplot2::Layer`s,
+#' the output is a list of `ggplot2::Layer`s.
 #'
 #' @references
-#'
 #' Murrell, Paul (2021):
 #' [Groups, Compositing Operators, and Affine Transformations in R Graphics](https://www.stat.auckland.ac.nz/~paul/Reports/GraphicsEngine/groups/groups.html).
 #' The University of Auckland. Report.
 #' \doi{10.17608/k6.auckland.17009120.v1}.
 #'
 #' @seealso [stack_blends()]
+#'
+#' @examples
+#' library(ggplot2)
+#'
+#' # create two versions of a dataset, where draw order can affect output
+#' set.seed(1234)
+#' df_a = data.frame(x = rnorm(500, 0), y = rnorm(500, 1), set = "a")
+#' df_b = data.frame(x = rnorm(500, 1), y = rnorm(500, 2), set = "b")
+#' df_ab = rbind(df_a, df_b) |>
+#'   transform(order = "draw a then b")
+#' df_ba = rbind(df_b, df_a) |>
+#'   transform(order = "draw b then a")
+#' df = rbind(df_ab, df_ba)
+#'
+#' # Using the "darken" blend mode, draw order does not matter:
+#' df |>
+#'   ggplot(aes(x, y, color = set)) +
+#'   geom_point(size = 3) |> blend("darken") +
+#'   scale_color_brewer(palette = "Set2") +
+#'   facet_grid(~ order)
+#'
+#' # Using the "multiply" blend mode, we can see density within groups:
+#' df |>
+#'   ggplot(aes(x, y, color = set)) +
+#'   geom_point(size = 3) |> blend("multiply") +
+#'   scale_color_brewer(palette = "Set2") +
+#'   facet_grid(~ order)
+#'
+#' # blend() on a single geom by default blends all grobs in that geom together
+#' # using the requested blend mode. If we wish to blend within specific data
+#' # subsets using normal blending ("over") but between subsets using the
+#' # requested blend mode, we can set the blend_group aesthetic. This will
+#' # make "multiply" behave more like "darken":
+#' df |>
+#'   ggplot(aes(x, y, color = set, blend_group = set)) +
+#'   geom_point(size = 3) |> blend("multiply") +
+#'   scale_color_brewer(palette = "Set2") +
+#'   facet_grid(~ order)
+#'
+#' # We can also blend lists of geoms together; these geoms are rendered using
+#' # normal ("over") blending (unless a blend() call is applied to a specific
+#' # sub-layer, as in the first layer below) and then blended together using
+#' # the requested blend mode.
+#' df |>
+#'   ggplot(aes(x, y, color = set)) +
+#'   list(
+#'     geom_point(size = 3) |> blend("darken"),
+#'     geom_vline(xintercept = 0, color = "gray75", size = 1.5),
+#'     geom_hline(yintercept = 0, color = "gray75", size = 1.5)
+#'   ) |> blend("hard.light") +
+#'   scale_color_brewer(palette = "Set2") +
+#'   facet_grid(~ order)
+#'
 #' @export
 blend = function(x, blend = "over", alpha = 1, ...) {
   check_blend(blend)

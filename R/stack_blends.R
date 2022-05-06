@@ -8,7 +8,7 @@
 #' @template param-x-layer
 #' @param ... A sequence of lists of arguments to pass to [blend()], each
 #'   representing a blend applied to a copy of `x`. For example, a single string
-#'   (like `"multiply"`) would result in a `blend(x, "muliply")` layer being
+#'   (like `"multiply"`) would result in a `blend(x, "multiply")` layer being
 #'   created; a list (like `list("multiply", alpha = 0.5)`) would result
 #'   in a `blend(x, "multiply", alpha = 0.5)` layer being created.
 #'
@@ -16,8 +16,8 @@
 #' A list of `ggplot2::Layers`s which can be added to a `ggplot()` object.
 #'
 #' @seealso [blend()]
-#' @examples
 #'
+#' @examples
 #' library(ggplot2)
 #'
 #' # create two versions of a dataset, where draw order can affect output

@@ -10,15 +10,33 @@
 (e.g. \code{"multiply"}, \code{"overlay"}, etc) to \pkg{ggplot2}.
 }
 \details{
-Support for blending layers (e.g. \code{geom}s) in \pkg{ggplot2}. See \code{blend()}.
+The primary support for blending is provided by the \code{blend()} function,
+which can be used to augment \code{\link[=ggplot]{ggplot()}} layers/geoms or lists of
+layers/geoms in a \code{\link[=ggplot]{ggplot()}} specification.
+
+For example, one can replace something like this:\preformatted{df |>
+  ggplot(aes(x, y)) +
+  geom_X(...) +
+  geom_Y(...) +
+  geom_Z(...)
+}
+
+With something like this:\preformatted{df |>
+  ggplot(aes(x, y)) +
+  geom_X(...) +
+  geom_Y(...) |> blend("multiply") +
+  geom_Z(...)
+}
+
+In order to apply a "multiply" blend to the layer with \code{geom_Y(...)}.
 }
 \section{Package options}{
 
 
-The following global options can be set using \code{options()} to modify the
+The following global options can be set using \code{\link[=options]{options()}} to modify the
 behavior of \pkg{ggblend}:
 \itemize{
-\item \code{"ggblend.check_blend"}: If \code{TRUE} (default), \code{blend()} will warn if
+\item \code{"ggblend.check_blend"}: If \code{TRUE} (default), \code{\link[=blend]{blend()}} will warn if
 you attempt to use a blend mode not supported by the current graphics
 device, as reported by \code{dev.capabilities()$compositing}. Since this check
 can be unreliable on some devices (they will report not support a blend

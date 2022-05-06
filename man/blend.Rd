@@ -21,8 +21,12 @@ Blend modes can include: \code{"clear"},
 \code{"color.dodge"}, \code{"color.burn"}, \code{"hard.light"}, \code{"soft.light"},
 \code{"difference"}, and \code{"exclusion"}
 
-Blend modes like \code{"multiply"} and \code{"screen"} are particularly useful as they
-are \emph{commutative}: the result is the same whichever order they are applied in.}
+Blend modes like \code{"multiply"}, \code{"darken"}, and \code{"lighten"} are particularly useful as they
+are \emph{commutative}: the result is the same whichever order they are applied in.
+
+A warning is issued if the current graphics device does not appear to support
+the requested blend mode. In some cases this warning may be spurious, so
+it can be disabled by setting \code{options(ggblend.check_blend = FALSE)}.}
 
 \item{alpha}{A numeric between \code{0} and \code{1} (inclusive). The opacity of a
 transparency mask applied to objects prior to blending.}
@@ -30,9 +34,9 @@ transparency mask applied to objects prior to blending.}
 \item{...}{Additional arguments (currently unused).}
 }
 \value{
-An object that can be added to a \code{ggplot()} object: if the input is a \code{ggplot2::Layer},
-the result is a \code{ggplot2::Layer}; if the input is a \code{list} of \code{ggplot2::Layer}s,
-the output is a \code{list} of \code{ggplot2::Layer}s.
+An object that can be added to a \code{\link[=ggplot]{ggplot()}} object: if the input is a \code{ggplot2::Layer},
+the result is a \code{ggplot2::Layer}; if the input is a list of \code{ggplot2::Layer}s,
+the output is a list of \code{ggplot2::Layer}s.
 }
 \description{
 Blend objects within a single layer (geom) or across multiple layers (geoms)
@@ -41,7 +45,7 @@ the built-in compositing support in graphical devices added in R 4.2.
 }
 \details{
 If \code{x} is a single layer / geometry and the \code{blend_group} aesthetic \emph{is not} set, every
-graphical object (\code{grob()}) output by the geometry will be blended together
+graphical object (\code{\link[=grob]{grob()}}) output by the geometry will be blended together
 using the \code{blend} blend mode. If \code{alpha != 1}, a transparency mask with the
 provided alpha level will be applied to each grob before blending.
 
@@ -55,6 +59,59 @@ If \code{x} is a list of layers / geometries, those layers will be rendered
 separately, a transparency mask with the provided \code{alpha} level
 will be applied to each layer as a whole (if \code{alpha != 1}), then these layers
 will be blended together using the \code{blend} blend mode.
+}
+\examples{
+library(ggplot2)
+
+# create two versions of a dataset, where draw order can affect output
+set.seed(1234)
+df_a = data.frame(x = rnorm(500, 0), y = rnorm(500, 1), set = "a")
+df_b = data.frame(x = rnorm(500, 1), y = rnorm(500, 2), set = "b")
+df_ab = rbind(df_a, df_b) |>
+  transform(order = "draw a then b")
+df_ba = rbind(df_b, df_a) |>
+  transform(order = "draw b then a")
+df = rbind(df_ab, df_ba)
+
+# Using the "darken" blend mode, draw order does not matter:
+df |>
+  ggplot(aes(x, y, color = set)) +
+  geom_point(size = 3) |> blend("darken") +
+  scale_color_brewer(palette = "Set2") +
+  facet_grid(~ order)
+
+# Using the "multiply" blend mode, we can see density within groups:
+df |>
+  ggplot(aes(x, y, color = set)) +
+  geom_point(size = 3) |> blend("multiply") +
+  scale_color_brewer(palette = "Set2") +
+  facet_grid(~ order)
+
+# blend() on a single geom by default blends all grobs in that geom together
+# using the requested blend mode. If we wish to blend within specific data
+# subsets using normal blending ("over") but between subsets using the
+# requested blend mode, we can set the blend_group aesthetic. This will
+# make "multiply" behave more like "darken":
+df |>
+  ggplot(aes(x, y, color = set, blend_group = set)) +
+  geom_point(size = 3) |> blend("multiply") +
+  scale_color_brewer(palette = "Set2") +
+  facet_grid(~ order)
+
+# We can also blend lists of geoms together; these geoms are rendered using
+# normal ("over") blending (unless a blend() call is applied to a specific
+# sub-layer, as in the first layer below) and then blended together using
+# the requested blend mode.
+df |>
+  ggplot(aes(x, y, color = set)) +
+  list(
+    geom_point(size = 3) |> blend("darken"),
+    geom_vline(xintercept = 0, color = "gray75", size = 1.5),
+    geom_hline(yintercept = 0, color = "gray75", size = 1.5)
+  ) |> blend("hard.light") +
+  scale_color_brewer(palette = "Set2") +
+  facet_grid(~ order)
+
 }
 \references{
 Murrell, Paul (2021):

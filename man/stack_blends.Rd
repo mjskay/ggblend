@@ -12,7 +12,7 @@ of layers.}
 
 \item{...}{A sequence of lists of arguments to pass to \code{\link[=blend]{blend()}}, each
 representing a blend applied to a copy of \code{x}. For example, a single string
-(like \code{"multiply"}) would result in a \code{blend(x, "muliply")} layer being
+(like \code{"multiply"}) would result in a \code{blend(x, "multiply")} layer being
 created; a list (like \code{list("multiply", alpha = 0.5)}) would result
 in a \code{blend(x, "multiply", alpha = 0.5)} layer being created.}
 }
@@ -26,7 +26,6 @@ other. This can be useful when a single blend in isolation does not achieve
 the desired effect (e.g. when dealing with overlapping points).
 }
 \examples{
-
 library(ggplot2)
 
 # create two versions of a dataset, where draw order can affect output
