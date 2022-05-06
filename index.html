@@ -103,7 +103,7 @@
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_color_brewer</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Set2"</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_grid.html" class="external-link">facet_grid</a></span><span class="op">(</span><span class="op">~</span> <span class="va">order</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="st">"Scatterplot without blending: draw order matters"</span><span class="op">)</span></code></pre></div>
-<p><img src="reference/figures/README-scatter_noblend-1.png"><!-- --></p>
+<p><img src="reference/figures/README-scatter_noblend-1.png" width="672"></p>
 <p>A <em>commutative</em> blend mode, like <code>"multiply"</code> or <code>"darken"</code>, is one potential solution that does not depend on drawing order. We can wrap <code><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point()</a></code> in a call to <code><a href="reference/blend.html">blend()</a></code> to achieve this, using something like <code>blend(geom_point(...), "darken")</code> or equivalently <code>geom_point(...) |&gt; blend("darken")</code>:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">df</span> |&gt;
@@ -112,7 +112,7 @@
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_color_brewer</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Set2"</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_grid.html" class="external-link">facet_grid</a></span><span class="op">(</span><span class="op">~</span> <span class="va">order</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="st">"Scatterplot with blend('darken'): draw order does not matter"</span><span class="op">)</span></code></pre></div>
-<p><img src="reference/figures/README-scatter_blend-1.png"><!-- --></p>
+<p><img src="reference/figures/README-scatter_blend-1.png" width="672"></p>
 <p>Now the output is identical no matter the draw order.</p>
 </div>
 <div class="section level2">
@@ -130,7 +130,7 @@
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_color_brewer</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Set2"</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_grid.html" class="external-link">facet_grid</a></span><span class="op">(</span><span class="op">~</span> <span class="va">order</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"Blending multiple geometries together"</span><span class="op">)</span></code></pre></div>
-<p><img src="reference/figures/README-scatter_blend_geom-1.png"><!-- --></p>
+<p><img src="reference/figures/README-scatter_blend_geom-1.png" width="672"></p>
 </div>
 <div class="section level2">
 <h2 id="blending-groups-within-one-geometry">Blending groups within one geometry<a class="anchor" aria-label="anchor" href="#blending-groups-within-one-geometry"></a>
@@ -213,7 +213,7 @@
     color <span class="op">=</span> <span class="st">"cyl"</span>, fill <span class="op">=</span> <span class="st">"cyl"</span>, y <span class="op">=</span> <span class="st">"mpg"</span>
   <span class="op">)</span> <span class="op">+</span>
   <span class="fu">ggdist</span><span class="fu">::</span><span class="fu">theme_ggdist</span><span class="op">(</span><span class="op">)</span></code></pre></div>
-<p><img src="reference/figures/README-lineribbon_noblend-1.png"><!-- --></p>
+<p><img src="reference/figures/README-lineribbon_noblend-1.png" width="672"></p>
 <p>Notice the overlap of the orange (<code>cyl = 6</code>) and purple (<code>cyl = 8</code>) lines.</p>
 <p>If we add a <code>blend_group = cyl</code> aesthetic mapping, we can blend the geometries for the different levels of <code>cyl</code> together with a <code><a href="reference/blend.html">blend()</a></code> call around <code>ggdist::stat_lineribbon()</code>:</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
@@ -232,7 +232,7 @@
     color <span class="op">=</span> <span class="st">"cyl"</span>, fill <span class="op">=</span> <span class="st">"cyl"</span>, y <span class="op">=</span> <span class="st">"mpg"</span>
   <span class="op">)</span> <span class="op">+</span>
   <span class="fu">ggdist</span><span class="fu">::</span><span class="fu">theme_ggdist</span><span class="op">(</span><span class="op">)</span></code></pre></div>
-<p><img src="reference/figures/README-lineribbon_blend-1.png"><!-- --></p>
+<p><img src="reference/figures/README-lineribbon_blend-1.png" width="672"></p>
 <p>Now the overlapping ribbons are blended together.</p>
 </div>
 </div>
