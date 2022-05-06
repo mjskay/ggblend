@@ -90,11 +90,11 @@ We can also blend geometries together by passing a list of geometries to
 ``` r
 df |>
   ggplot(aes(x, y, color = set)) +
-  blend(list(
+  list(
     geom_point(size = 3) |> blend("darken"),
     geom_vline(xintercept = 0, color = "gray75", size = 1.5),
     geom_hline(yintercept = 0, color = "gray75", size = 1.5)
-  ), "hard.light") +
+  ) |> blend("hard.light") +
   scale_color_brewer(palette = "Set2") +
   facet_grid(~ order) +
   labs(title = "Blending multiple geometries together")

@@ -1,0 +1,9 @@
+url: http://mjskay.github.io/ggblend
+
+authors:
+  Matthew Kay:
+    href: http://www.mjskay.com
+
+figures:
+  dev: grDevices::png
+  dev.args: [{cairo: true}]
