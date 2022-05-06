@@ -54,7 +54,22 @@
 
     <div id="details">
     <h2>Details</h2>
-    <p>Support for blending layers (e.g. <code>geom</code>s) in <span class="pkg">ggplot2</span>. See <code><a href="blend.html">blend()</a></code>.</p>
+    <p>The primary support for blending is provided by the <code><a href="blend.html">blend()</a></code> function,
+which can be used to augment <code><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot()</a></code> layers/geoms or lists of
+layers/geoms in a <code><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot()</a></code> specification.</p>
+<p>For example, one can replace something like this:</p><div class="sourceCode"><pre><code><span class="va">df</span> |&gt;
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu">geom_X</span><span class="op">(</span><span class="va">...</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu">geom_Y</span><span class="op">(</span><span class="va">...</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu">geom_Z</span><span class="op">(</span><span class="va">...</span><span class="op">)</span></code></pre></div>
+
+<p>With something like this:</p><div class="sourceCode"><pre><code><span class="va">df</span> |&gt;
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu">geom_X</span><span class="op">(</span><span class="va">...</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu">geom_Y</span><span class="op">(</span><span class="va">...</span><span class="op">)</span> |&gt; <span class="fu"><a href="../reference/blend.html">blend</a></span><span class="op">(</span><span class="st">"multiply"</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu">geom_Z</span><span class="op">(</span><span class="va">...</span><span class="op">)</span></code></pre></div>
+
+<p>In order to apply a "multiply" blend to the layer with <code>geom_Y(...)</code>.</p>
     </div>
     <div id="package-options">
     <h2>Package options</h2>

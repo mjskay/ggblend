@@ -67,7 +67,7 @@ of layers.</p></dd>
 <dt>...</dt>
 <dd><p>A sequence of lists of arguments to pass to <code><a href="blend.html">blend()</a></code>, each
 representing a blend applied to a copy of <code>x</code>. For example, a single string
-(like <code>"multiply"</code>) would result in a <code>blend(x, "muliply")</code> layer being
+(like <code>"multiply"</code>) would result in a <code>blend(x, "multiply")</code> layer being
 created; a list (like <code>list("multiply", alpha = 0.5)</code>) would result
 in a <code>blend(x, "multiply", alpha = 0.5)</code> layer being created.</p></dd>
 </dl></div>
@@ -82,8 +82,7 @@ in a <code>blend(x, "multiply", alpha = 0.5)</code> layer being created.</p></dd
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"></span>
-<span class="r-in"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># create two versions of a dataset, where draw order can affect output</span></span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1234</span><span class="op">)</span></span>

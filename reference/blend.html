@@ -73,8 +73,11 @@ Blend modes can include: <code>"clear"</code>,
 <code>"multiply"</code>, <code>"screen"</code>, <code>"overlay"</code>, <code>"darken"</code>, <code>"lighten"</code>,
 <code>"color.dodge"</code>, <code>"color.burn"</code>, <code>"hard.light"</code>, <code>"soft.light"</code>,
 <code>"difference"</code>, and <code>"exclusion"</code></p>
-<p>Blend modes like <code>"multiply"</code> and <code>"screen"</code> are particularly useful as they
-are <em>commutative</em>: the result is the same whichever order they are applied in.</p></dd>
+<p>Blend modes like <code>"multiply"</code>, <code>"darken"</code>, and <code>"lighten"</code> are particularly useful as they
+are <em>commutative</em>: the result is the same whichever order they are applied in.</p>
+<p>A warning is issued if the current graphics device does not appear to support
+the requested blend mode. In some cases this warning may be spurious, so
+it can be disabled by setting <code>options(ggblend.check_blend = FALSE)</code>.</p></dd>
 <dt>alpha</dt>
 <dd><p>A numeric between <code>0</code> and <code>1</code> (inclusive). The opacity of a
 transparency mask applied to objects prior to blending.</p></dd>
@@ -84,8 +87,8 @@ transparency mask applied to objects prior to blending.</p></dd>
     <div id="value">
     <h2>Value</h2>
     <p>An object that can be added to a <code><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot()</a></code> object: if the input is a <code>ggplot2::Layer</code>,
-the result is a <code>ggplot2::Layer</code>; if the input is a <code>list</code> of <code>ggplot2::Layer</code>s,
-the output is a <code>list</code> of <code>ggplot2::Layer</code>s.</p>
+the result is a <code>ggplot2::Layer</code>; if the input is a list of <code>ggplot2::Layer</code>s,
+the output is a list of <code>ggplot2::Layer</code>s.</p>
     </div>
     <div id="details">
     <h2>Details</h2>
@@ -116,6 +119,95 @@ The University of Auckland. Report.
     <div class="dont-index"><p><code><a href="stack_blends.html">stack_blends()</a></code></p></div>
     </div>
 
+    <div id="ref-examples">
+    <h2>Examples</h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
+<span class="r-in"></span>
+<span class="r-in"><span class="co"># create two versions of a dataset, where draw order can affect output</span></span>
+<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1234</span><span class="op">)</span></span>
+<span class="r-in"><span class="va">df_a</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">500</span>, <span class="fl">0</span><span class="op">)</span>, y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">500</span>, <span class="fl">1</span><span class="op">)</span>, set <span class="op">=</span> <span class="st">"a"</span><span class="op">)</span></span>
+<span class="r-in"><span class="va">df_b</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">500</span>, <span class="fl">1</span><span class="op">)</span>, y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">500</span>, <span class="fl">2</span><span class="op">)</span>, set <span class="op">=</span> <span class="st">"b"</span><span class="op">)</span></span>
+<span class="r-in"><span class="va">df_ab</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span><span class="va">df_a</span>, <span class="va">df_b</span><span class="op">)</span> |&gt;</span>
+<span class="r-in">  <span class="fu"><a href="https://rdrr.io/r/base/transform.html" class="external-link">transform</a></span><span class="op">(</span>order <span class="op">=</span> <span class="st">"draw a then b"</span><span class="op">)</span></span>
+<span class="r-in"><span class="va">df_ba</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span><span class="va">df_b</span>, <span class="va">df_a</span><span class="op">)</span> |&gt;</span>
+<span class="r-in">  <span class="fu"><a href="https://rdrr.io/r/base/transform.html" class="external-link">transform</a></span><span class="op">(</span>order <span class="op">=</span> <span class="st">"draw b then a"</span><span class="op">)</span></span>
+<span class="r-in"><span class="va">df</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span><span class="va">df_ab</span>, <span class="va">df_ba</span><span class="op">)</span></span>
+<span class="r-in"></span>
+<span class="r-in"><span class="co"># Using the "darken" blend mode, draw order does not matter:</span></span>
+<span class="r-in"><span class="va">df</span> |&gt;</span>
+<span class="r-in">  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, color <span class="op">=</span> <span class="va">set</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span class="r-in">  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">3</span><span class="op">)</span> |&gt; <span class="fu">blend</span><span class="op">(</span><span class="st">"darken"</span><span class="op">)</span> <span class="op">+</span></span>
+<span class="r-in">  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_color_brewer</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Set2"</span><span class="op">)</span> <span class="op">+</span></span>
+<span class="r-in">  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_grid.html" class="external-link">facet_grid</a></span><span class="op">(</span><span class="op">~</span> <span class="va">order</span><span class="op">)</span></span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>blend = "darken" does not appear to be supported by your graphics device.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span>  - Blending output may not be as expected.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span>  - If your current graphics device *does* support blend = "darken"</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span>    but auto-detection failed, consider reporting a bug.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Group definition failed</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Group definition failed</span>
+<span class="r-plt img"><img src="blend-1.png" alt="" width="700" height="433"></span>
+<span class="r-in"></span>
+<span class="r-in"><span class="co"># Using the "multiply" blend mode, we can see density within groups:</span></span>
+<span class="r-in"><span class="va">df</span> |&gt;</span>
+<span class="r-in">  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, color <span class="op">=</span> <span class="va">set</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span class="r-in">  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">3</span><span class="op">)</span> |&gt; <span class="fu">blend</span><span class="op">(</span><span class="st">"multiply"</span><span class="op">)</span> <span class="op">+</span></span>
+<span class="r-in">  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_color_brewer</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Set2"</span><span class="op">)</span> <span class="op">+</span></span>
+<span class="r-in">  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_grid.html" class="external-link">facet_grid</a></span><span class="op">(</span><span class="op">~</span> <span class="va">order</span><span class="op">)</span></span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>blend = "multiply" does not appear to be supported by your graphics device.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span>  - Blending output may not be as expected.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span>  - If your current graphics device *does* support blend = "multiply"</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span>    but auto-detection failed, consider reporting a bug.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Group definition failed</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Group definition failed</span>
+<span class="r-plt img"><img src="blend-2.png" alt="" width="700" height="433"></span>
+<span class="r-in"></span>
+<span class="r-in"><span class="co"># blend() on a single geom by default blends all grobs in that geom together</span></span>
+<span class="r-in"><span class="co"># using the requested blend mode. If we wish to blend within specific data</span></span>
+<span class="r-in"><span class="co"># subsets using normal blending ("over") but between subsets using the</span></span>
+<span class="r-in"><span class="co"># requested blend mode, we can set the blend_group aesthetic. This will</span></span>
+<span class="r-in"><span class="co"># make "multiply" behave more like "darken":</span></span>
+<span class="r-in"><span class="va">df</span> |&gt;</span>
+<span class="r-in">  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, color <span class="op">=</span> <span class="va">set</span>, blend_group <span class="op">=</span> <span class="va">set</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span class="r-in">  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">3</span><span class="op">)</span> |&gt; <span class="fu">blend</span><span class="op">(</span><span class="st">"multiply"</span><span class="op">)</span> <span class="op">+</span></span>
+<span class="r-in">  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_color_brewer</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Set2"</span><span class="op">)</span> <span class="op">+</span></span>
+<span class="r-in">  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_grid.html" class="external-link">facet_grid</a></span><span class="op">(</span><span class="op">~</span> <span class="va">order</span><span class="op">)</span></span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>blend = "multiply" does not appear to be supported by your graphics device.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span>  - Blending output may not be as expected.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span>  - If your current graphics device *does* support blend = "multiply"</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span>    but auto-detection failed, consider reporting a bug.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Group definition failed</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Group definition failed</span>
+<span class="r-plt img"><img src="blend-3.png" alt="" width="700" height="433"></span>
+<span class="r-in"></span>
+<span class="r-in"><span class="co"># We can also blend lists of geoms together; these geoms are rendered using</span></span>
+<span class="r-in"><span class="co"># normal ("over") blending (unless a blend() call is applied to a specific</span></span>
+<span class="r-in"><span class="co"># sub-layer, as in the first layer below) and then blended together using</span></span>
+<span class="r-in"><span class="co"># the requested blend mode.</span></span>
+<span class="r-in"><span class="va">df</span> |&gt;</span>
+<span class="r-in">  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, color <span class="op">=</span> <span class="va">set</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span class="r-in">  <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span class="r-in">    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">3</span><span class="op">)</span> |&gt; <span class="fu">blend</span><span class="op">(</span><span class="st">"darken"</span><span class="op">)</span>,</span>
+<span class="r-in">    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html" class="external-link">geom_vline</a></span><span class="op">(</span>xintercept <span class="op">=</span> <span class="fl">0</span>, color <span class="op">=</span> <span class="st">"gray75"</span>, size <span class="op">=</span> <span class="fl">1.5</span><span class="op">)</span>,</span>
+<span class="r-in">    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html" class="external-link">geom_hline</a></span><span class="op">(</span>yintercept <span class="op">=</span> <span class="fl">0</span>, color <span class="op">=</span> <span class="st">"gray75"</span>, size <span class="op">=</span> <span class="fl">1.5</span><span class="op">)</span></span>
+<span class="r-in">  <span class="op">)</span> |&gt; <span class="fu">blend</span><span class="op">(</span><span class="st">"hard.light"</span><span class="op">)</span> <span class="op">+</span></span>
+<span class="r-in">  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_color_brewer</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Set2"</span><span class="op">)</span> <span class="op">+</span></span>
+<span class="r-in">  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_grid.html" class="external-link">facet_grid</a></span><span class="op">(</span><span class="op">~</span> <span class="va">order</span><span class="op">)</span></span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>blend = "hard.light" does not appear to be supported by your graphics device.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span>  - Blending output may not be as expected.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span>  - If your current graphics device *does* support blend = "hard.light"</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span>    but auto-detection failed, consider reporting a bug.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>blend = "darken" does not appear to be supported by your graphics device.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span>  - Blending output may not be as expected.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span>  - If your current graphics device *does* support blend = "darken"</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span>    but auto-detection failed, consider reporting a bug.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Group definition failed</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Group definition failed</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Group definition failed</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Group definition failed</span>
+<span class="r-plt img"><img src="blend-4.png" alt="" width="700" height="433"></span>
+<span class="r-in"></span>
+</code></pre></div>
+    </div>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top"><h2 data-toc-skip>Contents</h2>
