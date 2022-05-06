@@ -21,6 +21,7 @@
 #'  are *commutative*: the result is the same whichever order they are applied in.
 #' @param alpha A numeric between `0` and `1` (inclusive). The opacity of a
 #'  transparency mask applied to objects prior to blending.
+#' @param ... Additional arguments (currently unused).
 #'
 #' @details
 #'
@@ -85,7 +86,7 @@ blend.list = function(x, blend = "over", alpha = 1, ...) {
 #' @noRd
 blend_grob = function(grob, blend = "over", alpha = 1) {
   viewport = if (!isTRUE(alpha == 1)) {
-    mask = rectGrob(gp = gpar(col = NA, fill = rgb(0, 0, 0, alpha)))
+    mask = rectGrob(gp = gpar(col = NA, fill = grDevices::rgb(0, 0, 0, alpha)))
     viewport(mask = mask)
   }
   groupGrob(grob, blend, vp = viewport)

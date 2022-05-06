@@ -1,5 +1,5 @@
 Package: ggblend
-Title: Blending and compositing in ggplot2
+Title: Blending and Compositing in ggplot2
 Version: 0.0.0.9000
 Authors@R: 
     person("Matthew", "Kay", , "mjskay@northwestern.edu", role = c("aut", "cre"),

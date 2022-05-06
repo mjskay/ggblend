@@ -26,6 +26,8 @@ are \emph{commutative}: the result is the same whichever order they are applied 
 
 \item{alpha}{A numeric between \code{0} and \code{1} (inclusive). The opacity of a
 transparency mask applied to objects prior to blending.}
+
+\item{...}{Additional arguments (currently unused).}
 }
 \value{
 An object that can be added to a \code{ggplot()} object: if the input is a \code{ggplot2::Layer},
