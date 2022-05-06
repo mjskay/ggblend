@@ -122,11 +122,11 @@
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">df</span> |&gt;
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, color <span class="op">=</span> <span class="va">set</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="reference/blend.html">blend</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>
+  <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>
     <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">3</span><span class="op">)</span> |&gt; <span class="fu"><a href="reference/blend.html">blend</a></span><span class="op">(</span><span class="st">"darken"</span><span class="op">)</span>,
     <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html" class="external-link">geom_vline</a></span><span class="op">(</span>xintercept <span class="op">=</span> <span class="fl">0</span>, color <span class="op">=</span> <span class="st">"gray75"</span>, size <span class="op">=</span> <span class="fl">1.5</span><span class="op">)</span>,
     <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html" class="external-link">geom_hline</a></span><span class="op">(</span>yintercept <span class="op">=</span> <span class="fl">0</span>, color <span class="op">=</span> <span class="st">"gray75"</span>, size <span class="op">=</span> <span class="fl">1.5</span><span class="op">)</span>
-  <span class="op">)</span>, <span class="st">"hard.light"</span><span class="op">)</span> <span class="op">+</span>
+  <span class="op">)</span> |&gt; <span class="fu"><a href="reference/blend.html">blend</a></span><span class="op">(</span><span class="st">"hard.light"</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_color_brewer</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Set2"</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_grid.html" class="external-link">facet_grid</a></span><span class="op">(</span><span class="op">~</span> <span class="va">order</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"Blending multiple geometries together"</span><span class="op">)</span></code></pre></div>
@@ -266,7 +266,8 @@
 <div class="developers">
 <h2 data-toc-skip>Developers</h2>
 <ul class="list-unstyled">
-<li>Matthew Kay <br><small class="roles"> Author, maintainer </small> <a href="https://orcid.org/0000-0001-9446-0419" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
+<li>
+<a href="http://www.mjskay.com" class="external-link">Matthew Kay</a> <br><small class="roles"> Author, maintainer </small> <a href="https://orcid.org/0000-0001-9446-0419" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
 </ul>
 </div>
 
@@ -286,7 +287,7 @@
 
       <footer><div class="copyright">
   <p></p>
-<p>Developed by Matthew Kay.</p>
+<p>Developed by <a href="http://www.mjskay.com" class="external-link">Matthew Kay</a>.</p>
 </div>
 
 <div class="pkgdown">
