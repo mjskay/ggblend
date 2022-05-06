@@ -3,5 +3,6 @@
 S3method(blend,Layer)
 S3method(blend,list)
 export(blend)
+export(stack_blends)
 import(ggplot2)
 import(grid)

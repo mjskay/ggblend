@@ -111,13 +111,31 @@ df |>
   geom_point(size = 3) |> blend("multiply", alpha = 0.65) +
   scale_color_brewer(palette = "Set2") +
   facet_grid(~ order) +
-  ggtitle("Scatterplot with blend('lighten') and blend(multiply, alpha = 0.65)")
+  ggtitle("Scatterplot with blend('lighten') and blend('multiply', alpha = 0.65)")
 ```
 
 <img src="man/figures/README-scatter_lighten_multiply-1.png" width="672" />
 
 Now it’s a little easier to see both overlap and density, and the output
 remains independent of draw order.
+
+Since this pattern may be useful in general, the `stack_blends()`
+function implements it: you pass it a layer and a sequence of lists of
+arguments for `blend()`; `stack_blends()` duplicates the layer, applying
+`blend()` with the provided arguments to each duplicated layer
+separately, then stacks them together. Thus the previous example can be
+written like so:
+
+``` r
+df |>
+  ggplot(aes(x, y, color = set)) +
+  geom_point(size = 3) |> stack_blends("lighten", list("multiply", alpha = 0.65)) +
+  scale_color_brewer(palette = "Set2") +
+  facet_grid(~ order) +
+  ggtitle("Scatterplot with stack_blends('lighten', list('multiply', alpha = 0.65))")
+```
+
+<img src="man/figures/README-scatter_lighten_multiply_stacked-1.png" width="672" />
 
 ## Blending multiple geometries
 

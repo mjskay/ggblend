@@ -62,3 +62,6 @@ Murrell, Paul (2021):
 The University of Auckland. Report.
 \doi{10.17608/k6.auckland.17009120.v1}.
 }
+\seealso{
+\code{\link[=stack_blends]{stack_blends()}}
+}
