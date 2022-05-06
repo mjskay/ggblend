@@ -221,7 +221,7 @@ predictions |>
   scale_color_brewer(palette = "Dark2") +
   ggdist::scale_fill_ramp_continuous(range = c(1, 0)) +
   labs(
-    title = "Overlapping lineribbons with blending", 
+    title = "Overlapping lineribbons with blend('multiply')", 
     color = "cyl", fill = "cyl", y = "mpg"
   ) +
   ggdist::theme_ggdist()
