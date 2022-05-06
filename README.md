@@ -267,3 +267,40 @@ predictions |>
 <img src="man/figures/README-lineribbon_blend-1.png" width="672" />
 
 Now the overlapping ribbons are blended together.
+
+## Compatibility with other packages
+
+In theory *ggblend* should be compatible with other packages, though in
+more complex cases (blending lists of geoms or using the `blend_group`
+aesthetic) it is possible it may fail, as these features are a bit more
+hackish.
+
+As a hard test, here is all three features applied to a modified version
+of the Gapminder example used in the [gganimate
+documentation](https://gganimate.com/):
+
+``` r
+library(gganimate)
+library(gapminder)
+
+p = ggplot(gapminder, aes(gdpPercap, lifeExp, size = pop, color = continent, blend_group = continent)) +
+  list(
+    geom_point(show.legend = c(size = FALSE)) |> blend("multiply"),
+    geom_hline(yintercept = 70, size = 2.5, color = "gray75")
+  ) |> blend("hard.light") +
+  scale_color_manual(values = continent_colors) +
+  scale_size(range = c(2, 12)) +
+  scale_x_log10() +
+  labs(
+    title = 'Gapminder with gganimate and ggblend', 
+    subtitle = 'Year: {frame_time}', 
+    x = 'GDP per capita', 
+    y = 'life expectancy'
+  ) +
+  transition_time(year) +
+  ease_aes('linear')
+
+animate(p, type = "cairo")
+```
+
+![](man/figures/README-gapminder-1.gif)<!-- -->
