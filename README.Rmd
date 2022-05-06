@@ -84,6 +84,37 @@ df |>
 
 Now the output is identical no matter the draw order.
 
+## Alpha blending
+
+One disadvantage of the `"darken"` blend mode is that it doesn't show density within
+each group as well. We could use `"multiply"` instead, though then values can get quite dark:
+
+```{r scatter_multiply}
+df |>
+  ggplot(aes(x, y, color = set)) +
+  geom_point(size = 3) |> blend("multiply") +
+  scale_color_brewer(palette = "Set2") +
+  facet_grid(~ order) +
+  ggtitle("Scatterplot with blend('multiply'): a little too dark")
+```
+
+Let's try combining two blend modes to address this: we'll use a `"lighten"`
+blend mode (which is also commutative, but which makes the overlapping regions
+lighter), and then draw the `"multiply"`-blended version on top at an `alpha`
+of less than 1:
+
+```{r scatter_lighten_multiply}
+df |>
+  ggplot(aes(x, y, color = set)) +
+  geom_point(size = 3) |> blend("lighten") +
+  geom_point(size = 3) |> blend("multiply", alpha = 0.65) +
+  scale_color_brewer(palette = "Set2") +
+  facet_grid(~ order) +
+  ggtitle("Scatterplot with blend('lighten') and blend(multiply, alpha = 0.65)")
+```
+
+Now it's a little easier to see both overlap and density, and the output remains independent of draw order.
+
 ## Blending multiple geometries
 
 We can also blend geometries together by passing a list of geometries to `blend()`.
