@@ -5,7 +5,8 @@ output: github_document
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   fig.path = "man/figures/README-",
-  dev.args = list(png = list(type = "cairo"))
+  dev.args = list(png = list(type = "cairo")),
+  fig.retina = 2
 )
 ```
 

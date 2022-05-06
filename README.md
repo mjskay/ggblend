@@ -61,7 +61,7 @@ df |>
   ggtitle("Scatterplot without blending: draw order matters")
 ```
 
-![](man/figures/README-scatter_noblend-1.png)<!-- -->
+<img src="man/figures/README-scatter_noblend-1.png" width="672" />
 
 A *commutative* blend mode, like `"multiply"` or `"darken"`, is one
 potential solution that does not depend on drawing order. We can wrap
@@ -78,7 +78,7 @@ df |>
   ggtitle("Scatterplot with blend('darken'): draw order does not matter")
 ```
 
-![](man/figures/README-scatter_blend-1.png)<!-- -->
+<img src="man/figures/README-scatter_blend-1.png" width="672" />
 
 Now the output is identical no matter the draw order.
 
@@ -100,7 +100,7 @@ df |>
   labs(title = "Blending multiple geometries together")
 ```
 
-![](man/figures/README-scatter_blend_geom-1.png)<!-- -->
+<img src="man/figures/README-scatter_blend_geom-1.png" width="672" />
 
 ## Blending groups within one geometry
 
@@ -200,7 +200,7 @@ predictions |>
   ggdist::theme_ggdist()
 ```
 
-![](man/figures/README-lineribbon_noblend-1.png)<!-- -->
+<img src="man/figures/README-lineribbon_noblend-1.png" width="672" />
 
 Notice the overlap of the orange (`cyl = 6`) and purple (`cyl = 8`)
 lines.
@@ -227,6 +227,6 @@ predictions |>
   ggdist::theme_ggdist()
 ```
 
-![](man/figures/README-lineribbon_blend-1.png)<!-- -->
+<img src="man/figures/README-lineribbon_blend-1.png" width="672" />
 
 Now the overlapping ribbons are blended together.
