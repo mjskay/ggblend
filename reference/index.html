@@ -52,8 +52,8 @@
         </td>
         <td><p>Blending and compositing for ggplot2</p></td>
       </tr></tbody><tbody><tr><th colspan="2">
-          <h2 id="blending-layers">Blending layers <a href="#blending-layers" class="anchor" aria-hidden="true"></a></h2>
-          <p class="section-desc"></p><p>Blend within and between layers of a ggplot2 specification.</p>
+          <h2 id="functions-for-blending-layers">Functions for blending layers <a href="#functions-for-blending-layers" class="anchor" aria-hidden="true"></a></h2>
+          <p class="section-desc"></p><p>A functional approach for blending within and between layers of a ggplot2 specification. Most suitable for programming against.</p>
         </th>
       </tr></tbody><tbody><tr><td>
           <p><code><a href="blend.html">blend()</a></code> </p>
@@ -63,6 +63,22 @@
           <p><code><a href="stack_blends.html">stack_blends()</a></code> </p>
         </td>
         <td><p>Stack multiple blends of the same object on top of each other</p></td>
+      </tr></tbody><tbody><tr><th colspan="2">
+          <h2 id="operators-for-blending-layers">Operators for blending layers <a href="#operators-for-blending-layers" class="anchor" aria-hidden="true"></a></h2>
+          <p class="section-desc"></p><p>Algebraic operators for blending within and between layers of a ggplot2 specification. May be preferable for normal use.</p>
+        </th>
+      </tr></tbody><tbody><tr><td>
+          <p><code><a href="times-ggblend.html">`*`(<i>&lt;ANY&gt;</i>,<i>&lt;ggblend&gt;</i>)</a></code> <code><a href="times-ggblend.html">`*`(<i>&lt;ggblend&gt;</i>,<i>&lt;ANY&gt;</i>)</a></code> <code><a href="times-ggblend.html">`*`(<i>&lt;ggblend_stack&gt;</i>,<i>&lt;ANY&gt;</i>)</a></code> <code><a href="times-ggblend.html">`*`(<i>&lt;ANY&gt;</i>,<i>&lt;ggblend_stack&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Apply a blend to a layer</p></td>
+      </tr><tr><td>
+          <p><code><a href="pow-ggblend.html">`^`(<i>&lt;ggblend&gt;</i>,<i>&lt;ggblend&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Compose blends into a stack</p></td>
+      </tr><tr><td>
+          <p><code><a href="print.ggblend.html">print(<i>&lt;ggblend&gt;</i>)</a></code> <code><a href="print.ggblend.html">show(<i>&lt;ggblend&gt;</i>)</a></code> <code><a href="print.ggblend.html">print(<i>&lt;ggblend_stack&gt;</i>)</a></code> <code><a href="print.ggblend.html">show(<i>&lt;ggblend_stack&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Print a ggblend object</p></td>
       </tr></tbody></table></div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
