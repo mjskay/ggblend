@@ -2,13 +2,31 @@
 % Please edit documentation in R/blend.R
 \name{blend}
 \alias{blend}
+\alias{blend.Layer}
+\alias{blend.list}
+\alias{blend.character}
 \title{Blend ggplot2 layers}
 \usage{
 blend(x, blend = "over", alpha = 1, ...)
+
+\method{blend}{Layer}(x, blend = "over", alpha = 1, ...)
+
+\method{blend}{list}(x, blend = "over", alpha = 1, ...)
+
+\method{blend}{character}(x, blend, alpha = 1, ...)
 }
 \arguments{
-\item{x}{A \code{ggplot2::Layer}, such as a \code{geom} or \code{stat}, or a list
-of layers.}
+\item{x}{One of:
+\itemize{
+\item A \code{ggplot2::Layer}, such as a \code{geom} or \code{stat}, or a list of layers.
+\item A string (character vector of length 1) giving the name of a blend,
+which takes the place of the \code{blend} argument.
+}
+
+If a layer is provided, this stack of blends is applied to it.
+If a string is provided, this takes the place of the \code{blend} argument, and
+a \code{"ggblend"} object is returned which can be applied using the
+\code{\link{*.ggblend}} and \code{\link{^.ggblend}} operators.}
 
 \item{blend}{The blend mode to use. The default mode, \code{"over"}, corresponds to
 the "usual" blend mode of drawing objects on top of each other.
@@ -34,9 +52,14 @@ transparency mask applied to objects prior to blending.}
 \item{...}{Additional arguments (currently unused).}
 }
 \value{
-An object that can be added to a \code{\link[=ggplot]{ggplot()}} object: if the input is a \code{ggplot2::Layer},
+One of:
+\itemize{
+\item An object that can be added to a \code{\link[=ggplot]{ggplot()}} object: if the input is a \code{ggplot2::Layer},
 the result is a \code{ggplot2::Layer}; if the input is a list of \code{ggplot2::Layer}s,
 the output is a list of \code{ggplot2::Layer}s.
+\item If the input is a string, a \code{"ggblend"} object, which can be combined with other \code{"ggblend"}
+objects using \code{\link{^.ggblend}} or applied to a ggplot layer using \code{\link{*.ggblend}}.
+}
 }
 \description{
 Blend objects within a single layer (geom) or across multiple layers (geoms)
@@ -120,5 +143,9 @@ The University of Auckland. Report.
 \doi{10.17608/k6.auckland.17009120.v1}.
 }
 \seealso{
-\code{\link[=stack_blends]{stack_blends()}}
+Other blending functions and operators: 
+\code{\link{pow-ggblend}},
+\code{\link{stack_blends}()},
+\code{\link{times-ggblend}}
 }
+\concept{blending functions and operators}

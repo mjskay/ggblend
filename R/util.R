@@ -5,3 +5,7 @@ stop0 = function(...) {
 warning0 = function(...) {
   warning(..., call. = FALSE)
 }
+
+cat0 = function(...) {
+  cat(..., sep = "")
+}

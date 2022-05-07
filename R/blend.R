@@ -4,7 +4,15 @@
 #' using graphical blending modes, such as `"multiply"`, `"overlay"`, etc. Uses
 #' the built-in compositing support in graphical devices added in R 4.2.
 #'
-#' @template param-x-layer
+#' @param x One of:
+#'   - A `ggplot2::Layer`, such as a `geom` or `stat`, or a list of layers.
+#'   - A string (character vector of length 1) giving the name of a blend,
+#'     which takes the place of the `blend` argument.
+#'
+#'  If a layer is provided, this stack of blends is applied to it.
+#'  If a string is provided, this takes the place of the `blend` argument, and
+#'  a `"ggblend"` object is returned which can be applied using the
+#'  [`*.ggblend`] and [`^.ggblend`] operators.
 #' @param blend The blend mode to use. The default mode, `"over"`, corresponds to
 #'  the "usual" blend mode of drawing objects on top of each other.
 #'  The list of supported blend modes depends on your graphical device
@@ -44,9 +52,13 @@
 #' will be blended together using the `blend` blend mode.
 #'
 #' @return
-#' An object that can be added to a [ggplot()] object: if the input is a `ggplot2::Layer`,
-#' the result is a `ggplot2::Layer`; if the input is a list of `ggplot2::Layer`s,
-#' the output is a list of `ggplot2::Layer`s.
+#' One of:
+#'
+#'  - An object that can be added to a [ggplot()] object: if the input is a `ggplot2::Layer`,
+#'    the result is a `ggplot2::Layer`; if the input is a list of `ggplot2::Layer`s,
+#'    the output is a list of `ggplot2::Layer`s.
+#'  - If the input is a string, a `"ggblend"` object, which can be combined with other `"ggblend"`
+#'    objects using [`^.ggblend`] or applied to a ggplot layer using [`*.ggblend`].
 #'
 #' @references
 #' Murrell, Paul (2021):
@@ -54,7 +66,7 @@
 #' The University of Auckland. Report.
 #' \doi{10.17608/k6.auckland.17009120.v1}.
 #'
-#' @seealso [stack_blends()]
+#' @family blending functions and operators
 #'
 #' @examples
 #' library(ggplot2)
@@ -110,15 +122,17 @@
 #'
 #' @export
 blend = function(x, blend = "over", alpha = 1, ...) {
-  check_blend(blend)
   UseMethod("blend")
 }
 
+#' @rdname blend
 #' @export
 blend.Layer = function(x, blend = "over", alpha = 1, ...) {
+  check_blend(blend)
   blend_layer(x, blend, alpha)
 }
 
+#' @rdname blend
 #' @export
 blend.list = function(x, blend = "over", alpha = 1, ...) {
   # this is kind of hacky but seems to work --- basically, make a list of
@@ -126,8 +140,18 @@ blend.list = function(x, blend = "over", alpha = 1, ...) {
   # called on them it saves the data needed for drawing but otherwise does
   # nothing), and the final layer actually draws each layer and then blends
   # them together
-  layers = lapply(x, hide_layer)
+  check_blend(blend)
+  layers = lapply(unlist(x), hide_layer)
   c(layers, list(blend_layers(layers, blend, alpha)))
+}
+
+#' @rdname blend
+#' @export
+blend.character = function(x, blend, alpha = 1, ...) {
+  if (!missing(blend)) {
+    stop0("Cannot provide both `x` and `blend` when `x` is a string in blend().")
+  }
+  new_ggblend(blend = x, alpha = alpha)
 }
 
 

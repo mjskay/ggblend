@@ -2,13 +2,35 @@
 % Please edit documentation in R/stack_blends.R
 \name{stack_blends}
 \alias{stack_blends}
+\alias{stack_blends.Layer}
+\alias{stack_blends.list}
+\alias{stack_blends.character}
+\alias{stack_blends.ggblend}
 \title{Stack multiple blends of the same object on top of each other}
 \usage{
 stack_blends(x, ...)
+
+\method{stack_blends}{Layer}(x, ...)
+
+\method{stack_blends}{list}(x, ...)
+
+\method{stack_blends}{character}(x, ...)
+
+\method{stack_blends}{ggblend}(x, ...)
 }
 \arguments{
-\item{x}{A \code{ggplot2::Layer}, such as a \code{geom} or \code{stat}, or a list
-of layers.}
+\item{x}{One of:
+\itemize{
+\item A \code{ggplot2::Layer}, such as a \code{geom} or \code{stat}, or a list of layers.
+\item A string (character vector of length 1) giving the name of a blend,
+which is assumed to be the first blend in the sequence.
+\item A \code{"ggblend"} object as returned by \code{\link[=blend]{blend()}}, \code{\link[=stack_blends]{stack_blends()}}, etc.
+}
+
+If a layer is provided, this stack of blends is applied to it.
+If a string or \code{"ggblend"} object is provided, a new
+\code{"ggblend"} object is returned which can be applied using the
+\code{\link{*.ggblend}} and \code{\link{^.ggblend}} operators.}
 
 \item{...}{A sequence of lists of arguments to pass to \code{\link[=blend]{blend()}}, each
 representing a blend applied to a copy of \code{x}. For example, a single string
@@ -17,7 +39,14 @@ created; a list (like \code{list("multiply", alpha = 0.5)}) would result
 in a \code{blend(x, "multiply", alpha = 0.5)} layer being created.}
 }
 \value{
-A list of \code{ggplot2::Layers}s which can be added to a \code{ggplot()} object.
+One of:
+\itemize{
+\item If the input is a \code{ggplot2::Layer} or list, the output is a list of \code{ggplot2::Layer}s
+that can be added to a \code{\link[=ggplot]{ggplot()}} object.
+\item If the input is a string or a \code{"ggblend"}, the output is a \code{"ggblend"} object,
+which can be combined with other \code{"ggblend"} objects using \code{\link{^.ggblend}} or
+applied to a ggplot layer using \code{\link{*.ggblend}}.
+}
 }
 \description{
 This is a shortcut for duplicating a layer multiple times, applying a
@@ -57,5 +86,9 @@ df |>
 
 }
 \seealso{
-\code{\link[=blend]{blend()}}
+Other blending functions and operators: 
+\code{\link{blend}()},
+\code{\link{pow-ggblend}},
+\code{\link{times-ggblend}}
 }
+\concept{blending functions and operators}

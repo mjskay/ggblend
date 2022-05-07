@@ -6,3 +6,4 @@
 ^\.github$
 ^codecov\.yml$
 ^_pkgdown\.yml$
+^man-roxygen$

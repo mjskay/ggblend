@@ -65,9 +65,12 @@ df |>
 
 A *commutative* blend mode, like `"multiply"` or `"darken"`, is one
 potential solution that does not depend on drawing order. We can wrap
-`geom_point()` in a call to `blend()` to achieve this, using something
-like `blend(geom_point(...), "darken")` or equivalently
-`geom_point(...) |> blend("darken")`:
+`geom_point()` in a call to `blend()` to achieve this, there are
+currently three approaches:
+
+-   `blend(geom_point(...), "darken")` (normal function application)
+-   `geom_point(...) |> blend("darken")` (piping)
+-   `geom_point(...) * blend("darken")` (algebraic operations)
 
 ``` r
 df |>
@@ -129,7 +132,7 @@ written like so:
 ``` r
 df |>
   ggplot(aes(x, y, color = set)) +
-  geom_point(size = 3) |> stack_blends("lighten", list("multiply", alpha = 0.65)) +
+  geom_point(size = 3) |> stack_blends("lighten", blend("multiply", alpha = 0.65)) +
   scale_color_brewer(palette = "Set2") +
   facet_grid(~ order) +
   ggtitle("Scatterplot with stack_blends('lighten', list('multiply', alpha = 0.65))")
@@ -146,7 +149,7 @@ We can also blend geometries together by passing a list of geometries to
 df |>
   ggplot(aes(x, y, color = set)) +
   list(
-    geom_point(size = 3) |> blend("darken"),
+    geom_point(size = 3) |> stack_blends("lighten", blend("multiply", alpha = 0.65)),
     geom_vline(xintercept = 0, color = "gray75", size = 1.5),
     geom_hline(yintercept = 0, color = "gray75", size = 1.5)
   ) |> blend("hard.light") +
@@ -156,6 +159,27 @@ df |>
 ```
 
 <img src="man/figures/README-scatter_blend_geom-1.png" width="672" />
+
+## Algebraic syntax
+
+An experimental algebraic syntax for combining and applying blends
+replaces the function application `|>` with `*` and stacking blends with
+`^`. For example:
+
+``` r
+df |>
+  ggplot(aes(x, y, color = set)) +
+  list(
+    geom_point(size = 3) * blend("lighten") ^ blend("multiply", alpha = 0.65),
+    geom_vline(xintercept = 0, color = "gray75", size = 1.5),
+    geom_hline(yintercept = 0, color = "gray75", size = 1.5)
+  ) * blend("hard.light") +
+  scale_color_brewer(palette = "Set2") +
+  facet_grid(~ order) +
+  labs(title = "Blending multiple geometries together, algebraically")
+```
+
+<img src="man/figures/README-scatter_blend_algebraic-1.png" width="672" />
 
 ## Blending groups within one geometry
 

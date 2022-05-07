@@ -10,12 +10,23 @@ figures:
 
 reference:
 - title: Package overview
-  desc:  Overview of ggblend.
+  desc: Overview of ggblend.
   contents:
   - ggblend-package
 
-- title: Blending layers
-  desc:  Blend within and between layers of a ggplot2 specification.
+- title: Functions for blending layers
+  desc: >
+    A functional approach for blending within and between layers of a ggplot2 specification.
+    Most suitable for programming against.
   contents:
   - blend
   - stack_blends
+
+- title: Operators for blending layers
+  desc: >
+    Algebraic operators for blending within and between layers of a ggplot2 specification.
+    May be preferable for normal use.
+  contents:
+  - "*.ggblend"
+  - "^.ggblend"
+  - print.ggblend

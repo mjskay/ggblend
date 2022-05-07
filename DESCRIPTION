@@ -5,10 +5,10 @@ Authors@R:
     person("Matthew", "Kay", , "mjskay@northwestern.edu", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0001-9446-0419"))
 Description: Support for compositing groups of data and geoms in ggplot2 using
-  belnd modes like "multiply", "overlay", etc.
+    blend modes like "multiply", "overlay", etc.
 License: MIT + file LICENSE
 Depends: R (>= 4.2)
-Imports: grid, ggplot2 (>= 3.3.5)
+Imports: methods, grid, ggplot2 (>= 3.3.5)
 Suggests: 
     covr,
     testthat (>= 3.0.0)

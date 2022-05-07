@@ -51,4 +51,5 @@
 #'
 #' @import grid
 #' @import ggplot2
+#' @importFrom methods setOldClass setMethod show
 NULL
