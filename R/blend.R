@@ -141,8 +141,7 @@ blend.list = function(x, blend = "over", alpha = 1, ...) {
   # nothing), and the final layer actually draws each layer and then blends
   # them together
   check_blend(blend)
-  layers = lapply(unlist(x), hide_layer)
-  c(layers, list(blend_layers(layers, blend, alpha)))
+  blend_layers(x, blend, alpha)
 }
 
 #' @rdname blend
@@ -201,10 +200,16 @@ blend_groblists = function(groblists, blend = "over", alpha = 1) {
 #' @return a ggplot2::Layer
 #' @noRd
 blend_layers = function(layers, blend = "over", alpha = alpha) {
-  layer = geom_blank()
-  ggproto(NULL, layer,
+  # skip over hidden layers when blending (they should already be incorporated
+  # into a BlendedLayer)
+  layers = unlist(layers)
+  already_hidden = vapply(layers, inherits, what = "HiddenLayer", logical(1))
+  layers[!already_hidden] = lapply(layers[!already_hidden], hide_layer)
+  layers_to_blend = layers[!already_hidden]
+
+  blended_layer = ggproto("BlendedLayer", geom_blank(),
     draw_geom = function(self, data, layout) {
-      groblists = lapply(layers, function(l) {
+      groblists = lapply(layers_to_blend, function(l) {
         groblist = l$ggblend__draw_geom_(layout)
         # do not blend within layers
         lapply(groblist, groupGrob)
@@ -212,6 +217,8 @@ blend_layers = function(layers, blend = "over", alpha = alpha) {
       blend_groblists(groblists, blend, alpha)
     }
   )
+
+  c(layers, list(blended_layer))
 }
 
 #' Make a layer that will blend its contents when created. If the layer does not
@@ -237,10 +244,10 @@ blend_layer = function(layer, blend = "over", alpha = 1) {
           groblist = ggproto_parent(layer, self)$draw_geom(d, layout)
           # make layers their own blend group so that the blend is only
           # applied between layers, not within layers
-          lapply(groblist, groupGrob)
+          lapply(groblist, blend_grob)
         })
 
-        blend_groblists(groblists, blend, alpha)
+        blend_groblists(groblists, blend, alpha = alpha)
       }
     }
   )
@@ -253,7 +260,7 @@ blend_layer = function(layer, blend = "over", alpha = 1) {
 #' saves data for later drawing. Use `$ggblend__draw_geom_()` later to draw.
 #' @noRd
 hide_layer = function(layer) {
-  ggproto(NULL, layer,
+  ggproto("HiddenLayer", layer,
     # keep ggplot from drawing this layer normally, we will draw it later
     draw_geom = function(self, data, layout) {
       self$ggblend__last_data_ = data
