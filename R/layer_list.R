@@ -24,10 +24,12 @@ as_layer_list = function(x) {
 }
 
 #' @export
+as_layer_list.LayerList = function(x) {
+  x
+}
+
+#' @export
 as_layer_list.list = function(x) {
-  if (is_layer_list(x)) {
-    return(x)
-  }
   x = as.list(unlist(x))
   if (!all(vapply(x, is_layer_instance, logical(1)))) {
     stop0("All objects in a LayerList must be ggplot2 Layers")
@@ -36,7 +38,7 @@ as_layer_list.list = function(x) {
 }
 
 #' @export
-as_layer_list.Layer = function(x) {
+as_layer_list.LayerInstance = function(x) {
   new_layer_list(list(x))
 }
 

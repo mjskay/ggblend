@@ -6,6 +6,11 @@ is_layer_instance = function(x) {
   inherits(x, "LayerInstance")
 }
 
+is_layer = function(x) {
+  inherits(x, c("LayerInstance", "LayerList")) ||
+    (is.list(x) && all(vapply(x, is_layer, logical(1))))
+}
+
 
 # type conversion ---------------------------------------------------------
 
@@ -70,7 +75,7 @@ layer_apply = function(.x, .f, ...) {
 }
 
 #' @export
-layer_apply.Layer = function(.x, .f, ...) {
+layer_apply.LayerInstance = function(.x, .f, ...) {
   .f(.x, ...)
 }
 
