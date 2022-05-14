@@ -3,9 +3,6 @@ new_layer_list = function(list) {
 }
 
 #' @export
-setClass("LayerList", contains = "list")
-
-#' @export
 layer_list = function(...) {
   new_layer_list(list(...))
 }
@@ -31,8 +28,8 @@ as_layer_list.list = function(x) {
   if (is_layer_list(x)) {
     return(x)
   }
-  x = as.list(x)
-  if (!vapply(x, inherits, what = "Layer", logical(1))) {
+  x = as.list(unlist(x))
+  if (!all(vapply(x, is_layer_instance, logical(1)))) {
     stop0("All objects in a LayerList must be ggplot2 Layers")
   }
   new_layer_list(x)
@@ -43,25 +40,19 @@ as_layer_list.Layer = function(x) {
   new_layer_list(list(x))
 }
 
-#' When returning layers / lists from an adjustment, use this function so that
-#' layer lists of length 1 are returned as a single layer
-#' @noRd
-simplify_layer_list = function(x) {
-  if (is.list(x)) {
-    if (length(x) == 1) {
-      x[[1]]
-    } else {
-      new_layer_list(x)
-    }
-  } else {
-    x
-  }
-}
+
+# layer concatenation -------------------------------------------------
+
+#' @export
+setMethod("+", signature(e1 = "LayerList", e2 = "LayerList"), function(e1, e2) {
+  new_layer_list(c(e1, e2))
+})
+
 
 # printing ----------------------------------------------------------------
 
 #' @export
 setMethod("show", signature(object = "LayerList"), function(object) {
   cat("<LayerList>:\n")
-  print(asS3(object))
+  print(object@.Data)
 })

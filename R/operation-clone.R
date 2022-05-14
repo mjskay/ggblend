@@ -1,12 +1,9 @@
 #' @export
-setClass("Clone", contains = "Operation")
-
-#' @export
-clone = function() {
-  new("Clone")
+clone_above = function(mapping = aes(), ...) {
+  1 + adjust(mapping = mapping, ...)
 }
 
 #' @export
-setMethod("apply_operation", signature(operation = "Clone"), function(operation, layers) {
-  simplify_layer_list(layers)
-})
+clone_below = function(mapping = aes(), ...) {
+  adjust(mapping = mapping, ...) + 1
+}
