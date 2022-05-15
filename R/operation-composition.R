@@ -6,7 +6,7 @@ new_operation_composition = function(operation1, operation2) {
 # operation application ---------------------------------------------------
 
 setMethod("apply_operation", signature(operation = "operation_composition"), function(operation, layers) {
-  apply_composed_operation(operation@operation2, layers * operation@operation2)
+  apply_composed_operation(operation@operation2, layers * operation@operation1)
 })
 
 

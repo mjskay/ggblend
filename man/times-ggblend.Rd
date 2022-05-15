@@ -95,7 +95,7 @@ df |>
 }
 \seealso{
 Other blending functions and operators: 
-\code{\link{blend}()},
+\code{\link{blend}},
 \code{\link{pow-ggblend}},
 \code{\link{stack_blends}()}
 }
