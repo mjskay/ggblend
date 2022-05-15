@@ -1,4 +1,14 @@
 
+# type predicates ---------------------------------------------------------
+
+#' Is this a ggplot2 layer (i.e. a LayerInstance) or layer-like (i.e. a list of layers)
+#' @noRd
+is_layer_like = function(x) {
+  inherits(x, c("LayerInstance", "layer_list")) ||
+    (is.list(x) && all(vapply(unlist(x, use.names = FALSE), inherits, what = "LayerInstance", logical(1))))
+}
+
+
 # type conversion ---------------------------------------------------------
 
 #' @export

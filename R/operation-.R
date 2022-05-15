@@ -40,7 +40,7 @@ make_operation = function(name, constructor, y) {
 
   f_body = bquote(splice = TRUE, {
     not_missing_x = !missing(x)
-    if (not_missing_x && is_layer(x)) {
+    if (not_missing_x && is_layer_like(x)) {
       operation = .(.constructor)(..(constructor_args))
       layer = as_layer(x)
       apply_composed_operation(operation, layer)

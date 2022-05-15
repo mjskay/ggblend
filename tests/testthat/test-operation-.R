@@ -15,7 +15,10 @@ test_that("distributive law works", {
 
   expect_equal(
     (adjust(color = "red") + 1) * (1 + adjust(size = 2)),
-    new_operation_sum(list(adjust(color = "red"), nop(), adjust(color = "red", size = 2), adjust(size = 2)))
+    new_operation_sum(list(
+      adjust(color = "red"), adjust(color = "red", size = 2),
+      nop(), adjust(size = 2)
+    ))
   )
 })
 
