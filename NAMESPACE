@@ -2,7 +2,6 @@
 
 S3method(as_layer,LayerInstance)
 S3method(as_layer,default)
-S3method(as_layer,layer_group)
 S3method(as_layer,layer_list)
 S3method(as_layer,list)
 S3method(as_layer_group,LayerInstance)

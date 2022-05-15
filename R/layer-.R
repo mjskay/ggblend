@@ -34,9 +34,6 @@ as_layer.list = function(x) {
 #' @export
 as_layer.layer_list = function(x) x
 
-#' @export
-as_layer.layer_group = function(x) x
-
 
 # layer manipulation ------------------------------------------------------
 
