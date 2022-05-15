@@ -21,10 +21,9 @@ setAs("operation", "operation_sum", function(from) new_operation_sum(list(from))
 # operation application ---------------------------------------------------
 
 setMethod("apply_operation", signature(operation = "operation_sum"), function(operation, layers) {
-  simplify_layers(
-    lapply(operation, apply_operation, layers = layers),
-    prototype = layers
-  )
+  layer_apply(layers, function(layer) {
+    lapply(operation, apply_operation, layers = layer)
+  })
 })
 
 

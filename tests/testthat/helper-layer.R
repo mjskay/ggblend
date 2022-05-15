@@ -1,6 +1,26 @@
+layer_to_list = function(x) {
+  if (is.list(x)) {
+    rapply(x, as.list, classes = "LayerInstance", how = "replace")
+  } else {
+    as.list(x)
+  }
+}
+
 #' used for comparing layers. Layers (as ggproto objects) may not appear to be
 #' exactly equal because the definitions of variables may be in superclasses;
 #' this expectation fixes that
-expect_equal_layer = function(object, expected, ...) {
-  expect_equal(as.list(object), as.list(expected), ...)
+expect_equal_layer = function(object, expected) {
+  label = as_label(enquo(object))
+  expected.label = as_label(enquo(expected))
+
+  expect_equal(
+    class(object), class(expected),
+    label = paste0("class(", label, ")"),
+    expected.label = paste0("class(", expected.label, ")")
+  )
+  expect_equal(
+    layer_to_list(object), layer_to_list(expected),
+    label = label,
+    expected.label = expected.label
+  )
 }

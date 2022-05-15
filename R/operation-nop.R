@@ -10,7 +10,7 @@ nop = make_operation("nop", new_nop)
 # operation application ---------------------------------------------------
 
 setMethod("apply_operation", signature(operation = "nop"), function(operation, layers) {
-  simplify_layers(layers, prototype = layers)
+  layers
 })
 
 

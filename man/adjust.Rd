@@ -6,9 +6,16 @@
 \alias{adjust-class}
 \title{Adjust layer params and aesthetics (Layer operation)}
 \usage{
-adjust(x, mapping = aes(), ...)
+adjust(mapping = aes(), ...)
 }
 \arguments{
+\item{mapping}{An aesthetic created using \code{aes()}. Mappings provided here
+will overwrite mappings in \link{Layer}s when this \link{operation} is applied to
+them.}
+
+\item{...}{\link{Layer} parameters. Params provided here will overwrite
+params in \link{Layer}s when this \link{operation} is applied to them.}
+
 \item{x}{One of:
 \itemize{
 \item A \link{Layer}-like object: applies this operation to the layer.
@@ -16,13 +23,6 @@ adjust(x, mapping = aes(), ...)
 \item Anything else: creates an \link{operation}, passing \code{x} along to the
 \code{mapping} argument
 }}
-
-\item{mapping}{An aesthetic created using \code{aes()}. Mappings provided here
-will overwrite mappings in \link{Layer}s when this \link{operation} is applied to
-them.}
-
-\item{...}{\link{Layer} parameters. Params provided here will overwrite
-params in \link{Layer}s when this \link{operation} is applied to them.}
 }
 \value{
 A \link{Layer}-like object (if \code{x} is a \link{Layer}) or an \link{operation} (if not).

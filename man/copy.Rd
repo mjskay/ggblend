@@ -6,19 +6,11 @@
 \alias{copy_under}
 \title{Copy layers then adjust params and aesthetics (Layer operation)}
 \usage{
-copy_over(x, mapping = aes(), ...)
+copy_over(mapping = aes(), ...)
 
-copy_under(x, mapping = aes(), ...)
+copy_under(mapping = aes(), ...)
 }
 \arguments{
-\item{x}{One of:
-\itemize{
-\item A \link{Layer}-like object: applies this operation to the layer.
-\item A missing argument: creates an \link{operation}
-\item Anything else: creates an \link{operation}, passing \code{x} along to the
-\code{mapping} argument
-}}
-
 \item{mapping}{An aesthetic created using \code{aes()}. Mappings provided here
 will overwrite mappings in \link{Layer}s when this \link{operation} is applied to
 them.}

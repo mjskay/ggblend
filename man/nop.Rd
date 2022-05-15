@@ -6,7 +6,7 @@
 \alias{nop-class}
 \title{Identity ("no-op") transformation (Layer operation)}
 \usage{
-nop(x)
+nop()
 }
 \arguments{
 \item{x}{One of:

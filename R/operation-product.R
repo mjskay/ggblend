@@ -64,7 +64,7 @@ setMethod("*", signature(e1 = "operation_sum", e2 = "operation"), function(e1, e
 #' @rdname operation_product
 #' @export
 setMethod("*", signature(e1 = "operation_sum", e2 = "operation_sum"), function(e1, e2) {
-  new_operation_sum(unlist(lapply(e2, `*`, e1 = e1)))
+  new_operation_sum(do.call(c, lapply(e1, `*`, e2 = e2)))
 })
 
 
