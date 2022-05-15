@@ -4,7 +4,7 @@
 \alias{copy}
 \alias{copy_over}
 \alias{copy_under}
-\title{Copy layers then adjust params and aesthetics (Layer Operation)}
+\title{Copy layers then adjust params and aesthetics (Layer operation)}
 \usage{
 copy_over(x, mapping = aes(), ...)
 
@@ -14,23 +14,23 @@ copy_under(x, mapping = aes(), ...)
 \item{x}{One of:
 \itemize{
 \item A \link{Layer}-like object: applies this operation to the layer.
-\item A missing argument: creates an \link{Operation}
-\item Anything else: creates an \link{Operation}, passing \code{x} along to the
+\item A missing argument: creates an \link{operation}
+\item Anything else: creates an \link{operation}, passing \code{x} along to the
 \code{mapping} argument
 }}
 
 \item{mapping}{An aesthetic created using \code{aes()}. Mappings provided here
-will overwrite mappings in \link{Layer}s when this \link{Operation} is applied to
+will overwrite mappings in \link{Layer}s when this \link{operation} is applied to
 them.}
 
 \item{...}{\link{Layer} parameters. Params provided here will overwrite
-params in \link{Layer}s when this \link{Operation} is applied to them.}
+params in \link{Layer}s when this \link{operation} is applied to them.}
 }
 \value{
-A \link{Layer}-like object (if \code{x} is a \link{Layer}) or an \link{Operation} (if not).
+A \link{Layer}-like object (if \code{x} is a \link{Layer}) or an \link{operation} (if not).
 }
 \description{
-A layer \link{Operation} for copying and then adjusting the params and aesthetic
+A layer \link{operation} for copying and then adjusting the params and aesthetic
 mappings of a \link{Layer}.
 }
 \details{
@@ -61,10 +61,10 @@ data.frame(
 
 }
 \seealso{
-\link{Operation} for a description of \link{Layer} operations.
+\link{operation} for a description of \link{Layer} operations.
 
 Other Layer operations: 
-\code{\link{Adjust-class}},
-\code{\link{Nop-class}}
+\code{\link{adjust}},
+\code{\link{nop}}
 }
 \concept{Layer operations}

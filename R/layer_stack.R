@@ -1,5 +1,5 @@
 new_layer_stack = function(list) {
-  new("LayerStack", .Data = list)
+  new("layer_stack", .Data = list)
 }
 
 #' @export
@@ -12,7 +12,7 @@ layer_stack = function(...) {
 
 #' @export
 is_layer_stack = function(x) {
-  inherits(x, "LayerStack")
+  inherits(x, "layer_stack")
 }
 
 
@@ -30,7 +30,7 @@ as_layer_stack.list = function(x) {
   }
   x = as.list(x)
   if (!all(vapply(x, inherits, what = "Layer", logical(1)))) {
-    stop0("All objects in a LayerStack must be ggplot2 Layers")
+    stop0("All objects in a layer_stack must be ggplot2 Layers")
   }
   new_layer_stack(x)
 }
@@ -44,7 +44,7 @@ as_layer_stack.Layer = function(x) {
 # printing ----------------------------------------------------------------
 
 #' @export
-setMethod("show", signature(object = "LayerStack"), function(object) {
-  cat("<LayerStack>:\n")
+setMethod("show", signature(object = "layer_stack"), function(object) {
+  cat("<layer_stack>:\n")
   print(object@.Data)
 })

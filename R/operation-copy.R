@@ -1,6 +1,6 @@
-#' Copy layers then adjust params and aesthetics (Layer Operation)
+#' Copy layers then adjust params and aesthetics (Layer operation)
 #'
-#' A layer [Operation] for copying and then adjusting the params and aesthetic
+#' A layer [operation] for copying and then adjusting the params and aesthetic
 #' mappings of a [Layer].
 #'
 #' @inheritParams adjust

@@ -1,39 +1,4 @@
 
-#' Layer operations
-#'
-#' [Operation]s are composable transformations that can be applied to \pkg{ggplot2}
-#' [Layer]s or [Layer]-like objects (e.g. lists of [Layer]s; see the [Layer]
-#' documentation page for a description of valid [Layer]-like objects).
-#'
-#' @param x,object An [Operation].
-#' @param ... Further arguments passed to other methods.
-#'
-#' @details
-#'
-#' [Operation]s can be composed using the `+` and `*` operators (see [OperationSum]
-#' and [OperationProduct]). Addition and multiplication of [Operation]s and [Layer]s
-#' obeys the distributive law.
-#'
-#' [Operation]s can be applied to [Layer]s using `*` or `|>`, with slightly
-#' different results:
-#'
-#' - Using `*`, application of [Operation]s to a list of [Layer]s *is* distributive. For example,
-#'   `list(geom_line(), geom_point()) * blend("multiply")` is
-#'   equivalent to `list(geom_line() * blend("multiply"), geom_point() * blend("multiply"))`;
-#'   i.e. it multiply-blends the contents of the two layers individually.
-#'
-#' - Using `|>`, application of [Operation]s to a list of [Layer]s is *not*
-#'   distributive (unless the only reasonable interpretation of applying the
-#'   transformation is necessarily distributive; e.g. `adjust()`). For example,
-#'   `list(geom_line(), geom_point()) |> blend("multiply")` would multiply-blend
-#'   both layers together, rather than multiply-blending the contents of the
-#'   two layers individually.
-#'
-#' @name Operation-class
-#' @aliases Operation
-NULL
-
-
 # construct an operation --------------------------------------------------
 
 #' Make a function that can make an operation
@@ -88,7 +53,7 @@ make_operation = function(name, constructor, y) {
 
 # type conversion ---------------------------------------------------------
 
-setAs("numeric", "Operation", function(from) {
+setAs("numeric", "operation", function(from) {
   from * nop()
 })
 
@@ -99,31 +64,31 @@ setGeneric("apply_operation", function(operation, layers) {
   stop0("Unimplemented layer operation")
 })
 
-#' @rdname OperationProduct-class
+#' @rdname operation_product
 #' @export
-setMethod("*", signature(e1 = "Operation"), function(e1, e2) {
+setMethod("*", signature(e1 = "operation"), function(e1, e2) {
   apply_operation(e1, as_layer(e2))
 })
 
-#' @rdname OperationProduct-class
+#' @rdname operation_product
 #' @export
-setMethod("*", signature(e2 = "Operation"), function(e1, e2) {
+setMethod("*", signature(e2 = "operation"), function(e1, e2) {
   apply_operation(e2, as_layer(e1))
 })
 
 
 # printing ----------------------------------------------------------------
 
-#' @describeIn Operation-class Print an [Operation].
+#' @describeIn operation Print an [operation].
 #' @export
-setMethod("show", signature(object = "Operation"), function(object) {
-  cat0("<Operation>: ", format(object), "\n")
+setMethod("show", signature(object = "operation"), function(object) {
+  cat0("<operation>: ", format(object), "\n")
   invisible(object)
 })
 
-#' @describeIn Operation-class Format an [Operation] for printing.
+#' @describeIn operation Format an [operation] for printing.
 #' @export
-setMethod("format", signature(x = "Operation"), function(x, ...) {
+setMethod("format", signature(x = "operation"), function(x, ...) {
   arg_names = setdiff(slotNames(x), ".Data")
   args = attributes(x)[arg_names]
   args_string = format_name_value_pairs(args)

@@ -1,66 +1,26 @@
-#' Layer operation addition
-#'
-#' [Operation]s can be added together to form stacks of operations, which
-#' when multiplied by (applied to) [Layer]s, those [Layer]s are distributed
-#' over the [Operation]s (i.e. copied).
-#'
-#' @param x,... [Operation]s
-#' @param e1 an [Operation] or [numeric()]
-#' @param e2 an [Operation] or [numeric()]
-#' @param na.rm ignored
-#'
-#' @details
-#' Addition of \pkg{ggblend} [Operation]s depends on the types of
-#' objects being summed:
-#'
-#' - If you add an [Operation] to an [Operation], they are merged into
-#'   a single [Operation] that copies input [Layer]s, one for each [Operation].
-#' - If you add an [Operation] to a [numeric()] *n*, it is equivalent to
-#'   adding `*` [nop()]s to that [Operation].
-#'
-#' @examples
-#'
-#' library(ggplot2)
-#'
-#' # adding operations together creates a sum of operations
-#' adjust(color = "red") + adjust(size = 2)
-#'
-#' # addition and multiplication obey the distributive law
-#' op = (adjust(aes(y = 11 -x), color = "skyblue") + 1) * (adjust(color = "white", size = 4) + 1)
-#' op
-#'
-#' # multiplication by a geom returns a modified version of that geom,
-#' # distributed over the sum of the operations
-#' data.frame(x = 1:10) |>
-#'   ggplot(aes(x = x, y = x)) +
-#'   geom_line(size = 2) * op
-#' @name OperationSum-class
-#' @aliases OperationSum
-NULL
-
 new_operation_sum = function(list) {
-  new("OperationSum", .Data = list)
+  new("operation_sum", .Data = list)
 }
 
-#' @rdname OperationSum-class
+#' @rdname operation_sum
 #' @export
-setMethod("sum", signature(x = "Operation"), function(x, ..., na.rm = FALSE) {
-  as(list(x, ...), "OperationSum")
+setMethod("sum", signature(x = "operation"), function(x, ..., na.rm = FALSE) {
+  as(list(x, ...), "operation_sum")
 })
 
 
 # type conversion ---------------------------------------------------------
 
-setAs("list", "OperationSum", function(from) {
-  new_operation_sum(lapply(from, as, "Operation"))
+setAs("list", "operation_sum", function(from) {
+  new_operation_sum(lapply(from, as, "operation"))
 })
 
-setAs("Operation", "OperationSum", function(from) new_operation_sum(list(from)))
+setAs("operation", "operation_sum", function(from) new_operation_sum(list(from)))
 
 
 # operation application ---------------------------------------------------
 
-setMethod("apply_operation", signature(operation = "OperationSum"), function(operation, layers) {
+setMethod("apply_operation", signature(operation = "operation_sum"), function(operation, layers) {
   simplify_layers(
     lapply(operation, apply_operation, layers = layers),
     prototype = layers
@@ -70,35 +30,37 @@ setMethod("apply_operation", signature(operation = "OperationSum"), function(ope
 
 # operation concatenation -------------------------------------------------
 
-#' @rdname OperationSum-class
+#' @rdname operation_sum
 #' @export
-setMethod("+", signature(e1 = "Operation", e2 = "Operation"), function(e1, e2) {
-  e1 = as(e1, "OperationSum")
-  e2 = as(e2, "OperationSum")
+setMethod("+", signature(e1 = "operation", e2 = "operation"), function(e1, e2) {
+  e1 = as(e1, "operation_sum")
+  e2 = as(e2, "operation_sum")
   new_operation_sum(c(e1, e2))
 })
 
-#' @rdname OperationSum-class
+#' @rdname operation_sum
 #' @export
-setMethod("+", signature(e1 = "Operation", e2 = "numeric"), function(e1, e2) {
+setMethod("+", signature(e1 = "operation", e2 = "numeric"), function(e1, e2) {
   e1 + e2 * nop()
 })
 
-#' @rdname OperationSum-class
+#' @rdname operation_sum
 #' @export
-setMethod("+", signature(e1 = "numeric", e2 = "Operation"), function(e1, e2) {
+setMethod("+", signature(e1 = "numeric", e2 = "operation"), function(e1, e2) {
   e1 * nop() + e2
 })
 
 
 # printing ----------------------------------------------------------------
 
-#' @rdname OperationSum-class
+#' @rdname operation_sum
 #' @export
-setMethod("format", signature(x = "OperationSum"), function(x, ...) {
+setMethod("format", signature(x = "operation_sum"), function(x, ...) {
   if (length(x) == 0) {
     "0"
+  } else if (length(x) == 1) {
+    format(x[[1]])
   } else {
-    paste(vapply(x, format, character(1)), collapse = " + ")
+    paste0("(", paste(vapply(x, format, character(1)), collapse = " + "), ")")
   }
 })

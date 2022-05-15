@@ -7,7 +7,7 @@ is_layer_instance = function(x) {
 }
 
 is_layer = function(x) {
-  inherits(x, c("LayerInstance", "LayerList")) ||
+  inherits(x, c("LayerInstance", "layer_list")) ||
     (is.list(x) && all(vapply(x, is_layer, logical(1))))
 }
 
@@ -35,10 +35,10 @@ as_layer.list = function(x) {
 }
 
 #' @export
-as_layer.LayerList = function(x) x
+as_layer.layer_list = function(x) x
 
 #' @export
-as_layer.LayerStack = function(x) x
+as_layer.layer_stack = function(x) x
 
 
 # layer manipulation ------------------------------------------------------
@@ -55,11 +55,11 @@ setGeneric("simplify_layers", function(layers, prototype) {
   layers
 })
 
-setMethod("simplify_layers", signature(prototype = "LayerStack"), function(layers, prototype) {
+setMethod("simplify_layers", signature(prototype = "layer_stack"), function(layers, prototype) {
   as_layer_stack(layers)
 })
 
-setMethod("simplify_layers", signature(layers = "list", prototype = "LayerList"), function(layers, prototype) {
+setMethod("simplify_layers", signature(layers = "list", prototype = "layer_list"), function(layers, prototype) {
   if (length(layers) == 1) {
     layers[[1]]
   } else {
