@@ -54,12 +54,5 @@ test_that("application of sums preserves structure of input", {
     input * (adjust(color = "red") + adjust(size = 2)),
     ref
   )
-
-  # should be the same if we pre-calculate the operation
-  op = force((adjust(color = "red") + adjust(size = 2)))
-  expect_equal_layer(
-    input * op,
-    ref
-  )
 })
 

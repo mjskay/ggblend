@@ -111,6 +111,8 @@ blend_layers = function(layers, blend = "over", alpha = alpha) {
 #' @param blend blend mode
 #' @noRd
 blend_layer = function(layer, blend = "over", alpha = 1) {
+  force(layer)
+
   ggproto(NULL, layer,
     draw_geom = function(self, data, layout) {
       if (is.null(data$blend_group)) {
@@ -143,16 +145,21 @@ blend_layer = function(layer, blend = "over", alpha = 1) {
 #' saves data for later drawing. Use `$ggblend__draw_geom_()` later to draw.
 #' @noRd
 hide_layer = function(layer) {
+  force(layer)
+  store = environment()
+
   ggproto("HiddenLayer", layer,
     # keep ggplot from drawing this layer normally, we will draw it later
     draw_geom = function(self, data, layout) {
-      self$ggblend__last_data_ = data
-      ggproto_parent(layer, self)$draw_geom(data[NULL,], layout)
+      store$last_grobs = ggproto_parent(layer, self)$draw_geom(data, layout)
+
+      # draw nothing here
+      rep(list(zeroGrob()), nrow(layout$layout))
     },
-    # function to actually draw the geom, using the data saved from the last
+    # function to actually draw the geom, using the grobs saved from the last
     # call to $draw_geom()
     ggblend__draw_geom_ = function(self, layout) {
-      ggproto_parent(layer, self)$draw_geom(self$ggblend__last_data_, layout)
+      store$last_grobs
     }
   )
 }
@@ -166,7 +173,11 @@ hide_layer = function(layer) {
 #' @return `blend` (invisibly)
 #' @noRd
 check_blend = function(blend) {
-  if (getOption("ggblend.check_blend", TRUE) && !isTRUE(blend %in% grDevices::dev.capabilities()$compositing)) {
+  if (
+    getOption("ggblend.check_blend", TRUE) &&
+    dev.cur() != 1 &&
+    !isTRUE(blend %in% grDevices::dev.capabilities()$compositing)
+  ) {
     warning0(
       'blend = ', deparse1(blend), ' does not appear to be supported by your graphics device.\n',
       ' - Blending output may not be as expected.\n',
