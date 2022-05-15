@@ -57,6 +57,8 @@ data.frame(
 
 Other Layer operations: 
 \code{\link{adjust}},
-\code{\link{copy}}
+\code{\link{blend}},
+\code{\link{copy}},
+\code{\link{partition}()}
 }
 \concept{Layer operations}

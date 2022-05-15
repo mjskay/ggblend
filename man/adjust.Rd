@@ -57,7 +57,9 @@ data.frame(
 \link{operation} for a description of \link{Layer} operations.
 
 Other Layer operations: 
+\code{\link{blend}},
 \code{\link{copy}},
-\code{\link{nop}}
+\code{\link{nop}},
+\code{\link{partition}()}
 }
 \concept{Layer operations}

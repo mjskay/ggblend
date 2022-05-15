@@ -5,14 +5,10 @@
 #' the built-in compositing support in graphical devices added in R 4.2.
 #'
 #' @param x One of:
-#'   - A `ggplot2::Layer`, such as a `geom` or `stat`, or a list of layers.
-#'   - A string (character vector of length 1) giving the name of a blend,
-#'     which takes the place of the `blend` argument.
-#'
-#'  If a layer is provided, this stack of blends is applied to it.
-#'  If a string is provided, this takes the place of the `blend` argument, and
-#'  a `"ggblend"` object is returned which can be applied using the
-#'  [`*.ggblend`] and [`^.ggblend`] operators.
+#'  - A [Layer]-like object: applies this operation to the layer.
+#'  - A missing argument: creates an [operation]
+#'  - A string (character vector of length 1) giving the name of a blend,
+#'    which takes the place of the `blend` argument.
 #' @param blend The blend mode to use. The default mode, `"over"`, corresponds to
 #'  the "usual" blend mode of drawing objects on top of each other.
 #'  The list of supported blend modes depends on your graphical device
@@ -32,7 +28,7 @@
 #'  it can be disabled by setting `options(ggblend.check_blend = FALSE)`.
 #' @param alpha A numeric between `0` and `1` (inclusive). The opacity of a
 #'  transparency mask applied to objects prior to blending.
-#' @param ... Additional arguments (currently unused).
+#' @template operation
 #'
 #' @details
 #' If `x` is a single layer / geometry and the `blend_group` aesthetic *is not* set, every
@@ -51,22 +47,14 @@
 #' will be applied to each layer as a whole (if `alpha != 1`), then these layers
 #' will be blended together using the `blend` blend mode.
 #'
-#' @return
-#' One of:
-#'
-#'  - An object that can be added to a [ggplot()] object: if the input is a `ggplot2::Layer`,
-#'    the result is a `ggplot2::Layer`; if the input is a list of `ggplot2::Layer`s,
-#'    the output is a list of `ggplot2::Layer`s.
-#'  - If the input is a string, a `"ggblend"` object, which can be combined with other `"ggblend"`
-#'    objects using [`^.ggblend`] or applied to a ggplot layer using [`*.ggblend`].
+#' If a `blend()` is multiplied by a list of layers using `*`, it acts on each
+#' layer individually (as if each layer were passed to `blend()`).
 #'
 #' @references
 #' Murrell, Paul (2021):
 #' [Groups, Compositing Operators, and Affine Transformations in R Graphics](https://www.stat.auckland.ac.nz/~paul/Reports/GraphicsEngine/groups/groups.html).
 #' The University of Auckland. Report.
 #' \doi{10.17608/k6.auckland.17009120.v1}.
-#'
-#' @family blending functions and operators
 #'
 #' @examples
 #' library(ggplot2)
