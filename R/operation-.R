@@ -26,7 +26,7 @@ make_operation = function(name, constructor, y) {
     y_string = as.character(y)
 
     bquote(
-      if (!missing(x)) {
+      if (not_missing_x) {
         if (!missing(.(y))) {
           stop0(
             "Cannot provide both the `x` and `", .(y_string),
@@ -39,8 +39,14 @@ make_operation = function(name, constructor, y) {
   }
 
   f_body = bquote(splice = TRUE, {
-    if (!missing(x) && is_layer(x)) {
-      x * .(.constructor)(..(constructor_args))
+    not_missing_x = !missing(x)
+    if (not_missing_x && is_layer(x)) {
+      operation = .(.constructor)(..(constructor_args))
+      layer = as_layer(x)
+      apply_composed_operation(operation, layer)
+    } else if (not_missing_x && is(x, "operation")) {
+      operation = .(.constructor)(..(constructor_args))
+      new_operation_composition(x, operation)
     } else {
       .(copy_x_to_y)
       .(.constructor)(..(constructor_args))
@@ -62,6 +68,10 @@ setAs("numeric", "operation", function(from) {
 
 setGeneric("apply_operation", function(operation, layers) {
   stop0("Unimplemented layer operation")
+})
+
+setGeneric("apply_composed_operation", function(operation, layers) {
+  apply_operation(operation, layers)
 })
 
 #' @rdname operation_product
