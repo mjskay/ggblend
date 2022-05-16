@@ -16,7 +16,13 @@
     <loc>http://mjskay.github.io/ggblend/index.html</loc>
   </url>
   <url>
+    <loc>http://mjskay.github.io/ggblend/reference/adjust.html</loc>
+  </url>
+  <url>
     <loc>http://mjskay.github.io/ggblend/reference/blend.html</loc>
+  </url>
+  <url>
+    <loc>http://mjskay.github.io/ggblend/reference/copy.html</loc>
   </url>
   <url>
     <loc>http://mjskay.github.io/ggblend/reference/ggblend-package.html</loc>
@@ -25,15 +31,27 @@
     <loc>http://mjskay.github.io/ggblend/reference/index.html</loc>
   </url>
   <url>
-    <loc>http://mjskay.github.io/ggblend/reference/pow-ggblend.html</loc>
+    <loc>http://mjskay.github.io/ggblend/reference/layer-like.html</loc>
   </url>
   <url>
-    <loc>http://mjskay.github.io/ggblend/reference/print.ggblend.html</loc>
+    <loc>http://mjskay.github.io/ggblend/reference/layer_list.html</loc>
   </url>
   <url>
-    <loc>http://mjskay.github.io/ggblend/reference/stack_blends.html</loc>
+    <loc>http://mjskay.github.io/ggblend/reference/nop.html</loc>
   </url>
   <url>
-    <loc>http://mjskay.github.io/ggblend/reference/times-ggblend.html</loc>
+    <loc>http://mjskay.github.io/ggblend/reference/operation-class.html</loc>
+  </url>
+  <url>
+    <loc>http://mjskay.github.io/ggblend/reference/operation_composition.html</loc>
+  </url>
+  <url>
+    <loc>http://mjskay.github.io/ggblend/reference/operation_product.html</loc>
+  </url>
+  <url>
+    <loc>http://mjskay.github.io/ggblend/reference/operation_sum.html</loc>
+  </url>
+  <url>
+    <loc>http://mjskay.github.io/ggblend/reference/partition.html</loc>
   </url>
 </urlset>

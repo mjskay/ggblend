@@ -4,14 +4,15 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="description" content='Support for compositing groups of data and geoms in ggplot2 using
+    blend modes like "multiply", "overlay", etc.'>
 <title>Blending and Compositing in ggplot2 • ggblend</title>
-<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="bootstrap-toc.css">
-<script src="bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
+<script src="deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link href="deps/bootstrap-5.1.0/bootstrap.min.css" rel="stylesheet">
+<script src="deps/bootstrap-5.1.0/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
-<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="pkgdown.css" rel="stylesheet">
-<script src="pkgdown.js"></script><meta property="og:title" content="Blending and Compositing in ggplot2">
+<!-- bootstrap-toc --><script src="https://cdn.rawgit.com/afeld/bootstrap-toc/v1.0.1/dist/bootstrap-toc.min.js"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Blending and Compositing in ggplot2">
 <meta property="og:description" content='Support for compositing groups of data and geoms in ggplot2 using
     blend modes like "multiply", "overlay", etc.'>
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
@@ -19,51 +20,46 @@
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
 </head>
-<body data-spy="scroll" data-target="#toc">
+<body>
+    <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
     
 
-    <div class="container template-home">
-      <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
-  <div class="container">
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <span class="navbar-brand">
-        <a class="navbar-link" href="index.html">ggblend</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.0.9000</span>
-      </span>
-    </div>
+    <nav class="navbar fixed-top navbar-light navbar-expand-lg bg-light"><div class="container">
+    
+    <a class="navbar-brand me-2" href="index.html">ggblend</a>
 
-    <div id="navbar" class="navbar-collapse collapse">
-      <ul class="nav navbar-nav">
-<li>
-  <a href="reference/index.html">Reference</a>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9000</small>
+
+    
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div id="navbar" class="collapse navbar-collapse ms-3">
+      <ul class="navbar-nav me-auto">
+<li class="nav-item">
+  <a class="nav-link" href="reference/index.html">Reference</a>
 </li>
       </ul>
-<ul class="nav navbar-nav navbar-right">
-<li>
-  <a href="https://github.com/mjskay/ggblend/" class="external-link">
-    <span class="fab fa-github fa-lg"></span>
+<form class="form-inline my-2 my-lg-0" role="search">
+        <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="search.json" id="search-input" placeholder="Search for" autocomplete="off">
+</form>
+
+      <ul class="navbar-nav">
+<li class="nav-item">
+  <a class="external-link nav-link" href="https://github.com/mjskay/ggblend/" aria-label="github">
+    <span class="fab fa fab fa-github fa-lg"></span>
      
   </a>
 </li>
       </ul>
 </div>
-<!--/.nav-collapse -->
+
+    
   </div>
-<!--/.container -->
-</div>
-<!--/.navbar -->
-
-      
-
-      </header><div class="row">
-  <div class="contents col-md-9">
-<div class="section level1">
+</nav><div class="container template-home">
+<div class="row">
+  <main id="main" class="col-md-9"><div class="section level1">
 <div class="page-header"><h1 id="ggblend">ggblend<a class="anchor" aria-label="anchor" href="#ggblend"></a>
 </h1></div>
 <!-- badges: start -->
@@ -104,7 +100,7 @@
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_grid.html" class="external-link">facet_grid</a></span><span class="op">(</span><span class="op">~</span> <span class="va">order</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="st">"Scatterplot without blending: draw order matters"</span><span class="op">)</span></code></pre></div>
 <p><img src="reference/figures/README-scatter_noblend-1.png" width="672"></p>
-<p>A <em>commutative</em> blend mode, like <code>"multiply"</code> or <code>"darken"</code>, is one potential solution that does not depend on drawing order. We can wrap <code><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point()</a></code> in a call to <code><a href="reference/blend.html">blend()</a></code> to achieve this, there are currently three approaches:</p>
+<p>A <em>commutative</em> blend mode, like <code>"multiply"</code> or <code>"darken"</code>, is one potential solution that does not depend on drawing order. We can apply a <code><a href="reference/blend.html">blend()</a></code> operation to geom_point()` to achieve this. There three ways to do this:</p>
 <ul>
 <li>
 <code>blend(geom_point(...), "darken")</code> (normal function application)</li>
@@ -113,6 +109,7 @@
 <li>
 <code>geom_point(...) * blend("darken")</code> (algebraic operations)</li>
 </ul>
+<p>Function application and piping are equivalent. <strong>In this case</strong>, all three approaches are equivalent. As we will see later, the multiplication approach is useful when we want a shorthand for applying the same operation to multiple layers in a list without combining those layers first (in other words, multiplication of operations over layers is <em>distributive</em> in an algebraic sense).</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">df</span> |&gt;
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, color <span class="op">=</span> <span class="va">set</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
@@ -130,7 +127,7 @@
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">df</span> |&gt;
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, color <span class="op">=</span> <span class="va">set</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">3</span><span class="op">)</span> |&gt; <span class="fu"><a href="reference/blend.html">blend</a></span><span class="op">(</span><span class="st">"multiply"</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">3</span><span class="op">)</span> <span class="op">*</span> <span class="fu"><a href="reference/blend.html">blend</a></span><span class="op">(</span><span class="st">"multiply"</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_color_brewer</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Set2"</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_grid.html" class="external-link">facet_grid</a></span><span class="op">(</span><span class="op">~</span> <span class="va">order</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="st">"Scatterplot with blend('multiply'): a little too dark"</span><span class="op">)</span></code></pre></div>
@@ -139,32 +136,57 @@
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">df</span> |&gt;
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, color <span class="op">=</span> <span class="va">set</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">3</span><span class="op">)</span> |&gt; <span class="fu"><a href="reference/blend.html">blend</a></span><span class="op">(</span><span class="st">"lighten"</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">3</span><span class="op">)</span> |&gt; <span class="fu"><a href="reference/blend.html">blend</a></span><span class="op">(</span><span class="st">"multiply"</span>, alpha <span class="op">=</span> <span class="fl">0.65</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">3</span><span class="op">)</span> <span class="op">*</span> <span class="fu"><a href="reference/blend.html">blend</a></span><span class="op">(</span><span class="st">"lighten"</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">3</span><span class="op">)</span> <span class="op">*</span> <span class="fu"><a href="reference/blend.html">blend</a></span><span class="op">(</span><span class="st">"multiply"</span>, alpha <span class="op">=</span> <span class="fl">0.65</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_color_brewer</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Set2"</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_grid.html" class="external-link">facet_grid</a></span><span class="op">(</span><span class="op">~</span> <span class="va">order</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="st">"Scatterplot with blend('lighten') and blend('multiply', alpha = 0.65)"</span><span class="op">)</span></code></pre></div>
 <p><img src="reference/figures/README-scatter_lighten_multiply-1.png" width="672"></p>
 <p>Now it’s a little easier to see both overlap and density, and the output remains independent of draw order.</p>
-<p>Since this pattern may be useful in general, the <code><a href="reference/stack_blends.html">stack_blends()</a></code> function implements it: you pass it a layer and a sequence of lists of arguments for <code><a href="reference/blend.html">blend()</a></code>; <code><a href="reference/stack_blends.html">stack_blends()</a></code> duplicates the layer, applying <code><a href="reference/blend.html">blend()</a></code> with the provided arguments to each duplicated layer separately, then stacks them together. Thus the previous example can be written like so:</p>
+<p>It is a little verbose to need to copy out a layer multiple times, as in:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">3</span><span class="op">)</span> <span class="op">*</span> <span class="fu"><a href="reference/blend.html">blend</a></span><span class="op">(</span><span class="st">"lighten"</span><span class="op">)</span> <span class="op">+</span>
+<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">3</span><span class="op">)</span> <span class="op">*</span> <span class="fu"><a href="reference/blend.html">blend</a></span><span class="op">(</span><span class="st">"multiply"</span>, alpha <span class="op">=</span> <span class="fl">0.65</span><span class="op">)</span></code></pre></div>
+<p>Operations and layers in <em>ggblend</em> act as a small algebra. Operations and sums of operations can be multiplied by layers and lists of layers, and those operations are distributed over the layers (This is where <code>*</code> and <code>|&gt;</code> differ: <code>|&gt;</code> does not distribute operations like <code><a href="reference/blend.html">blend()</a></code> over layers, which is useful if you want to use a blend to combine multiple layers together, rather than applying that blend to each layer individually).</p>
+<p>For example, we can “factor out” the <code>geom_point(size = 3)</code> layer from the above expression, yielding this:</p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">3</span><span class="op">)</span> <span class="op">*</span> <span class="op">(</span><span class="fu"><a href="reference/blend.html">blend</a></span><span class="op">(</span><span class="st">"lighten"</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="reference/blend.html">blend</a></span><span class="op">(</span><span class="st">"multiply"</span>, alpha <span class="op">=</span> <span class="fl">0.65</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<p>Both expressions are equivalent. Thus we can rewrite the previous example like so:</p>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">df</span> |&gt;
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, color <span class="op">=</span> <span class="va">set</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">3</span><span class="op">)</span> |&gt; <span class="fu"><a href="reference/stack_blends.html">stack_blends</a></span><span class="op">(</span><span class="st">"lighten"</span>, <span class="fu"><a href="reference/blend.html">blend</a></span><span class="op">(</span><span class="st">"multiply"</span>, alpha <span class="op">=</span> <span class="fl">0.65</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">3</span><span class="op">)</span> <span class="op">*</span> <span class="op">(</span><span class="fu"><a href="reference/blend.html">blend</a></span><span class="op">(</span><span class="st">"lighten"</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="reference/blend.html">blend</a></span><span class="op">(</span><span class="st">"multiply"</span>, alpha <span class="op">=</span> <span class="fl">0.65</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_color_brewer</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Set2"</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_grid.html" class="external-link">facet_grid</a></span><span class="op">(</span><span class="op">~</span> <span class="va">order</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="st">"Scatterplot with stack_blends('lighten', list('multiply', alpha = 0.65))"</span><span class="op">)</span></code></pre></div>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="st">"Scatterplot with blend('lighten') + blend('multiply', alpha = 0.65)"</span><span class="op">)</span></code></pre></div>
 <p><img src="reference/figures/README-scatter_lighten_multiply_stacked-1.png" width="672"></p>
 </div>
 <div class="section level2">
 <h2 id="blending-multiple-geometries">Blending multiple geometries<a class="anchor" aria-label="anchor" href="#blending-multiple-geometries"></a>
 </h2>
 <p>We can also blend geometries together by passing a list of geometries to <code><a href="reference/blend.html">blend()</a></code>. These lists can include already-blended geometries:</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">df</span> |&gt;
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, color <span class="op">=</span> <span class="va">set</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>
-    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">3</span><span class="op">)</span> |&gt; <span class="fu"><a href="reference/stack_blends.html">stack_blends</a></span><span class="op">(</span><span class="st">"lighten"</span>, <span class="fu"><a href="reference/blend.html">blend</a></span><span class="op">(</span><span class="st">"multiply"</span>, alpha <span class="op">=</span> <span class="fl">0.65</span><span class="op">)</span><span class="op">)</span>,
+    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">3</span><span class="op">)</span> <span class="op">*</span> <span class="op">(</span><span class="fu"><a href="reference/blend.html">blend</a></span><span class="op">(</span><span class="st">"lighten"</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="reference/blend.html">blend</a></span><span class="op">(</span><span class="st">"multiply"</span>, alpha <span class="op">=</span> <span class="fl">0.65</span><span class="op">)</span><span class="op">)</span>,
+    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html" class="external-link">geom_vline</a></span><span class="op">(</span>xintercept <span class="op">=</span> <span class="fl">0</span>, color <span class="op">=</span> <span class="st">"gray75"</span>, size <span class="op">=</span> <span class="fl">1.5</span><span class="op">)</span>,
+    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html" class="external-link">geom_hline</a></span><span class="op">(</span>yintercept <span class="op">=</span> <span class="fl">0</span>, color <span class="op">=</span> <span class="st">"gray75"</span>, size <span class="op">=</span> <span class="fl">1.5</span><span class="op">)</span>
+  <span class="op">)</span> |&gt; <span class="fu"><a href="reference/blend.html">blend</a></span><span class="op">(</span><span class="st">"hard.light"</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_color_brewer</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Set2"</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_grid.html" class="external-link">facet_grid</a></span><span class="op">(</span><span class="op">~</span> <span class="va">order</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"Blending multiple geometries together"</span><span class="op">)</span></code></pre></div>
+<p><img src="reference/figures/README-scatter_blend_geom_incorrect-1.png" width="672"></p>
+<p>Whoops!! If you look closely, the blending of the <code><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point()</a></code> layers appears to have changed. Recall that this expression:</p>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">3</span><span class="op">)</span> <span class="op">*</span> <span class="op">(</span><span class="fu"><a href="reference/blend.html">blend</a></span><span class="op">(</span><span class="st">"lighten"</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="reference/blend.html">blend</a></span><span class="op">(</span><span class="st">"multiply"</span>, alpha <span class="op">=</span> <span class="fl">0.65</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<p>Is equivalent to specifying two separate layers, one with <code>blend("lighten")</code> and the other with <code>blend("multiply", alpha = 0.65))</code>. Thus, when you apply <code>|&gt; blend("hard.light")</code> to the <code><a href="https://rdrr.io/r/base/list.html" class="external-link">list()</a></code> of layers, it will use a hard light blend mode to blend these two layers together, when previously they would be blended using the normal (or <code>"over"</code>) blend mode.</p>
+<p>We can gain back the original appearance by blending these two layers together with <code>|&gt; blend()</code> prior to applying the hard light blend:</p>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">df</span> |&gt;
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, color <span class="op">=</span> <span class="va">set</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>
+    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">3</span><span class="op">)</span> <span class="op">*</span> <span class="op">(</span><span class="fu"><a href="reference/blend.html">blend</a></span><span class="op">(</span><span class="st">"lighten"</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="reference/blend.html">blend</a></span><span class="op">(</span><span class="st">"multiply"</span>, alpha <span class="op">=</span> <span class="fl">0.65</span><span class="op">)</span><span class="op">)</span> |&gt; <span class="fu"><a href="reference/blend.html">blend</a></span><span class="op">(</span><span class="op">)</span>,
     <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html" class="external-link">geom_vline</a></span><span class="op">(</span>xintercept <span class="op">=</span> <span class="fl">0</span>, color <span class="op">=</span> <span class="st">"gray75"</span>, size <span class="op">=</span> <span class="fl">1.5</span><span class="op">)</span>,
     <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html" class="external-link">geom_hline</a></span><span class="op">(</span>yintercept <span class="op">=</span> <span class="fl">0</span>, color <span class="op">=</span> <span class="st">"gray75"</span>, size <span class="op">=</span> <span class="fl">1.5</span><span class="op">)</span>
   <span class="op">)</span> |&gt; <span class="fu"><a href="reference/blend.html">blend</a></span><span class="op">(</span><span class="st">"hard.light"</span><span class="op">)</span> <span class="op">+</span>
@@ -174,31 +196,14 @@
 <p><img src="reference/figures/README-scatter_blend_geom-1.png" width="672"></p>
 </div>
 <div class="section level2">
-<h2 id="algebraic-syntax">Algebraic syntax<a class="anchor" aria-label="anchor" href="#algebraic-syntax"></a>
-</h2>
-<p>An experimental algebraic syntax for combining and applying blends replaces the function application <code>|&gt;</code> with <code>*</code> and stacking blends with <code>^</code>. For example:</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">df</span> |&gt;
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, color <span class="op">=</span> <span class="va">set</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>
-    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">3</span><span class="op">)</span> <span class="op">*</span> <span class="fu"><a href="reference/blend.html">blend</a></span><span class="op">(</span><span class="st">"lighten"</span><span class="op">)</span> <span class="op">^</span> <span class="fu"><a href="reference/blend.html">blend</a></span><span class="op">(</span><span class="st">"multiply"</span>, alpha <span class="op">=</span> <span class="fl">0.65</span><span class="op">)</span>,
-    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html" class="external-link">geom_vline</a></span><span class="op">(</span>xintercept <span class="op">=</span> <span class="fl">0</span>, color <span class="op">=</span> <span class="st">"gray75"</span>, size <span class="op">=</span> <span class="fl">1.5</span><span class="op">)</span>,
-    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html" class="external-link">geom_hline</a></span><span class="op">(</span>yintercept <span class="op">=</span> <span class="fl">0</span>, color <span class="op">=</span> <span class="st">"gray75"</span>, size <span class="op">=</span> <span class="fl">1.5</span><span class="op">)</span>
-  <span class="op">)</span> <span class="op">*</span> <span class="fu"><a href="reference/blend.html">blend</a></span><span class="op">(</span><span class="st">"hard.light"</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_color_brewer</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Set2"</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_grid.html" class="external-link">facet_grid</a></span><span class="op">(</span><span class="op">~</span> <span class="va">order</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"Blending multiple geometries together, algebraically"</span><span class="op">)</span></code></pre></div>
-<p><img src="reference/figures/README-scatter_blend_algebraic-1.png" width="672"></p>
-</div>
-<div class="section level2">
 <h2 id="blending-groups-within-one-geometry">Blending groups within one geometry<a class="anchor" aria-label="anchor" href="#blending-groups-within-one-geometry"></a>
 </h2>
 <p>Sometimes it’s useful to have finer-grained control of blending within a given geometry. Here, we’ll show how to use <code><a href="reference/blend.html">blend()</a></code> with <code>stat_lineribbon()</code> from <a href="https://mjskay.github.io/ggdist/" class="external-link">ggdist</a> to create overlapping gradient ribbons depicting uncertainty.</p>
 <p>We’ll fit a model:</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">m_mpg</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">mpg</span> <span class="op">~</span> <span class="va">hp</span> <span class="op">*</span> <span class="va">cyl</span>, data <span class="op">=</span> <span class="va">mtcars</span><span class="op">)</span></code></pre></div>
 <p>And generate some confidence distributions for the mean using <a href="https://pkg.mitchelloharawild.com/distributional/" class="external-link">distributional</a>:</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">grid</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">[</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"cyl"</span>, <span class="st">"hp"</span><span class="op">)</span><span class="op">]</span><span class="op">)</span>
 
 <span class="va">predictions</span> <span class="op">=</span> <span class="va">grid</span> |&gt;
@@ -206,56 +211,56 @@
   <span class="fu"><a href="https://rdrr.io/r/base/transform.html" class="external-link">transform</a></span><span class="op">(</span>mu_hat <span class="op">=</span> <span class="fu">distributional</span><span class="fu">::</span><span class="fu">dist_student_t</span><span class="op">(</span>df <span class="op">=</span> <span class="va">df</span>, mu <span class="op">=</span> <span class="va">fit</span>, sigma <span class="op">=</span> <span class="va">se.fit</span><span class="op">)</span><span class="op">)</span>
 
 <span class="va">predictions</span></code></pre></div>
-<div class="sourceCode" id="cb12"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a><span class="co">##                     cyl  hp      fit    se.fit df residual.scale</span></span>
-<span id="cb12-2"><a href="#cb12-2"></a><span class="co">## Mazda RX4             6 110 20.28825 0.7984429 28       2.973694</span></span>
-<span id="cb12-3"><a href="#cb12-3"></a><span class="co">## Datsun 710            4  93 25.74371 0.8818612 28       2.973694</span></span>
-<span id="cb12-4"><a href="#cb12-4"></a><span class="co">## Hornet Sportabout     8 175 15.56144 0.8638133 28       2.973694</span></span>
-<span id="cb12-5"><a href="#cb12-5"></a><span class="co">## Valiant               6 105 20.54952 0.8045354 28       2.973694</span></span>
-<span id="cb12-6"><a href="#cb12-6"></a><span class="co">## Duster 360            8 245 14.66678 0.9773475 28       2.973694</span></span>
-<span id="cb12-7"><a href="#cb12-7"></a><span class="co">## Merc 240D             4  62 28.58736 1.2184598 28       2.973694</span></span>
-<span id="cb12-8"><a href="#cb12-8"></a><span class="co">## Merc 230              4  95 25.56025 0.9024699 28       2.973694</span></span>
-<span id="cb12-9"><a href="#cb12-9"></a><span class="co">## Merc 280              6 123 19.60892 0.8423540 28       2.973694</span></span>
-<span id="cb12-10"><a href="#cb12-10"></a><span class="co">## Merc 450SE            8 180 15.49754 0.8332276 28       2.973694</span></span>
-<span id="cb12-11"><a href="#cb12-11"></a><span class="co">## Cadillac Fleetwood    8 205 15.17801 0.7674501 28       2.973694</span></span>
-<span id="cb12-12"><a href="#cb12-12"></a><span class="co">## Lincoln Continental   8 215 15.05021 0.7866649 28       2.973694</span></span>
-<span id="cb12-13"><a href="#cb12-13"></a><span class="co">## Chrysler Imperial     8 230 14.85849 0.8606705 28       2.973694</span></span>
-<span id="cb12-14"><a href="#cb12-14"></a><span class="co">## Fiat 128              4  66 28.22044 1.1218796 28       2.973694</span></span>
-<span id="cb12-15"><a href="#cb12-15"></a><span class="co">## Honda Civic           4  52 29.50466 1.4914670 28       2.973694</span></span>
-<span id="cb12-16"><a href="#cb12-16"></a><span class="co">## Toyota Corolla        4  65 28.31217 1.1451536 28       2.973694</span></span>
-<span id="cb12-17"><a href="#cb12-17"></a><span class="co">## Toyota Corona         4  97 25.37679 0.9280143 28       2.973694</span></span>
-<span id="cb12-18"><a href="#cb12-18"></a><span class="co">## Dodge Challenger      8 150 15.88096 1.0770037 28       2.973694</span></span>
-<span id="cb12-19"><a href="#cb12-19"></a><span class="co">## Porsche 914-2         4  91 25.92718 0.8665404 28       2.973694</span></span>
-<span id="cb12-20"><a href="#cb12-20"></a><span class="co">## Lotus Europa          4 113 23.90910 1.2628426 28       2.973694</span></span>
-<span id="cb12-21"><a href="#cb12-21"></a><span class="co">## Ford Pantera L        8 264 14.42394 1.1660619 28       2.973694</span></span>
-<span id="cb12-22"><a href="#cb12-22"></a><span class="co">## Ferrari Dino          6 175 16.89163 1.5508852 28       2.973694</span></span>
-<span id="cb12-23"><a href="#cb12-23"></a><span class="co">## Maserati Bora         8 335 13.51650 2.0458075 28       2.973694</span></span>
-<span id="cb12-24"><a href="#cb12-24"></a><span class="co">## Volvo 142E            4 109 24.27603 1.1625257 28       2.973694</span></span>
-<span id="cb12-25"><a href="#cb12-25"></a><span class="co">##                                         mu_hat</span></span>
-<span id="cb12-26"><a href="#cb12-26"></a><span class="co">## Mazda RX4           t(28, 20.28825, 0.7984429)</span></span>
-<span id="cb12-27"><a href="#cb12-27"></a><span class="co">## Datsun 710          t(28, 25.74371, 0.8818612)</span></span>
-<span id="cb12-28"><a href="#cb12-28"></a><span class="co">## Hornet Sportabout   t(28, 15.56144, 0.8638133)</span></span>
-<span id="cb12-29"><a href="#cb12-29"></a><span class="co">## Valiant             t(28, 20.54952, 0.8045354)</span></span>
-<span id="cb12-30"><a href="#cb12-30"></a><span class="co">## Duster 360          t(28, 14.66678, 0.9773475)</span></span>
-<span id="cb12-31"><a href="#cb12-31"></a><span class="co">## Merc 240D             t(28, 28.58736, 1.21846)</span></span>
-<span id="cb12-32"><a href="#cb12-32"></a><span class="co">## Merc 230            t(28, 25.56025, 0.9024699)</span></span>
-<span id="cb12-33"><a href="#cb12-33"></a><span class="co">## Merc 280             t(28, 19.60892, 0.842354)</span></span>
-<span id="cb12-34"><a href="#cb12-34"></a><span class="co">## Merc 450SE          t(28, 15.49754, 0.8332276)</span></span>
-<span id="cb12-35"><a href="#cb12-35"></a><span class="co">## Cadillac Fleetwood  t(28, 15.17801, 0.7674501)</span></span>
-<span id="cb12-36"><a href="#cb12-36"></a><span class="co">## Lincoln Continental t(28, 15.05021, 0.7866649)</span></span>
-<span id="cb12-37"><a href="#cb12-37"></a><span class="co">## Chrysler Imperial   t(28, 14.85849, 0.8606705)</span></span>
-<span id="cb12-38"><a href="#cb12-38"></a><span class="co">## Fiat 128              t(28, 28.22044, 1.12188)</span></span>
-<span id="cb12-39"><a href="#cb12-39"></a><span class="co">## Honda Civic          t(28, 29.50466, 1.491467)</span></span>
-<span id="cb12-40"><a href="#cb12-40"></a><span class="co">## Toyota Corolla       t(28, 28.31217, 1.145154)</span></span>
-<span id="cb12-41"><a href="#cb12-41"></a><span class="co">## Toyota Corona       t(28, 25.37679, 0.9280143)</span></span>
-<span id="cb12-42"><a href="#cb12-42"></a><span class="co">## Dodge Challenger     t(28, 15.88096, 1.077004)</span></span>
-<span id="cb12-43"><a href="#cb12-43"></a><span class="co">## Porsche 914-2       t(28, 25.92718, 0.8665404)</span></span>
-<span id="cb12-44"><a href="#cb12-44"></a><span class="co">## Lotus Europa          t(28, 23.9091, 1.262843)</span></span>
-<span id="cb12-45"><a href="#cb12-45"></a><span class="co">## Ford Pantera L       t(28, 14.42394, 1.166062)</span></span>
-<span id="cb12-46"><a href="#cb12-46"></a><span class="co">## Ferrari Dino         t(28, 16.89163, 1.550885)</span></span>
-<span id="cb12-47"><a href="#cb12-47"></a><span class="co">## Maserati Bora         t(28, 13.5165, 2.045807)</span></span>
-<span id="cb12-48"><a href="#cb12-48"></a><span class="co">## Volvo 142E           t(28, 24.27603, 1.162526)</span></span></code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1"></a><span class="co">##                     cyl  hp      fit    se.fit df residual.scale</span></span>
+<span id="cb15-2"><a href="#cb15-2"></a><span class="co">## Mazda RX4             6 110 20.28825 0.7984429 28       2.973694</span></span>
+<span id="cb15-3"><a href="#cb15-3"></a><span class="co">## Datsun 710            4  93 25.74371 0.8818612 28       2.973694</span></span>
+<span id="cb15-4"><a href="#cb15-4"></a><span class="co">## Hornet Sportabout     8 175 15.56144 0.8638133 28       2.973694</span></span>
+<span id="cb15-5"><a href="#cb15-5"></a><span class="co">## Valiant               6 105 20.54952 0.8045354 28       2.973694</span></span>
+<span id="cb15-6"><a href="#cb15-6"></a><span class="co">## Duster 360            8 245 14.66678 0.9773475 28       2.973694</span></span>
+<span id="cb15-7"><a href="#cb15-7"></a><span class="co">## Merc 240D             4  62 28.58736 1.2184598 28       2.973694</span></span>
+<span id="cb15-8"><a href="#cb15-8"></a><span class="co">## Merc 230              4  95 25.56025 0.9024699 28       2.973694</span></span>
+<span id="cb15-9"><a href="#cb15-9"></a><span class="co">## Merc 280              6 123 19.60892 0.8423540 28       2.973694</span></span>
+<span id="cb15-10"><a href="#cb15-10"></a><span class="co">## Merc 450SE            8 180 15.49754 0.8332276 28       2.973694</span></span>
+<span id="cb15-11"><a href="#cb15-11"></a><span class="co">## Cadillac Fleetwood    8 205 15.17801 0.7674501 28       2.973694</span></span>
+<span id="cb15-12"><a href="#cb15-12"></a><span class="co">## Lincoln Continental   8 215 15.05021 0.7866649 28       2.973694</span></span>
+<span id="cb15-13"><a href="#cb15-13"></a><span class="co">## Chrysler Imperial     8 230 14.85849 0.8606705 28       2.973694</span></span>
+<span id="cb15-14"><a href="#cb15-14"></a><span class="co">## Fiat 128              4  66 28.22044 1.1218796 28       2.973694</span></span>
+<span id="cb15-15"><a href="#cb15-15"></a><span class="co">## Honda Civic           4  52 29.50466 1.4914670 28       2.973694</span></span>
+<span id="cb15-16"><a href="#cb15-16"></a><span class="co">## Toyota Corolla        4  65 28.31217 1.1451536 28       2.973694</span></span>
+<span id="cb15-17"><a href="#cb15-17"></a><span class="co">## Toyota Corona         4  97 25.37679 0.9280143 28       2.973694</span></span>
+<span id="cb15-18"><a href="#cb15-18"></a><span class="co">## Dodge Challenger      8 150 15.88096 1.0770037 28       2.973694</span></span>
+<span id="cb15-19"><a href="#cb15-19"></a><span class="co">## Porsche 914-2         4  91 25.92718 0.8665404 28       2.973694</span></span>
+<span id="cb15-20"><a href="#cb15-20"></a><span class="co">## Lotus Europa          4 113 23.90910 1.2628426 28       2.973694</span></span>
+<span id="cb15-21"><a href="#cb15-21"></a><span class="co">## Ford Pantera L        8 264 14.42394 1.1660619 28       2.973694</span></span>
+<span id="cb15-22"><a href="#cb15-22"></a><span class="co">## Ferrari Dino          6 175 16.89163 1.5508852 28       2.973694</span></span>
+<span id="cb15-23"><a href="#cb15-23"></a><span class="co">## Maserati Bora         8 335 13.51650 2.0458075 28       2.973694</span></span>
+<span id="cb15-24"><a href="#cb15-24"></a><span class="co">## Volvo 142E            4 109 24.27603 1.1625257 28       2.973694</span></span>
+<span id="cb15-25"><a href="#cb15-25"></a><span class="co">##                                         mu_hat</span></span>
+<span id="cb15-26"><a href="#cb15-26"></a><span class="co">## Mazda RX4           t(28, 20.28825, 0.7984429)</span></span>
+<span id="cb15-27"><a href="#cb15-27"></a><span class="co">## Datsun 710          t(28, 25.74371, 0.8818612)</span></span>
+<span id="cb15-28"><a href="#cb15-28"></a><span class="co">## Hornet Sportabout   t(28, 15.56144, 0.8638133)</span></span>
+<span id="cb15-29"><a href="#cb15-29"></a><span class="co">## Valiant             t(28, 20.54952, 0.8045354)</span></span>
+<span id="cb15-30"><a href="#cb15-30"></a><span class="co">## Duster 360          t(28, 14.66678, 0.9773475)</span></span>
+<span id="cb15-31"><a href="#cb15-31"></a><span class="co">## Merc 240D             t(28, 28.58736, 1.21846)</span></span>
+<span id="cb15-32"><a href="#cb15-32"></a><span class="co">## Merc 230            t(28, 25.56025, 0.9024699)</span></span>
+<span id="cb15-33"><a href="#cb15-33"></a><span class="co">## Merc 280             t(28, 19.60892, 0.842354)</span></span>
+<span id="cb15-34"><a href="#cb15-34"></a><span class="co">## Merc 450SE          t(28, 15.49754, 0.8332276)</span></span>
+<span id="cb15-35"><a href="#cb15-35"></a><span class="co">## Cadillac Fleetwood  t(28, 15.17801, 0.7674501)</span></span>
+<span id="cb15-36"><a href="#cb15-36"></a><span class="co">## Lincoln Continental t(28, 15.05021, 0.7866649)</span></span>
+<span id="cb15-37"><a href="#cb15-37"></a><span class="co">## Chrysler Imperial   t(28, 14.85849, 0.8606705)</span></span>
+<span id="cb15-38"><a href="#cb15-38"></a><span class="co">## Fiat 128              t(28, 28.22044, 1.12188)</span></span>
+<span id="cb15-39"><a href="#cb15-39"></a><span class="co">## Honda Civic          t(28, 29.50466, 1.491467)</span></span>
+<span id="cb15-40"><a href="#cb15-40"></a><span class="co">## Toyota Corolla       t(28, 28.31217, 1.145154)</span></span>
+<span id="cb15-41"><a href="#cb15-41"></a><span class="co">## Toyota Corona       t(28, 25.37679, 0.9280143)</span></span>
+<span id="cb15-42"><a href="#cb15-42"></a><span class="co">## Dodge Challenger     t(28, 15.88096, 1.077004)</span></span>
+<span id="cb15-43"><a href="#cb15-43"></a><span class="co">## Porsche 914-2       t(28, 25.92718, 0.8665404)</span></span>
+<span id="cb15-44"><a href="#cb15-44"></a><span class="co">## Lotus Europa          t(28, 23.9091, 1.262843)</span></span>
+<span id="cb15-45"><a href="#cb15-45"></a><span class="co">## Ford Pantera L       t(28, 14.42394, 1.166062)</span></span>
+<span id="cb15-46"><a href="#cb15-46"></a><span class="co">## Ferrari Dino         t(28, 16.89163, 1.550885)</span></span>
+<span id="cb15-47"><a href="#cb15-47"></a><span class="co">## Maserati Bora         t(28, 13.5165, 2.045807)</span></span>
+<span id="cb15-48"><a href="#cb15-48"></a><span class="co">## Volvo 142E           t(28, 24.27603, 1.162526)</span></span></code></pre></div>
 <p>A basic plot based on examples in <code><a href="http://mjskay.github.io/ggdist/articles/freq-uncertainty-vis.html" class="external-link">vignette("freq-uncertainty-vis", package = "ggdist")</a></code> and <code><a href="http://mjskay.github.io/ggdist/articles/lineribbon.html" class="external-link">vignette("lineribbon", package = "ggdist")</a></code> may have issues when lineribbons overlap:</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">predictions</span> |&gt;
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">hp</span>, fill <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">ordered</a></span><span class="op">(</span><span class="va">cyl</span><span class="op">)</span>, color <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">ordered</a></span><span class="op">(</span><span class="va">cyl</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu">ggdist</span><span class="fu">::</span><span class="fu">stat_lineribbon</span><span class="op">(</span>
@@ -273,20 +278,28 @@
   <span class="fu">ggdist</span><span class="fu">::</span><span class="fu">theme_ggdist</span><span class="op">(</span><span class="op">)</span></code></pre></div>
 <p><img src="reference/figures/README-lineribbon_noblend-1.png" width="672"></p>
 <p>Notice the overlap of the orange (<code>cyl = 6</code>) and purple (<code>cyl = 8</code>) lines.</p>
-<p>If we add a <code>blend_group = cyl</code> aesthetic mapping, we can blend the geometries for the different levels of <code>cyl</code> together with a <code><a href="reference/blend.html">blend()</a></code> call around <code>ggdist::stat_lineribbon()</code>:</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<p>If we add a <code>partition = cyl</code> aesthetic mapping, we can blend the geometries for the different levels of <code>cyl</code> together with a <code><a href="reference/blend.html">blend()</a></code> call around <code>ggdist::stat_lineribbon()</code>.</p>
+<p>There are many ways we could add the partition to the plot:</p>
+<ol style="list-style-type: decimal">
+<li>Add <code>partition = cyl</code> to the existing <code>aes(...)</code> call. However, this leaves the partitioning information far from the call to <code><a href="reference/blend.html">blend()</a></code>, so the relationship between them is less clear.</li>
+<li>Add <code>aes(partition = cyl)</code> to the <code>stat_lineribbon(...)</code> call. This is a more localized change (better!), but will raise a warning if <code>stat_lineribbon()</code> itself does not recognized the <code>partition</code> aesthetic.</li>
+<li>Add <code>|&gt; adjust(aes(partition = cyl))</code> after <code>stat_lineribbon(...)</code> to add the <code>partition</code> aesthetic to it (this will bypass the warning).</li>
+<li>Add <code>|&gt; partition(vars(cyl))</code> after <code>stat_lineribbon(...)</code> to add the <code>partition</code> aesthetic. This is an alias for the <code><a href="reference/adjust.html">adjust()</a></code> approach that is intended to be clearer. It takes a specification for a partition that is similar to <code><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html" class="external-link">facet_wrap()</a></code>: either a one-sided formula or a call to <code><a href="https://ggplot2.tidyverse.org/reference/vars.html" class="external-link">vars()</a></code>.</li>
+</ol>
+<p>Let’s try the fourth approach:</p>
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">predictions</span> |&gt;
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">hp</span>, fill <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">ordered</a></span><span class="op">(</span><span class="va">cyl</span><span class="op">)</span>, color <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">ordered</a></span><span class="op">(</span><span class="va">cyl</span><span class="op">)</span>, blend_group <span class="op">=</span> <span class="va">cyl</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">hp</span>, fill <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">ordered</a></span><span class="op">(</span><span class="va">cyl</span><span class="op">)</span>, color <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">ordered</a></span><span class="op">(</span><span class="va">cyl</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu">ggdist</span><span class="fu">::</span><span class="fu">stat_lineribbon</span><span class="op">(</span>
     <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>ydist <span class="op">=</span> <span class="va">mu_hat</span>, fill_ramp <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes_eval.html" class="external-link">stat</a></span><span class="op">(</span><span class="va">.width</span><span class="op">)</span><span class="op">)</span>,
     .width <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/ppoints.html" class="external-link">ppoints</a></span><span class="op">(</span><span class="fl">40</span><span class="op">)</span>
-  <span class="op">)</span> |&gt; <span class="fu"><a href="reference/blend.html">blend</a></span><span class="op">(</span><span class="st">"multiply"</span><span class="op">)</span> <span class="op">+</span>
+  <span class="op">)</span> |&gt; <span class="fu"><a href="reference/partition.html">partition</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/vars.html" class="external-link">vars</a></span><span class="op">(</span><span class="va">cyl</span><span class="op">)</span><span class="op">)</span> |&gt; <span class="fu"><a href="reference/blend.html">blend</a></span><span class="op">(</span><span class="st">"multiply"</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">mpg</span><span class="op">)</span>, data <span class="op">=</span> <span class="va">mtcars</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_fill_brewer</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Set2"</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_color_brewer</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Dark2"</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu">ggdist</span><span class="fu">::</span><span class="fu">scale_fill_ramp_continuous</span><span class="op">(</span>range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">0</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>
-    title <span class="op">=</span> <span class="st">"Overlapping lineribbons with aes(blend_group = cyl) and blend('multiply')"</span>, 
+    title <span class="op">=</span> <span class="st">"Overlapping lineribbons with aes(partition = cyl) and blend('multiply')"</span>, 
     color <span class="op">=</span> <span class="st">"cyl"</span>, fill <span class="op">=</span> <span class="st">"cyl"</span>, y <span class="op">=</span> <span class="st">"mpg"</span>
   <span class="op">)</span> <span class="op">+</span>
   <span class="fu">ggdist</span><span class="fu">::</span><span class="fu">theme_ggdist</span><span class="op">(</span><span class="op">)</span></code></pre></div>
@@ -296,13 +309,13 @@
 <div class="section level2">
 <h2 id="compatibility-with-other-packages">Compatibility with other packages<a class="anchor" aria-label="anchor" href="#compatibility-with-other-packages"></a>
 </h2>
-<p>In theory <em>ggblend</em> should be compatible with other packages, though in more complex cases (blending lists of geoms or using the <code>blend_group</code> aesthetic) it is possible it may fail, as these features are a bit more hackish.</p>
+<p>In theory <em>ggblend</em> should be compatible with other packages, though in more complex cases (blending lists of geoms or using the <code>partition</code> aesthetic) it is possible it may fail, as these features are a bit more hackish.</p>
 <p>As a hard test, here is all three features applied to a modified version of the Gapminder example used in the <a href="https://gganimate.com/" class="external-link">gganimate documentation</a>:</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://gganimate.com" class="external-link">gganimate</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/jennybc/gapminder" class="external-link">gapminder</a></span><span class="op">)</span>
 
-<span class="va">p</span> <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">gapminder</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">gdpPercap</span>, <span class="va">lifeExp</span>, size <span class="op">=</span> <span class="va">pop</span>, color <span class="op">=</span> <span class="va">continent</span>, blend_group <span class="op">=</span> <span class="va">continent</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
+<span class="va">p</span> <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">gapminder</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">gdpPercap</span>, <span class="va">lifeExp</span>, size <span class="op">=</span> <span class="va">pop</span>, color <span class="op">=</span> <span class="va">continent</span>, partition <span class="op">=</span> <span class="va">continent</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>
     <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span>show.legend <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>size <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span> |&gt; <span class="fu"><a href="reference/blend.html">blend</a></span><span class="op">(</span><span class="st">"multiply"</span><span class="op">)</span>,
     <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html" class="external-link">geom_hline</a></span><span class="op">(</span>yintercept <span class="op">=</span> <span class="fl">70</span>, size <span class="op">=</span> <span class="fl">2.5</span>, color <span class="op">=</span> <span class="st">"gray75"</span><span class="op">)</span>
@@ -323,10 +336,7 @@
 <p><img src="reference/figures/README-gapminder-1.gif"><!-- --></p>
 </div>
 </div>
-  </div>
-
-  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
-    <div class="links">
+  </main><aside class="col-md-3"><div class="links">
 <h2 data-toc-skip>Links</h2>
 <ul class="list-unstyled">
 <li><a href="https://github.com/mjskay/ggblend/" class="external-link">Browse source code</a></li>
@@ -368,25 +378,24 @@
 </ul>
 </div>
 
-  </div>
+  </aside>
 </div>
 
 
-      <footer><div class="copyright">
+    <footer><div class="pkgdown-footer-left">
   <p></p>
 <p>Developed by <a href="http://www.mjskay.com" class="external-link">Matthew Kay</a>.</p>
 </div>
 
-<div class="pkgdown">
+<div class="pkgdown-footer-right">
   <p></p>
 <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
 </div>
 
-      </footer>
+    </footer>
 </div>
 
   
-
 
   
 
