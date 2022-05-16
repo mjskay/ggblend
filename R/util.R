@@ -19,3 +19,7 @@ format_name_value_pairs = function(x) {
     )
   }
 }
+
+bullet = function(x) {
+  paste0(strwrap(paste0("- ", x), exdent = 3, indent = 1), collapse = "\n")
+}

@@ -66,6 +66,28 @@ will be blended together using the \code{blend} blend mode.
 If a \code{blend()} is multiplied by a list of layers using \code{*}, it acts on each
 layer individually (as if each layer were passed to \code{blend()}).
 }
+\section{Supported devices}{
+
+Blending is not currently supported by all graphics devices. As of this writing,
+at least \code{png(type = "cairo")}, \code{svg()}, and \code{cairo_pdf()} are known to support
+blending.
+
+\code{blend()} attempts to auto-detect support for blending using \code{dev.capabilities()}.
+You may receive a warning when using \code{blend()} if it appears blending is not
+supported by the current graphics device. This warning \strong{either} means (1)
+your graphics device does not support blending (in which case you should
+switch to one that does) or (2) your graphics device
+supports blending but incorrectly reports that it does not. Unfortunately,
+not all graphics devices that support blending appear to correctly \emph{report}
+that they support blending, so even if auto-detection fails, \code{blend()} will
+still attempt to apply the blend, just in case.
+
+If the warning is issued and the output is still correctly blended, this is
+likely a bug in the graphics device. You can report the bug to the authors of
+the graphics device if you wish; in the mean time, you can use
+\code{options(ggblend.check_blend = FALSE)} to disable the check.
+}
+
 \examples{
 library(ggplot2)
 

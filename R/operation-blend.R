@@ -179,10 +179,19 @@ check_blend = function(blend) {
     !isTRUE(blend %in% grDevices::dev.capabilities()$compositing)
   ) {
     warning0(
-      'blend = ', deparse1(blend), ' does not appear to be supported by your graphics device.\n',
-      ' - Blending output may not be as expected.\n',
-      ' - If your current graphics device *does* support blend = ', deparse1(blend), '\n',
-      '   but auto-detection failed, consider reporting a bug.'
+      'Your graphics device, ', deparse1(names(dev.cur())),
+      ', reports that blend = ', deparse1(blend), ' is not supported.\n',
+      bullet('If the blending output IS NOT as expected (e.g. geoms are not being
+        drawn), then you must switch to a graphics device that supports blending,
+        like png(type = "cairo"), svg(), or cairo_pdf().
+      '), "\n",
+      bullet('If the blending output IS as expected despite this warning, this is likely a
+        bug *in the graphics device*. Unfortunately, several graphics do not correctly
+        report their capabilities. You may wish to a report a bug to the authors of the
+        graphics device. In the mean time, you can disable this
+        warning via options(ggblend.check_blend = FALSE).
+      '), "\n",
+      bullet("For more information, see the Supported Devices section of help('blend').")
     )
   }
   invisible(blend)
