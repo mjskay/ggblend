@@ -1,18 +1,19 @@
 #' Adjust layer params and aesthetics (Layer operation)
 #'
 #' A layer [operation] for adjusting the params and aesthetic mappings of
-#' a [Layer].
+#' a [layer-like] object.
 #'
 #' @param x One of:
-#'  - A [Layer]-like object: applies this operation to the layer.
+#'  - A [layer-like] object: applies this operation to the layer.
 #'  - A missing argument: creates an [operation]
 #'  - Anything else: creates an [operation], passing `x` along to the
 #'    `mapping` argument
 #' @param mapping An aesthetic created using `aes()`. Mappings provided here
-#'   will overwrite mappings in [Layer]s when this [operation] is applied to
+#'   will overwrite mappings in [ggplot2::layer()]s when this [operation] is applied to
 #'   them.
-#' @param ... [Layer] parameters. Params provided here will overwrite
-#'   params in [Layer]s when this [operation] is applied to them.
+#' @param ... [ggplot2::layer()] parameters, such as would be passed to a `geom_...()`
+#'   or `stat_...()` call. Params provided here will overwrite params in layers when
+#'   this [operation] is applied to them.
 #'
 #' @template operation
 #'

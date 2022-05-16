@@ -32,7 +32,7 @@
 }
 \description{
 \link{operation}s can be added together to form stacks of operations, which
-when multiplied by (applied to) \link{Layer}s, those \link{Layer}s are distributed
+when multiplied by (applied to) \link{layer-like} objects, those \link{layer-like} objects are distributed
 over the \link{operation}s (i.e. copied).
 }
 \details{
@@ -40,13 +40,12 @@ Addition of \pkg{ggblend} \link{operation}s depends on the types of
 objects being summed:
 \itemize{
 \item If you add an \link{operation} to an \link{operation}, they are merged into
-a single \link{operation} that copies input \link{Layer}s, one for each \link{operation}.
+a single \link{operation} that copies input \link{layer-like} objects, one for each \link{operation}.
 \item If you add an \link{operation} to a \code{\link[=numeric]{numeric()}} \emph{n}, it is equivalent to
 adding \code{*} \code{\link[=nop]{nop()}}s to that \link{operation}.
 }
 }
 \examples{
-
 library(ggplot2)
 
 # adding operations together creates a sum of operations

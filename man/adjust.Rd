@@ -11,25 +11,26 @@ adjust(x, mapping = aes(), ...)
 \arguments{
 \item{x}{One of:
 \itemize{
-\item A \link{Layer}-like object: applies this operation to the layer.
+\item A \link{layer-like} object: applies this operation to the layer.
 \item A missing argument: creates an \link{operation}
 \item Anything else: creates an \link{operation}, passing \code{x} along to the
 \code{mapping} argument
 }}
 
 \item{mapping}{An aesthetic created using \code{aes()}. Mappings provided here
-will overwrite mappings in \link{Layer}s when this \link{operation} is applied to
+will overwrite mappings in \code{\link[ggplot2:layer]{ggplot2::layer()}}s when this \link{operation} is applied to
 them.}
 
-\item{...}{\link{Layer} parameters. Params provided here will overwrite
-params in \link{Layer}s when this \link{operation} is applied to them.}
+\item{...}{\code{\link[ggplot2:layer]{ggplot2::layer()}} parameters, such as would be passed to a \code{geom_...()}
+or \code{stat_...()} call. Params provided here will overwrite params in layers when
+this \link{operation} is applied to them.}
 }
 \value{
-A \link{Layer}-like object (if \code{x} is a \link{Layer}) or an \link{operation} (if not).
+A \link{layer-like} object (if \code{x} is \link{layer-like}) or an \link{operation} (if not).
 }
 \description{
 A layer \link{operation} for adjusting the params and aesthetic mappings of
-a \link{Layer}.
+a \link{layer-like} object.
 }
 \examples{
 
@@ -54,12 +55,12 @@ data.frame(
 
 }
 \seealso{
-\link{operation} for a description of \link{Layer} operations.
+\link{operation} for a description of layer operations.
 
-Other Layer operations: 
+Other layer operations: 
 \code{\link{blend}},
 \code{\link{copy}},
 \code{\link{nop}},
 \code{\link{partition}()}
 }
-\concept{Layer operations}
+\concept{layer operations}

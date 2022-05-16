@@ -1,11 +1,11 @@
-#' Blend ggplot2 layers
+#' Blend ggplot2 layers (Layer operation)
 #'
 #' Blend objects within a single layer (geom) or across multiple layers (geoms)
 #' using graphical blending modes, such as `"multiply"`, `"overlay"`, etc. Uses
 #' the built-in compositing support in graphical devices added in R 4.2.
 #'
 #' @param x One of:
-#'  - A [Layer]-like object: applies this operation to the layer.
+#'  - A [layer-like] object: applies this operation to the layer.
 #'  - A missing argument: creates an [operation]
 #'  - A string (character vector of length 1) giving the name of a blend,
 #'    which takes the place of the `blend` argument.

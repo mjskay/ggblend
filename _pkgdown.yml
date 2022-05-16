@@ -4,6 +4,9 @@ authors:
   Matthew Kay:
     href: http://www.mjskay.com
 
+template:
+  bootstrap: 5
+
 figures:
   dev: grDevices::png
   dev.args: [{cairo: true}]
@@ -14,19 +17,29 @@ reference:
   contents:
   - ggblend-package
 
-- title: Functions for blending layers
+- title: Layers and layer-like objects
   desc: >
-    A functional approach for blending within and between layers of a ggplot2 specification.
-    Most suitable for programming against.
+    Objects that represent ggplot2 layers and layer-like objects
   contents:
-  - blend
-  - stack_blends
+  - layer-like
+  - layer_list
 
-- title: Operators for blending layers
+- title: Layer operations
   desc: >
-    Algebraic operators for blending within and between layers of a ggplot2 specification.
-    May be preferable for normal use.
+    Operations that can be applied to transform ggplot2 layers and layer-like objects
   contents:
-  - "*.ggblend"
-  - "^.ggblend"
-  - print.ggblend
+  - operation
+  - nop
+  - adjust
+  - copy
+  - partition
+  - blend
+
+- title: Combinations of layer operations
+  desc: >
+    Combinations of layer operations created through addition (`+`), multiplication (`*`), and
+    function composition (`|>`).
+  contents:
+  - operation_sum
+  - operation_product
+  - operation_composition

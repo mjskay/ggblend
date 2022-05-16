@@ -1,14 +1,14 @@
 #' Identity ("no-op") transformation (Layer operation)
 #'
-#' A layer [operation] which returns the input [Layer] unchanged.
+#' A layer [operation] which returns the input [layer-like] object unchanged.
 #'
 #' @param x One of:
-#'  - A [Layer]-like object: applies this operation to the layer.
+#'  - A [layer-like] object: applies this operation to the layer.
 #'  - A missing argument: creates an [operation]
 #'
 #' @details
 #'
-#' When `numeric()` are used with [operation]s, they are converted into
+#' When `numeric()`s are used with [operation]s, they are converted into
 #' sums of `nop()`s.
 #'
 #' @template operation

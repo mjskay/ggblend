@@ -11,18 +11,18 @@ nop(x)
 \arguments{
 \item{x}{One of:
 \itemize{
-\item A \link{Layer}-like object: applies this operation to the layer.
+\item A \link{layer-like} object: applies this operation to the layer.
 \item A missing argument: creates an \link{operation}
 }}
 }
 \value{
-A \link{Layer}-like object (if \code{x} is a \link{Layer}) or an \link{operation} (if not).
+A \link{layer-like} object (if \code{x} is \link{layer-like}) or an \link{operation} (if not).
 }
 \description{
-A layer \link{operation} which returns the input \link{Layer} unchanged.
+A layer \link{operation} which returns the input \link{layer-like} object unchanged.
 }
 \details{
-When \code{numeric()} are used with \link{operation}s, they are converted into
+When \code{numeric()}s are used with \link{operation}s, they are converted into
 sums of \code{nop()}s.
 }
 \examples{
@@ -53,12 +53,12 @@ data.frame(
 
 }
 \seealso{
-\link{operation} for a description of \link{Layer} operations.
+\link{operation} for a description of layer operations.
 
-Other Layer operations: 
+Other layer operations: 
 \code{\link{adjust}},
 \code{\link{blend}},
 \code{\link{copy}},
 \code{\link{partition}()}
 }
-\concept{Layer operations}
+\concept{layer operations}

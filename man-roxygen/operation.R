@@ -1,5 +1,5 @@
 #' @return
-#' A [Layer]-like object (if `x` is a [Layer]) or an [operation] (if not).
+#' A [layer-like] object (if `x` is [layer-like]) or an [operation] (if not).
 #'
-#' @family Layer operations
-#' @seealso [operation] for a description of [Layer] operations.
+#' @family layer operations
+#' @seealso [operation] for a description of layer operations.

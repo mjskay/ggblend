@@ -1,11 +1,11 @@
 #' Layer operation products
 #'
 #' [operation]s can be multiplied together to form chains of operations, which
-#' when multiplied by (applied to) [Layer]s, return modified [Layer]s.
+#' when multiplied by (applied to) [layer-like] objects, return modified [layer-like] objects.
 #'
 #' @param x,... [operation]s
-#' @param e1 an [operation], [Layer], or [numeric()]
-#' @param e2 an [operation], [Layer], or [numeric()]
+#' @param e1 an [operation], [layer-like], or [numeric()]
+#' @param e2 an [operation], [layer-like], or [numeric()]
 #' @param na.rm ignored
 #'
 #' @details
@@ -14,13 +14,12 @@
 #'
 #' - If you multiply an [operation] with an [operation], they are merged into
 #'   a single [operation] that applies each [operation] in sequence.
-#' - If you multiply an [operation] with a [Layer], that operation is applied
-#'   to the layer, returning a new [Layer].
+#' - If you multiply an [operation] with a [layer-like] object, that operation is applied
+#'   to the layer, returning a new [layer-like] object.
 #' - If you multiply an [operation] by a [numeric()] *n*, a new [operation] that
 #'   repeats the input [operation] is *n* times is returned.
 #'
 #' @examples
-#'
 #' library(ggplot2)
 #'
 #' # multiplying operations by numerics repeats them...
@@ -37,6 +36,7 @@
 #' data.frame(x = 1:10) |>
 #'   ggplot(aes(x = x, y = x)) +
 #'   geom_line(size = 2) * op
+#'
 #' @name operation_product
 #' @aliases operation_product-class
 #' @export

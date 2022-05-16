@@ -42,7 +42,7 @@ make_operation = function(name, constructor, y) {
     not_missing_x = !missing(x)
     if (not_missing_x && is_layer_like(x)) {
       operation = .(.constructor)(..(constructor_args))
-      layer = as_layer(x)
+      layer = as_layer_like(x)
       apply_composed_operation(operation, layer)
     } else if (not_missing_x && is(x, "operation")) {
       operation = .(.constructor)(..(constructor_args))
@@ -77,13 +77,13 @@ setGeneric("apply_composed_operation", function(operation, layers) {
 #' @rdname operation_product
 #' @export
 setMethod("*", signature(e1 = "operation"), function(e1, e2) {
-  apply_operation(e1, as_layer(e2))
+  apply_operation(e1, as_layer_like(e2))
 })
 
 #' @rdname operation_product
 #' @export
 setMethod("*", signature(e2 = "operation"), function(e1, e2) {
-  apply_operation(e2, as_layer(e1))
+  apply_operation(e2, as_layer_like(e1))
 })
 
 

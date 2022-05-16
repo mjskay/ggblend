@@ -1,7 +1,7 @@
 #' Copy layers then adjust params and aesthetics (Layer operation)
 #'
 #' A layer [operation] for copying and then adjusting the params and aesthetic
-#' mappings of a [Layer].
+#' mappings of a [layer-like] object.
 #'
 #' @inheritParams adjust
 #' @template operation

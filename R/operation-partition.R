@@ -3,7 +3,7 @@
 #' A layer [operation] for adding a `partition` aesthetic to a [layer].
 #'
 #' @param x One of:
-#'  - A [Layer]-like object: applies this operation to the layer.
+#'  - A [layer-like] object: applies this operation to the layer.
 #'  - A missing argument: creates an [operation]
 #'  - Anything else: creates an [operation], passing `x` along to the
 #'    `partition` argument

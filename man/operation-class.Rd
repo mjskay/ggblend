@@ -35,23 +35,24 @@
 \item{...}{Further arguments passed to other methods.}
 }
 \description{
-\link{operation}s are composable transformations that can be applied to \pkg{ggplot2}
-\link{Layer}s or \link{Layer}-like objects (e.g. lists of \link{Layer}s; see the \link{Layer}
-documentation page for a description of valid \link{Layer}-like objects).
+Layer \link{operation}s are composable transformations that can be applied to \pkg{ggplot2}
+\link{layer-like} objects, such as \code{stat}s, \code{geom}s, and lists of \code{stat}s and
+\code{geom}s; see the \link{layer-like} documentation page for a description of valid
+\link{layer-like} objects.
 }
 \details{
 \link{operation}s can be composed using the \code{+} and \code{*} operators (see \link{operation_sum}
-and \link{operation_product}). Addition and multiplication of \link{operation}s and \link{Layer}s
-obeys the distributive law.
+and \link{operation_product}). Addition and multiplication of \link{operation}s and \link{layer-like}
+objects obeys the distributive law.
 
-\link{operation}s can be applied to \link{Layer}s using \code{*} or \verb{|>}, with slightly
+\link{operation}s can be applied to \link{layer-like} objects using \code{*} or \verb{|>}, with slightly
 different results:
 \itemize{
-\item Using \code{*}, application of \link{operation}s to a list of \link{Layer}s \emph{is} distributive. For example,
+\item Using \code{*}, application of \link{operation}s to a list of \link{layer-like} objects \emph{is} distributive. For example,
 \code{list(geom_line(), geom_point()) * blend("multiply")} is
 equivalent to \code{list(geom_line() * blend("multiply"), geom_point() * blend("multiply"))};
 i.e. it multiply-blends the contents of the two layers individually.
-\item Using \verb{|>}, application of \link{operation}s to a list of \link{Layer}s is \emph{not}
+\item Using \verb{|>}, application of \link{operation}s to a list of \link{layer-like} objects is \emph{not}
 distributive (unless the only reasonable interpretation of applying the
 transformation is necessarily distributive; e.g. \code{adjust()}). For example,
 \code{list(geom_line(), geom_point()) |> blend("multiply")} would multiply-blend
