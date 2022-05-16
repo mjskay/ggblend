@@ -108,6 +108,27 @@ will be blended together using the <code>blend</code> blend mode.</p>
 layer individually (as if each layer were passed to <code>blend()</code>).</p>
     </div>
     <div class="section level2">
+    <h2 id="supported-devices">Supported devices<a class="anchor" aria-label="anchor" href="#supported-devices"></a></h2>
+    
+
+<p>Blending is not currently supported by all graphics devices. As of this writing,
+at least <code>png(type = "cairo")</code>, <code><a href="https://rdrr.io/r/grDevices/cairo.html" class="external-link">svg()</a></code>, and <code><a href="https://rdrr.io/r/grDevices/cairo.html" class="external-link">cairo_pdf()</a></code> are known to support
+blending.</p>
+<p><code>blend()</code> attempts to auto-detect support for blending using <code><a href="https://rdrr.io/r/grDevices/dev.capabilities.html" class="external-link">dev.capabilities()</a></code>.
+You may receive a warning when using <code>blend()</code> if it appears blending is not
+supported by the current graphics device. This warning <strong>either</strong> means (1)
+your graphics device does not support blending (in which case you should
+switch to one that does) or (2) your graphics device
+supports blending but incorrectly reports that it does not. Unfortunately,
+not all graphics devices that support blending appear to correctly <em>report</em>
+that they support blending, so even if auto-detection fails, <code>blend()</code> will
+still attempt to apply the blend, just in case.</p>
+<p>If the warning is issued and the output is still correctly blended, this is
+likely a bug in the graphics device. You can report the bug to the authors of
+the graphics device if you wish; in the mean time, you can use
+<code>options(ggblend.check_blend = FALSE)</code> to disable the check.</p>
+    </div>
+    <div class="section level2">
     <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a></h2>
     <p>Murrell, Paul (2021):
 <a href="https://www.stat.auckland.ac.nz/~paul/Reports/GraphicsEngine/groups/groups.html" class="external-link">Groups, Compositing Operators, and Affine Transformations in R Graphics</a>.
@@ -145,10 +166,18 @@ The University of Auckland. Report.
 <span class="r-in">  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">3</span><span class="op">)</span> |&gt; <span class="fu">blend</span><span class="op">(</span><span class="st">"darken"</span><span class="op">)</span> <span class="op">+</span></span>
 <span class="r-in">  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_color_brewer</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Set2"</span><span class="op">)</span> <span class="op">+</span></span>
 <span class="r-in">  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_grid.html" class="external-link">facet_grid</a></span><span class="op">(</span><span class="op">~</span> <span class="va">order</span><span class="op">)</span></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>blend = "darken" does not appear to be supported by your graphics device.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span>  - Blending output may not be as expected.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span>  - If your current graphics device *does* support blend = "darken"</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span>    but auto-detection failed, consider reporting a bug.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Your graphics device, "agg_png", reports that blend = "darken" is not supported.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span>  - If the blending output IS NOT as expected (e.g. geoms are not being</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span>    drawn), then you must switch to a graphics device that supports</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span>    blending, like png(type = "cairo"), svg(), or cairo_pdf().</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span>  - If the blending output IS as expected despite this warning, this is</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span>    likely a bug *in the graphics device*. Unfortunately, several</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span>    graphics do not correctly report their capabilities. You may wish to</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span>    a report a bug to the authors of the graphics device. In the mean</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span>    time, you can disable this warning via options(ggblend.check_blend =</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span>    FALSE).</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span>  - For more information, see the Supported Devices section of</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span>    help('blend').</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Group definition failed</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Group definition failed</span>
 <span class="r-plt img"><img src="blend-1.png" alt="" width="700" height="433"></span>
@@ -159,10 +188,18 @@ The University of Auckland. Report.
 <span class="r-in">  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">3</span><span class="op">)</span> |&gt; <span class="fu">blend</span><span class="op">(</span><span class="st">"multiply"</span><span class="op">)</span> <span class="op">+</span></span>
 <span class="r-in">  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_color_brewer</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Set2"</span><span class="op">)</span> <span class="op">+</span></span>
 <span class="r-in">  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_grid.html" class="external-link">facet_grid</a></span><span class="op">(</span><span class="op">~</span> <span class="va">order</span><span class="op">)</span></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>blend = "multiply" does not appear to be supported by your graphics device.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span>  - Blending output may not be as expected.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span>  - If your current graphics device *does* support blend = "multiply"</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span>    but auto-detection failed, consider reporting a bug.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Your graphics device, "agg_png", reports that blend = "multiply" is not supported.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span>  - If the blending output IS NOT as expected (e.g. geoms are not being</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span>    drawn), then you must switch to a graphics device that supports</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span>    blending, like png(type = "cairo"), svg(), or cairo_pdf().</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span>  - If the blending output IS as expected despite this warning, this is</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span>    likely a bug *in the graphics device*. Unfortunately, several</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span>    graphics do not correctly report their capabilities. You may wish to</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span>    a report a bug to the authors of the graphics device. In the mean</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span>    time, you can disable this warning via options(ggblend.check_blend =</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span>    FALSE).</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span>  - For more information, see the Supported Devices section of</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span>    help('blend').</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Group definition failed</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Group definition failed</span>
 <span class="r-plt img"><img src="blend-2.png" alt="" width="700" height="433"></span>
@@ -177,10 +214,18 @@ The University of Auckland. Report.
 <span class="r-in">  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">3</span><span class="op">)</span> |&gt; <span class="fu">blend</span><span class="op">(</span><span class="st">"multiply"</span><span class="op">)</span> <span class="op">+</span></span>
 <span class="r-in">  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_color_brewer</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Set2"</span><span class="op">)</span> <span class="op">+</span></span>
 <span class="r-in">  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_grid.html" class="external-link">facet_grid</a></span><span class="op">(</span><span class="op">~</span> <span class="va">order</span><span class="op">)</span></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>blend = "multiply" does not appear to be supported by your graphics device.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span>  - Blending output may not be as expected.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span>  - If your current graphics device *does* support blend = "multiply"</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span>    but auto-detection failed, consider reporting a bug.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Your graphics device, "agg_png", reports that blend = "multiply" is not supported.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span>  - If the blending output IS NOT as expected (e.g. geoms are not being</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span>    drawn), then you must switch to a graphics device that supports</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span>    blending, like png(type = "cairo"), svg(), or cairo_pdf().</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span>  - If the blending output IS as expected despite this warning, this is</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span>    likely a bug *in the graphics device*. Unfortunately, several</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span>    graphics do not correctly report their capabilities. You may wish to</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span>    a report a bug to the authors of the graphics device. In the mean</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span>    time, you can disable this warning via options(ggblend.check_blend =</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span>    FALSE).</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span>  - For more information, see the Supported Devices section of</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span>    help('blend').</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Group definition failed</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Group definition failed</span>
 <span class="r-plt img"><img src="blend-3.png" alt="" width="700" height="433"></span>
@@ -198,14 +243,30 @@ The University of Auckland. Report.
 <span class="r-in">  <span class="op">)</span> |&gt; <span class="fu">blend</span><span class="op">(</span><span class="st">"hard.light"</span><span class="op">)</span> <span class="op">+</span></span>
 <span class="r-in">  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_color_brewer</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Set2"</span><span class="op">)</span> <span class="op">+</span></span>
 <span class="r-in">  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_grid.html" class="external-link">facet_grid</a></span><span class="op">(</span><span class="op">~</span> <span class="va">order</span><span class="op">)</span></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>blend = "darken" does not appear to be supported by your graphics device.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span>  - Blending output may not be as expected.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span>  - If your current graphics device *does* support blend = "darken"</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span>    but auto-detection failed, consider reporting a bug.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>blend = "hard.light" does not appear to be supported by your graphics device.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span>  - Blending output may not be as expected.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span>  - If your current graphics device *does* support blend = "hard.light"</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span>    but auto-detection failed, consider reporting a bug.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Your graphics device, "agg_png", reports that blend = "darken" is not supported.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span>  - If the blending output IS NOT as expected (e.g. geoms are not being</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span>    drawn), then you must switch to a graphics device that supports</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span>    blending, like png(type = "cairo"), svg(), or cairo_pdf().</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span>  - If the blending output IS as expected despite this warning, this is</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span>    likely a bug *in the graphics device*. Unfortunately, several</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span>    graphics do not correctly report their capabilities. You may wish to</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span>    a report a bug to the authors of the graphics device. In the mean</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span>    time, you can disable this warning via options(ggblend.check_blend =</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span>    FALSE).</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span>  - For more information, see the Supported Devices section of</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span>    help('blend').</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Your graphics device, "agg_png", reports that blend = "hard.light" is not supported.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span>  - If the blending output IS NOT as expected (e.g. geoms are not being</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span>    drawn), then you must switch to a graphics device that supports</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span>    blending, like png(type = "cairo"), svg(), or cairo_pdf().</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span>  - If the blending output IS as expected despite this warning, this is</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span>    likely a bug *in the graphics device*. Unfortunately, several</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span>    graphics do not correctly report their capabilities. You may wish to</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span>    a report a bug to the authors of the graphics device. In the mean</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span>    time, you can disable this warning via options(ggblend.check_blend =</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span>    FALSE).</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span>  - For more information, see the Supported Devices section of</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span>    help('blend').</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Group definition failed</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Group definition failed</span>
 <span class="r-plt img"><img src="blend-4.png" alt="" width="700" height="433"></span>
