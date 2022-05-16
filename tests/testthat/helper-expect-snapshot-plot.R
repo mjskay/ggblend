@@ -12,6 +12,7 @@ save_png = function(fig, width = 400, height = 400) {
 expect_snapshot_plot = function(name, fig) {
   os = tolower(Sys.info()[["sysname"]])
   supported_oses = c("windows", "linux")
+  non_ci_oses = "linux"
 
   name_for_os = function(os) {
     paste0(gsub("\\.", "_", make.names(name)), "-", os, ".png")
@@ -27,6 +28,7 @@ expect_snapshot_plot = function(name, fig) {
 
   skip_on_cran()
   skip_if_not(os %in% supported_oses)
+  if (os %in% non_ci_oses) skip_on_ci()
 
   path = save_png(fig + theme_test())
   name = name_for_os(os)
