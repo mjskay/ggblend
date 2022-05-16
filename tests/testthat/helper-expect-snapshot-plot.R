@@ -11,8 +11,10 @@ save_png = function(fig, width = 400, height = 400) {
 
 expect_snapshot_plot = function(name, fig) {
   skip_on_cran()
+  os = tolower(Sys.info()[["sysname"]])
+  skip_if_not(os %in% c("windows", "linux"))
 
-  name = paste0(gsub("\\.", "_", make.names(name)), ".png")
+  name = paste0(gsub("\\.", "_", make.names(name)), "-", os, ".png")
 
   # Announce the file before touching `code`. This way, if `code`
   # unexpectedly fails or skips, testthat will not auto-delete the
