@@ -116,6 +116,8 @@ of less than 1:
 ```{r scatter_lighten_multiply}
 df |>
   ggplot(aes(x, y, color = set)) +
+  geom_point(size = 3) * blend("lighten") +
+  geom_point(size = 3) * blend("multiply", alpha = 0.65) +
   scale_color_brewer(palette = "Set2") +
   facet_grid(~ order) +
   ggtitle("Scatterplot with blend('lighten') and blend('multiply', alpha = 0.65)")
@@ -252,23 +254,40 @@ predictions |>
 
 Notice the overlap of the orange (`cyl = 6`) and purple (`cyl = 8`) lines.
 
-If we add a `blend_group = cyl` aesthetic mapping, we can blend the geometries
+If we add a `partition = cyl` aesthetic mapping, we can blend the geometries
 for the different levels of `cyl` together with a `blend()` call around
-`ggdist::stat_lineribbon()`:
+`ggdist::stat_lineribbon()`. 
+
+There are many ways we could add the partition to the plot:
+
+1. Add `partition = cyl` to the existing `aes(...)` call. However, this
+   leaves the partitioning information far from the call to `blend()`, so the
+   relationship between them is less clear.
+2. Add `aes(partition = cyl)` to the `stat_lineribbon(...)` call. This is 
+   a more localized change (better!), but will raise a warning if `stat_lineribbon()`
+   itself does not recognized the `partition` aesthetic.
+3. Add `|> adjust(aes(partition = cyl))` after `stat_lineribbon(...)` to
+   add the `partition` aesthetic to it (this will bypass the warning).
+4. Add `|> partition(vars(cyl))` after `stat_lineribbon(...)` to add the 
+   `partition` aesthetic. This is an alias for the `adjust()` approach that is
+   intended to be clearer. It takes a specification for a partition that is 
+   similar to `facet_wrap()`: either a one-sided formula or a call to `vars()`.
+
+Let's try the fourth approach:
 
 ```{r lineribbon_blend}
 predictions |>
-  ggplot(aes(x = hp, fill = ordered(cyl), color = ordered(cyl), blend_group = cyl)) +
+  ggplot(aes(x = hp, fill = ordered(cyl), color = ordered(cyl))) +
   ggdist::stat_lineribbon(
     aes(ydist = mu_hat, fill_ramp = stat(.width)),
     .width = ppoints(40)
-  ) |> blend("multiply") +
+  ) |> partition(vars(cyl)) |> blend("multiply") +
   geom_point(aes(y = mpg), data = mtcars) +
   scale_fill_brewer(palette = "Set2") +
   scale_color_brewer(palette = "Dark2") +
   ggdist::scale_fill_ramp_continuous(range = c(1, 0)) +
   labs(
-    title = "Overlapping lineribbons with aes(blend_group = cyl) and blend('multiply')", 
+    title = "Overlapping lineribbons with aes(partition = cyl) and blend('multiply')", 
     color = "cyl", fill = "cyl", y = "mpg"
   ) +
   ggdist::theme_ggdist()
@@ -280,7 +299,7 @@ Now the overlapping ribbons are blended together.
 ## Compatibility with other packages
 
 In theory *ggblend* should be compatible with other packages, though in more
-complex cases (blending lists of geoms or using the `blend_group` aesthetic)
+complex cases (blending lists of geoms or using the `partition` aesthetic)
 it is possible it may fail, as these features are a bit more hackish.
 
 As a hard test, here is all three features applied to a modified version of the
@@ -290,7 +309,7 @@ Gapminder example used in the [gganimate documentation](https://gganimate.com/):
 library(gganimate)
 library(gapminder)
 
-p = ggplot(gapminder, aes(gdpPercap, lifeExp, size = pop, color = continent, blend_group = continent)) +
+p = ggplot(gapminder, aes(gdpPercap, lifeExp, size = pop, color = continent, partition = continent)) +
   list(
     geom_point(show.legend = c(size = FALSE)) |> blend("multiply"),
     geom_hline(yintercept = 70, size = 2.5, color = "gray75")

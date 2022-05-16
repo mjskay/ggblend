@@ -31,14 +31,14 @@
 #' @template operation
 #'
 #' @details
-#' If `x` is a single layer / geometry and the `blend_group` aesthetic *is not* set, every
+#' If `x` is a single layer / geometry and the `partition` aesthetic *is not* set, every
 #' graphical object ([grob()]) output by the geometry will be blended together
 #' using the `blend` blend mode. If `alpha != 1`, a transparency mask with the
 #' provided alpha level will be applied to each grob before blending.
 #'
-#' If `x` is a single layer / geometry and the `blend_group` aesthetic *is* set,
+#' If `x` is a single layer / geometry and the `partition` aesthetic *is* set,
 #' the geometry will be rendered for each subset of the data defined by the
-#' `blend_group` aesthetic, a transparency mask with the provided `alpha` level
+#' `partition` aesthetic, a transparency mask with the provided `alpha` level
 #' will be applied to each resulting group as a whole (if `alpha != 1`), then these groups
 #' will be blended together using the `blend` blend mode.
 #'
@@ -86,10 +86,10 @@
 #' # blend() on a single geom by default blends all grobs in that geom together
 #' # using the requested blend mode. If we wish to blend within specific data
 #' # subsets using normal blending ("over") but between subsets using the
-#' # requested blend mode, we can set the blend_group aesthetic. This will
+#' # requested blend mode, we can set the partition aesthetic. This will
 #' # make "multiply" behave more like "darken":
 #' df |>
-#'   ggplot(aes(x, y, color = set, blend_group = set)) +
+#'   ggplot(aes(x, y, color = set, partition = set)) +
 #'   geom_point(size = 3) |> blend("multiply") +
 #'   scale_color_brewer(palette = "Set2") +
 #'   facet_grid(~ order)

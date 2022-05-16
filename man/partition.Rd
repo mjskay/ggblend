@@ -3,6 +3,9 @@
 \name{partition}
 \alias{partition}
 \title{Partition a layer into subgroups (Layer operation)}
+\usage{
+partition(x, partition)
+}
 \arguments{
 \item{x}{One of:
 \itemize{
@@ -12,9 +15,14 @@
 \code{partition} argument
 }}
 
-\item{partition}{A quoted column expression for the \code{partition}
-aesthetic, to be passed on to \code{aes_()}; e.g. a \link{formula},
-\link{quosure}, or output from \code{\link[=vars]{vars()}}.}
+\item{partition}{One of:
+\itemize{
+\item A list of quosures, such as returned by \code{\link[=vars]{vars()}}, giving a (possibly multi-)
+column expression for the \code{partition} aesthetic. These expressions are
+combined using \code{\link[=interaction]{interaction()}} to be passed on to \code{aes(partition = ...)}
+\item A one-sided formula, giving a single-column expression for the \code{partition}
+aesthetic, which is passed on to \code{aes_(partition = ...)}.
+}}
 }
 \value{
 A \link{Layer}-like object (if \code{x} is a \link{Layer}) or an \link{operation} (if not).
@@ -24,11 +32,18 @@ A layer \link{operation} for adding a \code{partition} aesthetic to a \link{laye
 }
 \details{
 This is a shortcut for setting the \code{partition} aesthetic of a \link{layer}.
-\code{partition(~ XXX)} is equivalent to \code{adjust(aes(partition = XXX))}.
+\itemize{
+\item \code{partition(~ XXX)} is roughly equivalent to \code{adjust(aes(partition = XXX))}
+\item \code{partition(vars(X, Y, ...))} is roughly equivalent to \code{adjust(aes(partition = interaction(X, Y, ...)))}
+}
 
 When a \link{layer} with a \code{partition} aesthetic is used by the following
-\link{operation}s, the effects of the operations are applied to each subgroup
-defined by the partition: \code{\link[=blend]{blend()}}.
+\link{operation}s, the effects of the operations are applied across groups:
+\itemize{
+\item \code{\link[=blend]{blend()}}: Blends graphical objects within the subgroups defined by the
+partition together using normal (\code{"over"}) blending before applying its
+blend between subgroups.
+}
 }
 \examples{
 library(ggplot2)

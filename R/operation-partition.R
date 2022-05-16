@@ -7,18 +7,26 @@
 #'  - A missing argument: creates an [operation]
 #'  - Anything else: creates an [operation], passing `x` along to the
 #'    `partition` argument
-#' @param partition A quoted column expression for the `partition`
-#'   aesthetic, to be passed on to `aes_()`; e.g. a [formula],
-#'   [quosure], or output from [vars()].
+#' @param partition One of:
+#'   - A list of quosures, such as returned by [vars()], giving a (possibly multi-)
+#'     column expression for the `partition` aesthetic. These expressions are
+#'     combined using [interaction()] to be passed on to `aes(partition = ...)`
+#'   - A one-sided formula, giving a single-column expression for the `partition`
+#'     aesthetic, which is passed on to `aes_(partition = ...)`.
 #' @template operation
 #'
 #' @details
 #' This is a shortcut for setting the `partition` aesthetic of a [layer].
-#' `partition(~ XXX)` is equivalent to `adjust(aes(partition = XXX))`.
+#'
+#' - `partition(~ XXX)` is roughly equivalent to `adjust(aes(partition = XXX))`
+#' - `partition(vars(X, Y, ...))` is roughly equivalent to `adjust(aes(partition = interaction(X, Y, ...)))`
 #'
 #' When a [layer] with a `partition` aesthetic is used by the following
-#' [operation]s, the effects of the operations are applied to each subgroup
-#' defined by the partition: [blend()].
+#' [operation]s, the effects of the operations are applied across groups:
+#'
+#' - [blend()]: Blends graphical objects within the subgroups defined by the
+#'   partition together using normal (`"over"`) blending before applying its
+#'   blend between subgroups.
 #'
 #' @examples
 #' library(ggplot2)
@@ -29,13 +37,19 @@
 NULL
 
 new_partition = function(partition) {
-  if (is.list(partition) && length(partition) == 1) {
-    # to support partition(vars(...))
-    partition = partition[[1]]
+  if (inherits(partition, "quosures")) {
+    if (length(partition) > 1) {
+      mapping = aes(partition = interaction(!!!partition, drop = TRUE, lex.order = TRUE))
+    } else {
+      mapping = aes_(partition = partition[[1]])
+    }
+  } else{
+    mapping = aes_(partition = partition)
   }
-  adjust(aes_(partition = partition))
+
+  adjust(mapping = mapping)
 }
 
-#' @rdname copy
+#' @rdname partition
 #' @export
 partition = make_operation("partition", new_partition, partition)

@@ -105,7 +105,7 @@ blend_layers = function(layers, blend = "over", alpha = alpha) {
 }
 
 #' Make a layer that will blend its contents when created. If the layer does not
-#' have a blend_group aesthetic, blend all its grobs together. If it does,
+#' have a partition aesthetic, blend all its grobs together. If it does,
 #' first generate grobs for each blend group, then blend the groups together.
 #' @param layer a ggplot2::Layer
 #' @param blend blend mode
@@ -115,17 +115,17 @@ blend_layer = function(layer, blend = "over", alpha = 1) {
 
   ggproto(NULL, layer,
     draw_geom = function(self, data, layout) {
-      if (is.null(data$blend_group)) {
-        # absent a blend_group aes, we apply the blend to all grobs in the layer
+      if (is.null(data$partition)) {
+        # absent a partition aes, we apply the blend to all grobs in the layer
         groblist = ggproto_parent(layer, self)$draw_geom(data, layout)
         lapply(groblist, blend_grobs, blend = blend, alpha = alpha)
       } else {
-        # with a blend_group aes, we apply the blend between blend groups
+        # with a partition aes, we apply the blend between blend groups
 
-        # draw the geom for each blend_group separately
+        # draw the geom for each partition separately
         # groblists will be a list of groblists, where each groblist is a list
         # of grobs for a single layer
-        groblists = lapply(split(data, data$blend_group), function(d) {
+        groblists = lapply(split(data, data$partition), function(d) {
           groblist = ggproto_parent(layer, self)$draw_geom(d, layout)
           # make layers their own blend group so that the blend is only
           # applied between layers, not within layers

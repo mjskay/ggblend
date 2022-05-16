@@ -64,13 +64,20 @@ df |>
 <img src="man/figures/README-scatter_noblend-1.png" width="672" />
 
 A *commutative* blend mode, like `"multiply"` or `"darken"`, is one
-potential solution that does not depend on drawing order. We can wrap
-`geom_point()` in a call to `blend()` to achieve this, there are
-currently three approaches:
+potential solution that does not depend on drawing order. We can apply a
+`blend()` operation to geom_point()\` to achieve this. There three ways
+to do this:
 
 -   `blend(geom_point(...), "darken")` (normal function application)
 -   `geom_point(...) |> blend("darken")` (piping)
 -   `geom_point(...) * blend("darken")` (algebraic operations)
+
+Function application and piping are equivalent. **In this case**, all
+three approaches are equivalent. As we will see later, the
+multiplication approach is useful when we want a shorthand for applying
+the same operation to multiple layers in a list without combining those
+layers first (in other words, multiplication of operations over layers
+is *distributive* in an algebraic sense).
 
 ``` r
 df |>
@@ -94,7 +101,7 @@ though then values can get quite dark:
 ``` r
 df |>
   ggplot(aes(x, y, color = set)) +
-  geom_point(size = 3) |> blend("multiply") +
+  geom_point(size = 3) * blend("multiply") +
   scale_color_brewer(palette = "Set2") +
   facet_grid(~ order) +
   ggtitle("Scatterplot with blend('multiply'): a little too dark")
@@ -110,8 +117,8 @@ version on top at an `alpha` of less than 1:
 ``` r
 df |>
   ggplot(aes(x, y, color = set)) +
-  geom_point(size = 3) |> blend("lighten") +
-  geom_point(size = 3) |> blend("multiply", alpha = 0.65) +
+  geom_point(size = 3) * blend("lighten") +
+  geom_point(size = 3) * blend("multiply", alpha = 0.65) +
   scale_color_brewer(palette = "Set2") +
   facet_grid(~ order) +
   ggtitle("Scatterplot with blend('lighten') and blend('multiply', alpha = 0.65)")
@@ -122,20 +129,39 @@ df |>
 Now it’s a little easier to see both overlap and density, and the output
 remains independent of draw order.
 
-Since this pattern may be useful in general, the `stack_blends()`
-function implements it: you pass it a layer and a sequence of lists of
-arguments for `blend()`; `stack_blends()` duplicates the layer, applying
-`blend()` with the provided arguments to each duplicated layer
-separately, then stacks them together. Thus the previous example can be
-written like so:
+It is a little verbose to need to copy out a layer multiple times, as
+in:
+
+``` r
+geom_point(size = 3) * blend("lighten") +
+geom_point(size = 3) * blend("multiply", alpha = 0.65)
+```
+
+Operations and layers in *ggblend* act as a small algebra. Operations
+and sums of operations can be multiplied by layers and lists of layers,
+and those operations are distributed over the layers (This is where `*`
+and `|>` differ: `|>` does not distribute operations like `blend()` over
+layers, which is useful if you want to use a blend to combine multiple
+layers together, rather than applying that blend to each layer
+individually).
+
+For example, we can “factor out” the `geom_point(size = 3)` layer from
+the above expression, yielding this:
+
+``` r
+geom_point(size = 3) * (blend("lighten") + blend("multiply", alpha = 0.65))
+```
+
+Both expressions are equivalent. Thus we can rewrite the previous
+example like so:
 
 ``` r
 df |>
   ggplot(aes(x, y, color = set)) +
-  geom_point(size = 3) |> stack_blends("lighten", blend("multiply", alpha = 0.65)) +
+  geom_point(size = 3) * (blend("lighten") + blend("multiply", alpha = 0.65)) +
   scale_color_brewer(palette = "Set2") +
   facet_grid(~ order) +
-  ggtitle("Scatterplot with stack_blends('lighten', list('multiply', alpha = 0.65))")
+  ggtitle("Scatterplot with blend('lighten') + blend('multiply', alpha = 0.65)")
 ```
 
 <img src="man/figures/README-scatter_lighten_multiply_stacked-1.png" width="672" />
@@ -149,7 +175,39 @@ We can also blend geometries together by passing a list of geometries to
 df |>
   ggplot(aes(x, y, color = set)) +
   list(
-    geom_point(size = 3) |> stack_blends("lighten", blend("multiply", alpha = 0.65)),
+    geom_point(size = 3) * (blend("lighten") + blend("multiply", alpha = 0.65)),
+    geom_vline(xintercept = 0, color = "gray75", size = 1.5),
+    geom_hline(yintercept = 0, color = "gray75", size = 1.5)
+  ) |> blend("hard.light") +
+  scale_color_brewer(palette = "Set2") +
+  facet_grid(~ order) +
+  labs(title = "Blending multiple geometries together")
+```
+
+<img src="man/figures/README-scatter_blend_geom_incorrect-1.png" width="672" />
+
+Whoops!! If you look closely, the blending of the `geom_point()` layers
+appears to have changed. Recall that this expression:
+
+``` r
+geom_point(size = 3) * (blend("lighten") + blend("multiply", alpha = 0.65))
+```
+
+Is equivalent to specifying two separate layers, one with
+`blend("lighten")` and the other with
+`blend("multiply", alpha = 0.65))`. Thus, when you apply
+`|> blend("hard.light")` to the `list()` of layers, it will use a hard
+light blend mode to blend these two layers together, when previously
+they would be blended using the normal (or `"over"`) blend mode.
+
+We can gain back the original appearance by blending these two layers
+together with `|> blend()` prior to applying the hard light blend:
+
+``` r
+df |>
+  ggplot(aes(x, y, color = set)) +
+  list(
+    geom_point(size = 3) * (blend("lighten") + blend("multiply", alpha = 0.65)) |> blend(),
     geom_vline(xintercept = 0, color = "gray75", size = 1.5),
     geom_hline(yintercept = 0, color = "gray75", size = 1.5)
   ) |> blend("hard.light") +
@@ -159,27 +217,6 @@ df |>
 ```
 
 <img src="man/figures/README-scatter_blend_geom-1.png" width="672" />
-
-## Algebraic syntax
-
-An experimental algebraic syntax for combining and applying blends
-replaces the function application `|>` with `*` and stacking blends with
-`^`. For example:
-
-``` r
-df |>
-  ggplot(aes(x, y, color = set)) +
-  list(
-    geom_point(size = 3) * blend("lighten") ^ blend("multiply", alpha = 0.65),
-    geom_vline(xintercept = 0, color = "gray75", size = 1.5),
-    geom_hline(yintercept = 0, color = "gray75", size = 1.5)
-  ) * blend("hard.light") +
-  scale_color_brewer(palette = "Set2") +
-  facet_grid(~ order) +
-  labs(title = "Blending multiple geometries together, algebraically")
-```
-
-<img src="man/figures/README-scatter_blend_algebraic-1.png" width="672" />
 
 ## Blending groups within one geometry
 
@@ -284,23 +321,43 @@ predictions |>
 Notice the overlap of the orange (`cyl = 6`) and purple (`cyl = 8`)
 lines.
 
-If we add a `blend_group = cyl` aesthetic mapping, we can blend the
+If we add a `partition = cyl` aesthetic mapping, we can blend the
 geometries for the different levels of `cyl` together with a `blend()`
-call around `ggdist::stat_lineribbon()`:
+call around `ggdist::stat_lineribbon()`.
+
+There are many ways we could add the partition to the plot:
+
+1.  Add `partition = cyl` to the existing `aes(...)` call. However, this
+    leaves the partitioning information far from the call to `blend()`,
+    so the relationship between them is less clear.
+2.  Add `aes(partition = cyl)` to the `stat_lineribbon(...)` call. This
+    is a more localized change (better!), but will raise a warning if
+    `stat_lineribbon()` itself does not recognized the `partition`
+    aesthetic.
+3.  Add `|> adjust(aes(partition = cyl))` after `stat_lineribbon(...)`
+    to add the `partition` aesthetic to it (this will bypass the
+    warning).
+4.  Add `|> partition(vars(cyl))` after `stat_lineribbon(...)` to add
+    the `partition` aesthetic. This is an alias for the `adjust()`
+    approach that is intended to be clearer. It takes a specification
+    for a partition that is similar to `facet_wrap()`: either a
+    one-sided formula or a call to `vars()`.
+
+Let’s try the fourth approach:
 
 ``` r
 predictions |>
-  ggplot(aes(x = hp, fill = ordered(cyl), color = ordered(cyl), blend_group = cyl)) +
+  ggplot(aes(x = hp, fill = ordered(cyl), color = ordered(cyl))) +
   ggdist::stat_lineribbon(
     aes(ydist = mu_hat, fill_ramp = stat(.width)),
     .width = ppoints(40)
-  ) |> blend("multiply") +
+  ) |> partition(vars(cyl)) |> blend("multiply") +
   geom_point(aes(y = mpg), data = mtcars) +
   scale_fill_brewer(palette = "Set2") +
   scale_color_brewer(palette = "Dark2") +
   ggdist::scale_fill_ramp_continuous(range = c(1, 0)) +
   labs(
-    title = "Overlapping lineribbons with aes(blend_group = cyl) and blend('multiply')", 
+    title = "Overlapping lineribbons with aes(partition = cyl) and blend('multiply')", 
     color = "cyl", fill = "cyl", y = "mpg"
   ) +
   ggdist::theme_ggdist()
@@ -313,7 +370,7 @@ Now the overlapping ribbons are blended together.
 ## Compatibility with other packages
 
 In theory *ggblend* should be compatible with other packages, though in
-more complex cases (blending lists of geoms or using the `blend_group`
+more complex cases (blending lists of geoms or using the `partition`
 aesthetic) it is possible it may fail, as these features are a bit more
 hackish.
 
@@ -325,7 +382,7 @@ documentation](https://gganimate.com/):
 library(gganimate)
 library(gapminder)
 
-p = ggplot(gapminder, aes(gdpPercap, lifeExp, size = pop, color = continent, blend_group = continent)) +
+p = ggplot(gapminder, aes(gdpPercap, lifeExp, size = pop, color = continent, partition = continent)) +
   list(
     geom_point(show.legend = c(size = FALSE)) |> blend("multiply"),
     geom_hline(yintercept = 70, size = 2.5, color = "gray75")
