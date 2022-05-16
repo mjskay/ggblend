@@ -175,7 +175,7 @@ hide_layer = function(layer) {
 check_blend = function(blend) {
   if (
     getOption("ggblend.check_blend", TRUE) &&
-    dev.cur() != 1 &&
+    grDevices::dev.cur() != 1 &&
     !isTRUE(blend %in% grDevices::dev.capabilities()$compositing)
   ) {
     warning0(
