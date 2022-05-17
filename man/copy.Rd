@@ -6,16 +6,16 @@
 \alias{copy_under}
 \title{Copy layers then adjust params and aesthetics (Layer operation)}
 \usage{
-copy_over(x, mapping = aes(), ...)
+copy_over(object, mapping = aes(), ...)
 
-copy_under(x, mapping = aes(), ...)
+copy_under(object, mapping = aes(), ...)
 }
 \arguments{
-\item{x}{One of:
+\item{object}{One of:
 \itemize{
 \item A \link{layer-like} object: applies this operation to the layer.
 \item A missing argument: creates an \link{operation}
-\item Anything else: creates an \link{operation}, passing \code{x} along to the
+\item Anything else: creates an \link{operation}, passing \code{object} along to the
 \code{mapping} argument
 }}
 
@@ -28,7 +28,7 @@ or \code{stat_...()} call. Params provided here will overwrite params in layers 
 this \link{operation} is applied to them.}
 }
 \value{
-A \link{layer-like} object (if \code{x} is \link{layer-like}) or an \link{operation} (if not).
+A \link{layer-like} object (if \code{object} is \link{layer-like}) or an \link{operation} (if not).
 }
 \description{
 A layer \link{operation} for copying and then adjusting the params and aesthetic

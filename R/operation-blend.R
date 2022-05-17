@@ -12,7 +12,8 @@ blend = make_operation("blend", new_blend, blend)
 # operation application ---------------------------------------------------
 
 setMethod("apply_operation", signature(operation = "blend"), function(operation, layers) {
-  layer_apply(layers, blend_layer, blend = operation@blend, alpha = operation@alpha)
+  grob_transform = function(grob) blend_grob(grob, blend = operation@blend, alpha = operation@alpha)
+  layer_apply(layers, transform_layer, grob_transform = grob_transform)
 })
 
 setMethod("apply_composed_operation", signature(operation = "blend", layers = "list"), function(operation, layers) {
@@ -21,7 +22,8 @@ setMethod("apply_composed_operation", signature(operation = "blend", layers = "l
   # called on them it saves the data needed for drawing but otherwise does
   # nothing), and the final layer actually draws each layer and then blends
   # them together
-  blend_layers(layers, operation@blend, operation@alpha)
+  grob_transform = function(grob) blend_grob(grob, blend = operation@blend, alpha = operation@alpha)
+  transform_layers(layers, grob_transform)
 })
 
 
@@ -53,25 +55,25 @@ blend_grob = function(grob, blend = "over", alpha = 1) {
   groupGrob(grob, blend, vp = viewport)
 }
 
-#' Blend grobs together
-#' @param ... grobs to blend
-#' @param blend a blend mode
-#' @return a grob
+#' Transform input grobs as one
+#' @param ... grobs to transform
+#' @param grob_transform a function that transforms a grob
+#' @return a grob containing transformed versions of all input grobs
 #' @noRd
-blend_grobs = function(..., blend = "over", alpha = 1) {
-  blend_grob(grobTree(...), blend, alpha)
+transform_grobs = function(..., grob_transform) {
+  grob_transform(grobTree(...))
 }
 
-#' Blend groblists together. Each groblist represents the grobs for a layer,
+#' Transform groblists together. Each groblist represents the grobs for a layer,
 #' and is lists of grobs, one for each panel.
 #' @param groblists a list of groblists. Each groblist is a list of grobs.
-#' @param blend a blend mode
+#' @param grob_transform a function that takes a grob and returns a transformed grob
 #' @return a single groblist
 #' @noRd
-blend_groblists = function(groblists, blend = "over", alpha = 1) {
+transform_groblists = function(groblists, grob_transform) {
   if (length(groblists) == 0) return(list(zeroGrob()))
 
-  groblist = .mapply(blend_grobs, groblists, list(blend = blend, alpha = alpha))
+  groblist = .mapply(transform_grobs, groblists, list(grob_transform = grob_transform))
   names(groblist) = names(groblists[[1]])
   groblist
 }
@@ -82,43 +84,46 @@ blend_groblists = function(groblists, blend = "over", alpha = 1) {
 #' @param blend a blend mode
 #' @return a ggplot2::Layer
 #' @noRd
-blend_layers = function(layers, blend = "over", alpha = alpha) {
-  # skip over hidden layers when blending (they should already be incorporated
-  # into a BlendedLayer)
+transform_layers = function(layers, grob_transform) {
+  force(grob_transform)
+
+  # skip over hidden layers when transforming (they should already be incorporated
+  # into a TransformedLayer)
   layers = unlist(layers)
   already_hidden = vapply(layers, inherits, what = "HiddenLayer", logical(1))
   layers[!already_hidden] = lapply(layers[!already_hidden], hide_layer)
   layers_to_blend = layers[!already_hidden]
 
-  blended_layer = ggproto("BlendedLayer", geom_blank(),
+  transformed_layer = ggproto("TransformedLayer", geom_blank(),
     draw_geom = function(self, data, layout) {
       groblists = lapply(layers_to_blend, function(l) {
         groblist = l$ggblend__draw_geom_(layout)
         # do not blend within layers
         lapply(groblist, groupGrob)
       })
-      blend_groblists(groblists, blend, alpha)
+      transform_groblists(groblists, grob_transform)
     }
   )
 
-  c(layers, list(blended_layer))
+  c(layers, list(transformed_layer))
 }
 
-#' Make a layer that will blend its contents when created. If the layer does not
-#' have a partition aesthetic, blend all its grobs together. If it does,
-#' first generate grobs for each blend group, then blend the groups together.
+#' Make a layer that will transform its contents when created. If the layer does not
+#' have a partition aesthetic, transform all its grobs at once. If it does,
+#' first generate grobs for each partition, then transform the groups.
 #' @param layer a ggplot2::Layer
 #' @param blend blend mode
 #' @noRd
-blend_layer = function(layer, blend = "over", alpha = 1) {
+transform_layer = function(layer, grob_transform) {
   force(layer)
+  force(grob_transform)
 
   ggproto(NULL, layer,
     draw_geom = function(self, data, layout) {
       if (is.null(data$partition)) {
         # absent a partition aes, we apply the blend to all grobs in the layer
         groblist = ggproto_parent(layer, self)$draw_geom(data, layout)
-        lapply(groblist, blend_grobs, blend = blend, alpha = alpha)
+        lapply(groblist, grob_transform)
       } else {
         # with a partition aes, we apply the blend between blend groups
 
@@ -129,10 +134,10 @@ blend_layer = function(layer, blend = "over", alpha = 1) {
           groblist = ggproto_parent(layer, self)$draw_geom(d, layout)
           # make layers their own blend group so that the blend is only
           # applied between layers, not within layers
-          lapply(groblist, blend_grob)
+          lapply(groblist, groupGrob)
         })
 
-        blend_groblists(groblists, blend, alpha = alpha)
+        transform_groblists(groblists, grob_transform)
       }
     }
   )
@@ -179,7 +184,7 @@ check_blend = function(blend) {
     !isTRUE(blend %in% grDevices::dev.capabilities()$compositing)
   ) {
     warning0(
-      'Your graphics device, ', deparse1(names(dev.cur())),
+      'Your graphics device, ', deparse1(names(grDevices::dev.cur())),
       ', reports that blend = ', deparse1(blend), ' is not supported.\n',
       bullet('If the blending output IS NOT as expected (e.g. geoms are not being
         drawn), then you must switch to a graphics device that supports blending,

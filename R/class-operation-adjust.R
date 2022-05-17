@@ -3,10 +3,10 @@
 #' A layer [operation] for adjusting the params and aesthetic mappings of
 #' a [layer-like] object.
 #'
-#' @param x One of:
+#' @param object One of:
 #'  - A [layer-like] object: applies this operation to the layer.
 #'  - A missing argument: creates an [operation]
-#'  - Anything else: creates an [operation], passing `x` along to the
+#'  - Anything else: creates an [operation], passing `object` along to the
 #'    `mapping` argument
 #' @param mapping An aesthetic created using `aes()`. Mappings provided here
 #'   will overwrite mappings in [ggplot2::layer()]s when this [operation] is applied to

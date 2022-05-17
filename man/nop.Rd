@@ -6,17 +6,17 @@
 \alias{nop-class}
 \title{Identity ("no-op") transformation (Layer operation)}
 \usage{
-nop(x)
+nop(object)
 }
 \arguments{
-\item{x}{One of:
+\item{object}{One of:
 \itemize{
 \item A \link{layer-like} object: applies this operation to the layer.
 \item A missing argument: creates an \link{operation}
 }}
 }
 \value{
-A \link{layer-like} object (if \code{x} is \link{layer-like}) or an \link{operation} (if not).
+A \link{layer-like} object (if \code{object} is \link{layer-like}) or an \link{operation} (if not).
 }
 \description{
 A layer \link{operation} which returns the input \link{layer-like} object unchanged.

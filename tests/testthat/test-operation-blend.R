@@ -6,6 +6,22 @@ test_that("basic blending works", {
   )
 })
 
+test_that("blending without partition works", {
+  expect_snapshot_plot("multiply blend without partition",
+    data.frame(x = c(1,1.98,2,2.02,2.5,2.52,3), g = c("a", "a", "b", "b", "b", "b", "b")) |>
+      ggplot(aes(x, x, color = g, shape = g)) +
+      geom_point(size = 10) |> blend("multiply")
+  )
+})
+
+test_that("blending with partition works", {
+  expect_snapshot_plot("multiply blend with partition",
+    data.frame(x = c(1,1.98,2,2.02,2.5,2.52,3), g = c("a", "a", "b", "b", "b", "b", "b")) |>
+      ggplot(aes(x, x, color = g, shape = g)) +
+      geom_point(size = 10) |> partition(vars(g)) |> blend("multiply")
+  )
+})
+
 test_that("complex sequence of blends works", {
   set.seed(1234)
   df_a = data.frame(x = rnorm(100, 0), y = rnorm(100, 1), set = "a")

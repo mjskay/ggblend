@@ -4,14 +4,14 @@
 \alias{partition}
 \title{Partition a layer into subgroups (Layer operation)}
 \usage{
-partition(x, partition)
+partition(object, partition)
 }
 \arguments{
-\item{x}{One of:
+\item{object}{One of:
 \itemize{
 \item A \link{layer-like} object: applies this operation to the layer.
 \item A missing argument: creates an \link{operation}
-\item Anything else: creates an \link{operation}, passing \code{x} along to the
+\item Anything else: creates an \link{operation}, passing \code{object} along to the
 \code{partition} argument
 }}
 
@@ -25,7 +25,7 @@ aesthetic, which is passed on to \code{aes_(partition = ...)}.
 }}
 }
 \value{
-A \link{layer-like} object (if \code{x} is \link{layer-like}) or an \link{operation} (if not).
+A \link{layer-like} object (if \code{object} is \link{layer-like}) or an \link{operation} (if not).
 }
 \description{
 A layer \link{operation} for adding a \code{partition} aesthetic to a \link{layer}.

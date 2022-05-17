@@ -4,7 +4,7 @@
 #' using graphical blending modes, such as `"multiply"`, `"overlay"`, etc. Uses
 #' the built-in compositing support in graphical devices added in R 4.2.
 #'
-#' @param x One of:
+#' @param object One of:
 #'  - A [layer-like] object: applies this operation to the layer.
 #'  - A missing argument: creates an [operation]
 #'  - A string (character vector of length 1) giving the name of a blend,
@@ -31,18 +31,18 @@
 #' @template operation
 #'
 #' @details
-#' If `x` is a single layer / geometry and the `partition` aesthetic *is not* set, every
+#' If `object` is a single layer / geometry and the `partition` aesthetic *is not* set, every
 #' graphical object ([grob()]) output by the geometry will be blended together
 #' using the `blend` blend mode. If `alpha != 1`, a transparency mask with the
 #' provided alpha level will be applied to each grob before blending.
 #'
-#' If `x` is a single layer / geometry and the `partition` aesthetic *is* set,
+#' If `object` is a single layer / geometry and the `partition` aesthetic *is* set,
 #' the geometry will be rendered for each subset of the data defined by the
 #' `partition` aesthetic, a transparency mask with the provided `alpha` level
 #' will be applied to each resulting group as a whole (if `alpha != 1`), then these groups
 #' will be blended together using the `blend` blend mode.
 #'
-#' If `x` is a list of layers / geometries, those layers will be rendered
+#' If `object` is a list of layers / geometries, those layers will be rendered
 #' separately, a transparency mask with the provided `alpha` level
 #' will be applied to each layer as a whole (if `alpha != 1`), then these layers
 #' will be blended together using the `blend` blend mode.

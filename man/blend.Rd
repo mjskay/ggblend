@@ -6,10 +6,10 @@
 \alias{blend-class}
 \title{Blend ggplot2 layers (Layer operation)}
 \usage{
-blend(x, blend = "over", alpha = 1)
+blend(object, blend = "over", alpha = 1)
 }
 \arguments{
-\item{x}{One of:
+\item{object}{One of:
 \itemize{
 \item A \link{layer-like} object: applies this operation to the layer.
 \item A missing argument: creates an \link{operation}
@@ -39,7 +39,7 @@ it can be disabled by setting \code{options(ggblend.check_blend = FALSE)}.}
 transparency mask applied to objects prior to blending.}
 }
 \value{
-A \link{layer-like} object (if \code{x} is \link{layer-like}) or an \link{operation} (if not).
+A \link{layer-like} object (if \code{object} is \link{layer-like}) or an \link{operation} (if not).
 }
 \description{
 Blend objects within a single layer (geom) or across multiple layers (geoms)
@@ -47,18 +47,18 @@ using graphical blending modes, such as \code{"multiply"}, \code{"overlay"}, etc
 the built-in compositing support in graphical devices added in R 4.2.
 }
 \details{
-If \code{x} is a single layer / geometry and the \code{partition} aesthetic \emph{is not} set, every
+If \code{object} is a single layer / geometry and the \code{partition} aesthetic \emph{is not} set, every
 graphical object (\code{\link[=grob]{grob()}}) output by the geometry will be blended together
 using the \code{blend} blend mode. If \code{alpha != 1}, a transparency mask with the
 provided alpha level will be applied to each grob before blending.
 
-If \code{x} is a single layer / geometry and the \code{partition} aesthetic \emph{is} set,
+If \code{object} is a single layer / geometry and the \code{partition} aesthetic \emph{is} set,
 the geometry will be rendered for each subset of the data defined by the
 \code{partition} aesthetic, a transparency mask with the provided \code{alpha} level
 will be applied to each resulting group as a whole (if \code{alpha != 1}), then these groups
 will be blended together using the \code{blend} blend mode.
 
-If \code{x} is a list of layers / geometries, those layers will be rendered
+If \code{object} is a list of layers / geometries, those layers will be rendered
 separately, a transparency mask with the provided \code{alpha} level
 will be applied to each layer as a whole (if \code{alpha != 1}), then these layers
 will be blended together using the \code{blend} blend mode.

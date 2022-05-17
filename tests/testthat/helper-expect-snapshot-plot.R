@@ -30,7 +30,7 @@ expect_snapshot_plot = function(name, fig) {
   skip_if_not(os %in% supported_oses)
   if (os %in% non_ci_oses) skip_on_ci()
 
-  path = save_png(fig + theme_test())
+  path = save_png(fig + ggtitle(name) + theme_test())
   name = name_for_os(os)
   expect_snapshot_file(path, name)
 }

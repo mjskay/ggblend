@@ -82,5 +82,5 @@ layer_apply.LayerInstance = function(.x, .f, ...) {
 
 #' @export
 layer_apply.list = function(.x, .f, ...) {
-  rapply(.x, .f, classes = "LayerInstance", how = "replace")
+  rapply(.x, .f, classes = "LayerInstance", how = "replace", ...)
 }

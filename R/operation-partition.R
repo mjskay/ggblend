@@ -2,10 +2,10 @@
 #'
 #' A layer [operation] for adding a `partition` aesthetic to a [layer].
 #'
-#' @param x One of:
+#' @param object One of:
 #'  - A [layer-like] object: applies this operation to the layer.
 #'  - A missing argument: creates an [operation]
-#'  - Anything else: creates an [operation], passing `x` along to the
+#'  - Anything else: creates an [operation], passing `object` along to the
 #'    `partition` argument
 #' @param partition One of:
 #'   - A list of quosures, such as returned by [vars()], giving a (possibly multi-)

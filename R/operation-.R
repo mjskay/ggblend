@@ -17,38 +17,38 @@ make_operation = function(name, constructor, y) {
   .constructor = substitute(constructor)
 
   # construct args for the output function
-  f_args = c(alist(x = ), args)
+  f_args = c(alist(object = ), args)
 
-  # if y is provided, it is an argument that x will be copied into if
+  # if y is provided, it is an argument that object will be copied into if
   # we are constructing the operator (and not applying it directly)
-  copy_x_to_y = if (!missing(y)) {
+  copy_object_to_y = if (!missing(y)) {
     y = substitute(y)
     y_string = as.character(y)
 
     bquote(
-      if (not_missing_x) {
+      if (not_missing_object) {
         if (!missing(.(y))) {
           stop0(
-            "Cannot provide both the `x` and `", .(y_string),
+            "Cannot provide both the `object` and `", .(y_string),
             "` arguments to `", .(name), "()` simultaneously."
           )
         }
-        .(y) = x
+        .(y) = object
       }
     )
   }
 
   f_body = bquote(splice = TRUE, {
-    not_missing_x = !missing(x)
-    if (not_missing_x && is_layer_like(x)) {
+    not_missing_object = !missing(object)
+    if (not_missing_object && is_layer_like(object)) {
       operation = .(.constructor)(..(constructor_args))
-      layer = as_layer_like(x)
+      layer = as_layer_like(object)
       apply_composed_operation(operation, layer)
-    } else if (not_missing_x && is(x, "operation")) {
+    } else if (not_missing_object && is(object, "operation")) {
       operation = .(.constructor)(..(constructor_args))
-      new_operation_composition(x, operation)
+      new_operation_composition(object, operation)
     } else {
-      .(copy_x_to_y)
+      .(copy_object_to_y)
       .(.constructor)(..(constructor_args))
     }
   })

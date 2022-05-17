@@ -2,7 +2,7 @@
 #'
 #' A layer [operation] which returns the input [layer-like] object unchanged.
 #'
-#' @param x One of:
+#' @param object One of:
 #'  - A [layer-like] object: applies this operation to the layer.
 #'  - A missing argument: creates an [operation]
 #'
