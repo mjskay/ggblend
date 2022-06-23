@@ -58,6 +58,7 @@ data.frame(
 \link{operation} for a description of layer operations.
 
 Other layer operations: 
+\code{\link{affine_transform}},
 \code{\link{blend}},
 \code{\link{copy}},
 \code{\link{nop}},

@@ -66,6 +66,7 @@ data.frame(
 
 Other layer operations: 
 \code{\link{adjust}},
+\code{\link{affine_transform}},
 \code{\link{blend}},
 \code{\link{nop}},
 \code{\link{partition}()}

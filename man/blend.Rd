@@ -152,6 +152,7 @@ The University of Auckland. Report.
 
 Other layer operations: 
 \code{\link{adjust}},
+\code{\link{affine_transform}},
 \code{\link{copy}},
 \code{\link{nop}},
 \code{\link{partition}()}
