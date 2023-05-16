@@ -40,6 +40,6 @@ comp_op
 # multiplication by a geom returns a modified version of that geom
 data.frame(x = 1:10) |>
   ggplot(aes(x = x, y = x)) +
-  geom_line(size = 10, color = "red") * comp_op
+  geom_line(linewidth = 10, color = "red") * comp_op
 
 }

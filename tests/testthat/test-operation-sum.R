@@ -28,7 +28,7 @@ test_that("multiplication of sums works", {
 test_that("application of sums preserves structure of input", {
   input = list(
     geom_line(),
-    geom_point(),
+    geom_path(),
     list(
       geom_bar(),
       geom_col()
@@ -39,19 +39,19 @@ test_that("application of sums preserves structure of input", {
   )
 
   ref = layer_list(
-    list(geom_line(color = "red"), geom_line(size = 2)),
-    list(geom_point(color = "red"), geom_point(size = 2)),
+    list(geom_line(color = "red"), geom_line(linewidth = 2)),
+    list(geom_path(color = "red"), geom_path(linewidth = 2)),
     list(
-      list(geom_bar(color = "red"), geom_bar(size = 2)),
-      list(geom_col(color = "red"), geom_col(size = 2))
+      list(geom_bar(color = "red"), geom_bar(linewidth = 2)),
+      list(geom_col(color = "red"), geom_col(linewidth = 2))
     ),
     list(
-      list(geom_histogram(color = "red"), geom_histogram(size = 2))
+      list(geom_histogram(color = "red"), geom_histogram(linewidth = 2))
     )
   )
 
   expect_equal_layer(
-    input * (adjust(color = "red") + adjust(size = 2)),
+    input * (adjust(color = "red") + adjust(linewidth = 2)),
     ref
   )
 })

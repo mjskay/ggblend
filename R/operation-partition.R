@@ -41,10 +41,12 @@ new_partition = function(partition) {
     if (length(partition) > 1) {
       mapping = aes(partition = interaction(!!!partition, drop = TRUE, lex.order = TRUE))
     } else {
-      mapping = aes_(partition = partition[[1]])
+      mapping = aes(partition = !!partition[[1]])
     }
-  } else{
-    mapping = aes_(partition = partition)
+  } else if (inherits(partition, "formula")) {
+    mapping = aes(partition = !!rlang::as_quosure(partition))
+  } else {
+    mapping = aes(partition = !!partition)
   }
 
   adjust(mapping = mapping)

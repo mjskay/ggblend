@@ -10,7 +10,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-# ggblend
+# ggblend: Blending and compositing algebra for ggplot2
 
 <!-- badges: start -->
 [![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
@@ -37,7 +37,7 @@ We'll construct a simple dataset with two semi-overlapping point clouds. We'll
 have two versions of the dataset: one with all the `"a"` points listed first,
 and one with all the `"b"` points listed first.
 
-```{r data}
+```{r data, message=FALSE, warning=FALSE}
 library(ggplot2)
 library(ggblend)
 theme_set(theme_light())
@@ -168,8 +168,8 @@ df |>
   ggplot(aes(x, y, color = set)) +
   list(
     geom_point(size = 3) * (blend("lighten") + blend("multiply", alpha = 0.65)),
-    geom_vline(xintercept = 0, color = "gray75", size = 1.5),
-    geom_hline(yintercept = 0, color = "gray75", size = 1.5)
+    geom_vline(xintercept = 0, color = "gray75", linewidth = 1.5),
+    geom_hline(yintercept = 0, color = "gray75", linewidth = 1.5)
   ) |> blend("hard.light") +
   scale_color_brewer(palette = "Set2") +
   facet_grid(~ order) +
@@ -197,8 +197,8 @@ df |>
   ggplot(aes(x, y, color = set)) +
   list(
     geom_point(size = 3) * (blend("lighten") + blend("multiply", alpha = 0.65)) |> blend(),
-    geom_vline(xintercept = 0, color = "gray75", size = 1.5),
-    geom_hline(yintercept = 0, color = "gray75", size = 1.5)
+    geom_vline(xintercept = 0, color = "gray75", linewidth = 1.5),
+    geom_hline(yintercept = 0, color = "gray75", linewidth = 1.5)
   ) |> blend("hard.light") +
   scale_color_brewer(palette = "Set2") +
   facet_grid(~ order) +
@@ -238,7 +238,7 @@ A basic plot based on examples in `vignette("freq-uncertainty-vis", package = "g
 predictions |>
   ggplot(aes(x = hp, fill = ordered(cyl), color = ordered(cyl))) +
   ggdist::stat_lineribbon(
-    aes(ydist = mu_hat, fill_ramp = stat(.width)),
+    aes(ydist = mu_hat, fill_ramp = after_stat(.width)),
     .width = ppoints(40)
   ) +
   geom_point(aes(y = mpg), data = mtcars) +
@@ -279,7 +279,7 @@ Let's try the fourth approach:
 predictions |>
   ggplot(aes(x = hp, fill = ordered(cyl), color = ordered(cyl))) +
   ggdist::stat_lineribbon(
-    aes(ydist = mu_hat, fill_ramp = stat(.width)),
+    aes(ydist = mu_hat, fill_ramp = after_stat(.width)),
     .width = ppoints(40)
   ) |> partition(vars(cyl)) |> blend("multiply") +
   geom_point(aes(y = mpg), data = mtcars) +
@@ -305,14 +305,14 @@ it is possible it may fail, as these features are a bit more hackish.
 As a hard test, here is all three features applied to a modified version of the
 Gapminder example used in the [gganimate documentation](https://gganimate.com/):
 
-```{r gapminder}
+```{r gapminder, message=FALSE, warning=FALSE}
 library(gganimate)
 library(gapminder)
 
 p = ggplot(gapminder, aes(gdpPercap, lifeExp, size = pop, color = continent, partition = continent)) +
   list(
     geom_point(show.legend = c(size = FALSE)) |> blend("multiply"),
-    geom_hline(yintercept = 70, size = 2.5, color = "gray75")
+    geom_hline(yintercept = 70, linewidth = 2.5, color = "gray75")
   ) |> blend("hard.light") +
   scale_color_manual(values = continent_colors) +
   scale_size(range = c(2, 12)) +

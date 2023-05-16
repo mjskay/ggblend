@@ -1,5 +1,5 @@
 
-# ggblend
+# ggblend: Blending and compositing algebra for ggplot2
 
 <!-- badges: start -->
 
@@ -68,9 +68,9 @@ potential solution that does not depend on drawing order. We can apply a
 `blend()` operation to geom_point()\` to achieve this. There three ways
 to do this:
 
--   `blend(geom_point(...), "darken")` (normal function application)
--   `geom_point(...) |> blend("darken")` (piping)
--   `geom_point(...) * blend("darken")` (algebraic operations)
+- `blend(geom_point(...), "darken")` (normal function application)
+- `geom_point(...) |> blend("darken")` (piping)
+- `geom_point(...) * blend("darken")` (algebraic operations)
 
 Function application and piping are equivalent. **In this case**, all
 three approaches are equivalent. As we will see later, the
@@ -176,8 +176,8 @@ df |>
   ggplot(aes(x, y, color = set)) +
   list(
     geom_point(size = 3) * (blend("lighten") + blend("multiply", alpha = 0.65)),
-    geom_vline(xintercept = 0, color = "gray75", size = 1.5),
-    geom_hline(yintercept = 0, color = "gray75", size = 1.5)
+    geom_vline(xintercept = 0, color = "gray75", linewidth = 1.5),
+    geom_hline(yintercept = 0, color = "gray75", linewidth = 1.5)
   ) |> blend("hard.light") +
   scale_color_brewer(palette = "Set2") +
   facet_grid(~ order) +
@@ -208,8 +208,8 @@ df |>
   ggplot(aes(x, y, color = set)) +
   list(
     geom_point(size = 3) * (blend("lighten") + blend("multiply", alpha = 0.65)) |> blend(),
-    geom_vline(xintercept = 0, color = "gray75", size = 1.5),
-    geom_hline(yintercept = 0, color = "gray75", size = 1.5)
+    geom_vline(xintercept = 0, color = "gray75", linewidth = 1.5),
+    geom_hline(yintercept = 0, color = "gray75", linewidth = 1.5)
   ) |> blend("hard.light") +
   scale_color_brewer(palette = "Set2") +
   facet_grid(~ order) +
@@ -302,7 +302,7 @@ lineribbons overlap:
 predictions |>
   ggplot(aes(x = hp, fill = ordered(cyl), color = ordered(cyl))) +
   ggdist::stat_lineribbon(
-    aes(ydist = mu_hat, fill_ramp = stat(.width)),
+    aes(ydist = mu_hat, fill_ramp = after_stat(.width)),
     .width = ppoints(40)
   ) +
   geom_point(aes(y = mpg), data = mtcars) +
@@ -349,7 +349,7 @@ Let’s try the fourth approach:
 predictions |>
   ggplot(aes(x = hp, fill = ordered(cyl), color = ordered(cyl))) +
   ggdist::stat_lineribbon(
-    aes(ydist = mu_hat, fill_ramp = stat(.width)),
+    aes(ydist = mu_hat, fill_ramp = after_stat(.width)),
     .width = ppoints(40)
   ) |> partition(vars(cyl)) |> blend("multiply") +
   geom_point(aes(y = mpg), data = mtcars) +
@@ -385,7 +385,7 @@ library(gapminder)
 p = ggplot(gapminder, aes(gdpPercap, lifeExp, size = pop, color = continent, partition = continent)) +
   list(
     geom_point(show.legend = c(size = FALSE)) |> blend("multiply"),
-    geom_hline(yintercept = 70, size = 2.5, color = "gray75")
+    geom_hline(yintercept = 70, linewidth = 2.5, color = "gray75")
   ) |> blend("hard.light") +
   scale_color_manual(values = continent_colors) +
   scale_size(range = c(2, 12)) +

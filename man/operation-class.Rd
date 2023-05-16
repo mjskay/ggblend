@@ -65,8 +65,8 @@ two layers individually.
 }
 \section{Methods (by generic)}{
 \itemize{
-\item \code{show}: Print an \link{operation}.
+\item \code{show(operation)}: Print an \link{operation}.
 
-\item \code{format}: Format an \link{operation} for printing.
+\item \code{format(operation)}: Format an \link{operation} for printing.
+
 }}
-

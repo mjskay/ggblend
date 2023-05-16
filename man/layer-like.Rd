@@ -47,9 +47,9 @@ Anywhere in \pkg{ggblend} where a function parameter is documented as being
 }
 \section{Functions}{
 \itemize{
-\item \code{is_layer_like}: checks if an object is layer-like according to \pkg{ggblend}.
+\item \code{is_layer_like()}: checks if an object is layer-like according to \pkg{ggblend}.
 
-\item \code{as_layer_like}: validates that an object is layer-like and converts
+\item \code{as_layer_like()}: validates that an object is layer-like and converts
 it to a \code{"LayerInstance"} or \code{\link[=layer_list]{layer_list()}}.
-}}
 
+}}

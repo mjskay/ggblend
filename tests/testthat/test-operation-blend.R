@@ -41,8 +41,8 @@ test_that("complex sequence of blends works", {
       list(
         # double blend here since it may not always work
         geom_point(size = 6) * (blend("lighten") + blend("multiply", alpha = 0.65)) |> blend() * blend(),
-        geom_vline(xintercept = 0, color = "gray75", size = 1.5),
-        geom_hline(yintercept = 0, color = "gray75", size = 1.5)
+        geom_vline(xintercept = 0, color = "gray75", linewidth = 1.5),
+        geom_hline(yintercept = 0, color = "gray75", linewidth = 1.5)
       ) |> blend("hard.light") +
       scale_color_brewer(palette = "Set2") +
       facet_grid(~ order)

@@ -14,19 +14,23 @@ The primary support for blending is provided by the \code{blend()} function,
 which can be used to augment \code{\link[=ggplot]{ggplot()}} layers/geoms or lists of
 layers/geoms in a \code{\link[=ggplot]{ggplot()}} specification.
 
-For example, one can replace something like this:\preformatted{df |>
+For example, one can replace something like this:
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{df |>
   ggplot(aes(x, y)) +
   geom_X(...) +
   geom_Y(...) +
   geom_Z(...)
-}
+}\if{html}{\out{</div>}}
 
-With something like this:\preformatted{df |>
+With something like this:
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{df |>
   ggplot(aes(x, y)) +
   geom_X(...) +
   geom_Y(...) |> blend("multiply") +
   geom_Z(...)
-}
+}\if{html}{\out{</div>}}
 
 In order to apply a "multiply" blend to the layer with \code{geom_Y(...)}.
 }

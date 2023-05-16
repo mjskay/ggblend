@@ -36,7 +36,7 @@ a \link{layer-like} object.
 
 library(ggplot2)
 
-# here we use adjust() with nop() ( + 1) to create a copy of
+# Here we use adjust() with nop() ( + 1) to create a copy of
 # the stat_smooth layer, putting a white outline around it.
 set.seed(1234)
 k = 1000
@@ -47,8 +47,8 @@ data.frame(
 ) |>
   ggplot(aes(x, y, color = g)) +
   geom_point() +
-  stat_smooth(method = lm, formula = y ~ x, size = 1.5, se = FALSE) *
-    (adjust(aes(group = g), color = "white", size = 4) + 1) +
+  stat_smooth(method = lm, formula = y ~ x, linewidth = 1.5, se = FALSE) *
+    (adjust(aes(group = g), color = "white", linewidth = 4) + 1) +
   scale_color_brewer(palette = "Dark2")
 
 # (note this could also be done with copy_under())

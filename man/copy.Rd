@@ -56,8 +56,8 @@ data.frame(
 ) |>
   ggplot(aes(x, y, color = g)) +
   geom_point() +
-  stat_smooth(method = lm, formula = y ~ x, size = 1.5, se = FALSE) *
-    copy_under(aes(group = g), color = "white", size = 4) +
+  stat_smooth(method = lm, formula = y ~ x, linewidth = 1.5, se = FALSE) *
+    copy_under(aes(group = g), color = "white", linewidth = 4) +
   scale_color_brewer(palette = "Dark2")
 
 }

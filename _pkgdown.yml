@@ -34,6 +34,7 @@ reference:
   - copy
   - partition
   - blend
+  - affine_transform
 
 - title: Combinations of layer operations
   desc: >

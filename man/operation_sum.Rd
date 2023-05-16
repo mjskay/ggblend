@@ -49,15 +49,15 @@ adding \code{*} \code{\link[=nop]{nop()}}s to that \link{operation}.
 library(ggplot2)
 
 # adding operations together creates a sum of operations
-adjust(color = "red") + adjust(size = 2)
+adjust(color = "red") + adjust(linewidth = 2)
 
 # addition and multiplication obey the distributive law
-op = (adjust(aes(y = 11 -x), color = "skyblue") + 1) * (adjust(color = "white", size = 4) + 1)
+op = (adjust(aes(y = 11 -x), color = "skyblue") + 1) * (adjust(color = "white", linewidth = 4) + 1)
 op
 
 # multiplication by a geom returns a modified version of that geom,
 # distributed over the sum of the operations
 data.frame(x = 1:10) |>
   ggplot(aes(x = x, y = x)) +
-  geom_line(size = 2) * op
+  geom_line(linewidth = 2) * op
 }

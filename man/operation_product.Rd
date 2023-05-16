@@ -84,15 +84,15 @@ library(ggplot2)
 adjust(color = "red") * 2
 
 # multiplying operations together chains (or merges) them
-adjust(color = "red") * adjust(size = 2)
+adjust(color = "red") * adjust(linewidth = 2)
 
 # multiplication obeys the distributive law
-op = (adjust(aes(y = 11 -x), color = "skyblue") + 1) * (adjust(color = "white", size = 4) + 1)
+op = (adjust(aes(y = 11 -x), color = "skyblue") + 1) * (adjust(color = "white", linewidth = 4) + 1)
 op
 
 # multiplication by a geom returns a modified version of that geom
 data.frame(x = 1:10) |>
   ggplot(aes(x = x, y = x)) +
-  geom_line(size = 2) * op
+  geom_line(linewidth = 2) * op
 
 }

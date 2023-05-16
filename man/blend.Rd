@@ -134,8 +134,8 @@ df |>
   ggplot(aes(x, y, color = set)) +
   list(
     geom_point(size = 3) |> blend("darken"),
-    geom_vline(xintercept = 0, color = "gray75", size = 1.5),
-    geom_hline(yintercept = 0, color = "gray75", size = 1.5)
+    geom_vline(xintercept = 0, color = "gray75", linewidth = 1.5),
+    geom_hline(yintercept = 0, color = "gray75", linewidth = 1.5)
   ) |> blend("hard.light") +
   scale_color_brewer(palette = "Set2") +
   facet_grid(~ order)
