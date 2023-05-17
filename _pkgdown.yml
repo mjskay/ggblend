@@ -5,9 +5,6 @@ authors:
 template:
   bootstrap: 5
   bslib:
-    base_font: {google: "Source Sans Pro"}
-    heading_font: {google: "Source Sans Pro"}
-    code-bg: "#f6f6f6"
     line-height-base: 1.7
 figures:
   dev: grDevices::png
