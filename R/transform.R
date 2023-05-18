@@ -33,11 +33,13 @@ transform_layers = function(layers, grob_transform) {
   force(grob_transform)
 
   # skip over hidden layers when transforming (they should already be incorporated
-  # into a TransformedLayer)
+  # into a TransformedLayer) and elements that aren't layers (e.g. coords, scales, etc)
   layers = unlist(layers)
-  already_hidden = vapply(layers, inherits, what = "HiddenLayer", logical(1))
-  layers[!already_hidden] = lapply(layers[!already_hidden], hide_layer)
-  layers_to_transform = layers[!already_hidden]
+  to_transform =
+    vapply(layers, inherits, what = "LayerInstance", logical(1)) &
+    !vapply(layers, inherits, what = "HiddenLayer", logical(1))
+  layers[to_transform] = lapply(layers[to_transform], hide_layer)
+  layers_to_transform = layers[to_transform]
 
   transformed_layer = ggproto("TransformedLayer", geom_blank(),
     draw_geom = function(self, data, layout) {

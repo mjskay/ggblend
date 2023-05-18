@@ -30,7 +30,7 @@ NULL
 #' @export
 is_layer_like = function(x) {
   inherits(x, c("LayerInstance", "layer_list")) ||
-    (is.list(x) && all(vapply(unlist(x, use.names = FALSE), inherits, what = "LayerInstance", logical(1))))
+    (is.list(x) && all(vapply(unlist(x, use.names = FALSE), inherits, what = "gg", logical(1))))
 }
 
 
