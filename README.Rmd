@@ -19,9 +19,12 @@ knitr::opts_chunk$set(
 [![R-CMD-check](https://github.com/mjskay/ggblend/workflows/R-CMD-check/badge.svg)](https://github.com/mjskay/ggblend/actions)
 <!-- badges: end -->
 
-*ggblend* adds support for blend modes (like `"multiply"`, `"overlay"`, etc)
-to *ggplot2*. It requires R >= 4.2, as blending and compositing support was added
-in that version of R.
+*ggblend* is a small algebra of operations for blending, copying, adjusting, and 
+compositing layers in *ggplot2*. It allows you to easily copy and adjust the 
+aesthetics or parameters of an existing layer, to partition a layer into multiple
+pieces for re-composition, and to combine layers (or partitions of layers) using
+blend modes (like `"multiply"`, `"overlay"`, etc). It requires R >= 4.2, as 
+blending and compositing support was added in that version of R.
 
 ## Installation
 
