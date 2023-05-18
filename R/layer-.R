@@ -29,10 +29,16 @@ NULL
 #' @describeIn layer-like checks if an object is layer-like according to \pkg{ggblend}.
 #' @export
 is_layer_like = function(x) {
-  inherits(x, c("LayerInstance", "layer_list")) ||
-    (is.list(x) && all(vapply(unlist(x, use.names = FALSE), inherits, what = "gg", logical(1))))
+  inherits(x, c("LayerInstance", "layer_list")) || .is_layer_list_like(x)
 }
 
+.is_layer_list_like = function(x) {
+  is.list(x) && all(vapply(x, .is_layer_list_element, logical(1)))
+}
+
+.is_layer_list_element = function(x) {
+  inherits(x, "gg") || .is_layer_list_like(x)
+}
 
 # type conversion ---------------------------------------------------------
 
