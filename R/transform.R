@@ -41,7 +41,7 @@ transform_layers = function(layers, grob_transform) {
   layers[to_transform] = lapply(layers[to_transform], hide_layer)
   layers_to_transform = layers[to_transform]
 
-  transformed_layer = ggproto("TransformedLayer", geom_blank(),
+  transformed_layer = ggproto("TransformedLayer", geom_blank(inherit.aes = FALSE),
     draw_geom = function(self, data, layout) {
       groblists = lapply(layers_to_transform, function(l) {
         groblist = l$ggblend__draw_geom_(layout)
