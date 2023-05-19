@@ -29,6 +29,18 @@
 #'   both layers together, rather than multiply-blending the contents of the
 #'   two layers individually.
 #'
+#' @examples
+#' # operations can stand alone
+#' adjust(aes(color = x))
+#'
+#' # they can also be applied to layers through multiplication or piping
+#' geom_line() |> adjust(aes(color = x))
+#' geom_line() * adjust(aes(color = x))
+#'
+#' # layer operations act as a small algebra, and can be combined through
+#' # multiplication and addition
+#' (adjust(fill = "green") + 1) * blend("multiply")
+#'
 #' @name operation-class
 #' @aliases operation
 #' @export

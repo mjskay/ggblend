@@ -46,6 +46,12 @@ device, as reported by \code{dev.capabilities()$compositing}. Since this check
 can be unreliable on some devices (they will report not support a blend
 mode that they do support), you can disable this warning by setting this
 option to \code{FALSE}.
+\item \code{"ggblend.check_affine_transform"}: If \code{TRUE} (default), \code{\link[=affine_transform]{affine_transform()}} will warn if
+you attempt to use a blend mode not supported by the current graphics
+device, as reported by \code{dev.capabilities()$transformation}. Since this check
+can be unreliable on some devices (they will report not support a blend
+mode that they do support), you can disable this warning by setting this
+option to \code{FALSE}.
 }
 }
 

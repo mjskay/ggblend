@@ -89,6 +89,7 @@ the graphics device if you wish; in the mean time, you can use
 }
 
 \examples{
+\dontshow{old_options = options(ggblend.check_blend = FALSE)}
 library(ggplot2)
 
 # create two versions of a dataset, where draw order can affect output
@@ -139,7 +140,7 @@ df |>
   ) |> blend("hard.light") +
   scale_color_brewer(palette = "Set2") +
   facet_grid(~ order)
-
+\dontshow{options(old_options)}
 }
 \references{
 Murrell, Paul (2021):

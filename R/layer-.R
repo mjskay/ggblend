@@ -19,6 +19,11 @@
 #' Anywhere in \pkg{ggblend} where a function parameter is documented as being
 #' [layer-like], it can be any of the above object types.
 #'
+#' @examples
+#' is_layer_like(geom_line())
+#' is_layer_like(list(geom_line()))
+#' is_layer_like(list(geom_line(), scale_x_continuous()))
+#' is_layer_like(list(geom_line(), "abc"))
 #' @name layer-like
 #' @aliases layer
 NULL

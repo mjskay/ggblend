@@ -1,11 +1,14 @@
 Package: ggblend
-Title: Blending and Compositing in ggplot2
+Title: Blending and Compositing Algebra for 'ggplot2'
 Version: 0.0.0.9000
 Authors@R: 
     person("Matthew", "Kay", , "mjskay@northwestern.edu", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0001-9446-0419"))
-Description: Support for compositing groups of data and geoms in ggplot2 using
-    blend modes like "multiply", "overlay", etc.
+Description: Algebra of operations for blending, copying, adjusting, and 
+    compositing layers in 'ggplot2'. Supports copying and adjusting the 
+    aesthetics or parameters of an existing layer, partitioning a layer 
+    into multiple pieces for re-composition, and combining layers (or 
+    partitions of layers) using blend modes (like "multiply", "overlay", etc).
 License: MIT + file LICENSE
 Depends: R (>= 4.2)
 Imports: methods, grid, ggplot2 (>= 3.4.0), rlang

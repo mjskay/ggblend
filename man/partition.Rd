@@ -46,10 +46,38 @@ blend between subgroups.
 }
 }
 \examples{
+\dontshow{old_options = options(ggblend.check_blend = FALSE)}
 library(ggplot2)
 
-# TODO
+# create two versions of a dataset, where draw order can affect output
+set.seed(1234)
+df_a = data.frame(x = rnorm(500, 0), y = rnorm(500, 1), set = "a")
+df_b = data.frame(x = rnorm(500, 1), y = rnorm(500, 2), set = "b")
+df_ab = rbind(df_a, df_b) |>
+  transform(order = "draw a then b")
+df_ba = rbind(df_b, df_a) |>
+  transform(order = "draw b then a")
+df = rbind(df_ab, df_ba)
 
+# Using the "multiply" blend mode, draw order does not matter, but
+# the "multiply" blend is applied to all points, creating dark regions
+# outside the intersection:
+df |>
+  ggplot(aes(x, y, color = set)) +
+  geom_point(size = 3, alpha = 0.5) |> blend("multiply") +
+  scale_color_brewer(palette = "Set1") +
+  facet_grid(~ order)
+
+# By partitioning (either through |> partition(vars(set)) or aes(partition = set))
+# we will blend using the default blend mode (over) first, then we can apply the
+# "multiply" blend just between the two sets, so the regions outside the
+$ intersection are not blended using "multiply":
+df |>
+  ggplot(aes(x, y, color = set, partition = set)) +
+  geom_point(size = 3, alpha = 0.5) |> blend("multiply") +
+  scale_color_brewer(palette = "Set1") +
+  facet_grid(~ order)
+\dontshow{options(old_options)}
 }
 \seealso{
 \link{operation} for a description of layer operations.

@@ -53,3 +53,9 @@ Anywhere in \pkg{ggblend} where a function parameter is documented as being
 it to a \code{"LayerInstance"} or \code{\link[=layer_list]{layer_list()}}.
 
 }}
+\examples{
+is_layer_like(geom_line())
+is_layer_like(list(geom_line()))
+is_layer_like(list(geom_line(), scale_x_continuous()))
+is_layer_like(list(geom_line(), "abc"))
+}

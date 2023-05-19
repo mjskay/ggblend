@@ -49,6 +49,13 @@
 #'   mode that they do support), you can disable this warning by setting this
 #'   option to `FALSE`.
 #'
+#' - `"ggblend.check_affine_transform"`: If `TRUE` (default), [affine_transform()] will warn if
+#'   you attempt to use a blend mode not supported by the current graphics
+#'   device, as reported by `dev.capabilities()$transformation`. Since this check
+#'   can be unreliable on some devices (they will report not support a blend
+#'   mode that they do support), you can disable this warning by setting this
+#'   option to `FALSE`.
+#'
 #' @import grid
 #' @import ggplot2
 #' @import methods

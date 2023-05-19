@@ -77,6 +77,7 @@
 #' \doi{10.17608/k6.auckland.17009120.v1}.
 #'
 #' @examples
+#' \dontshow{old_options = options(ggblend.check_blend = FALSE)}
 #' library(ggplot2)
 #'
 #' # create two versions of a dataset, where draw order can affect output
@@ -127,7 +128,7 @@
 #'   ) |> blend("hard.light") +
 #'   scale_color_brewer(palette = "Set2") +
 #'   facet_grid(~ order)
-#'
+#' \dontshow{options(old_options)}
 #' @name blend
 #' @aliases blend-class
 #' @export

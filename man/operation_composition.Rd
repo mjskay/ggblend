@@ -24,7 +24,7 @@ layer as a whole, not any sub-parts (e.g. sub-layers or graphical objects).
 }
 }
 \examples{
-
+\dontshow{old_options = options(ggblend.check_blend = FALSE)}
 library(ggplot2)
 
 # composing operations together chains them
@@ -41,5 +41,5 @@ comp_op
 data.frame(x = 1:10) |>
   ggplot(aes(x = x, y = x)) +
   geom_line(linewidth = 10, color = "red") * comp_op
-
+\dontshow{options(old_options)}
 }

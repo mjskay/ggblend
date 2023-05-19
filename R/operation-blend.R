@@ -1,6 +1,4 @@
 new_blend = function(blend = "over", alpha = 1) {
-  check_blend(blend)
-
   new("blend", blend = blend, alpha = alpha)
 }
 
@@ -13,7 +11,8 @@ blend = make_operation("blend", new_blend, blend)
 
 setMethod("apply_operation", signature(operation = "blend"), function(operation, layers) {
   grob_transform = function(grob) blend_grob(grob, blend = operation@blend, alpha = operation@alpha)
-  layer_apply(layers, transform_layer, grob_transform = grob_transform)
+  check = function() check_blend(operation@blend)
+  layer_apply(layers, transform_layer, grob_transform = grob_transform, check = check)
 })
 
 setMethod("apply_composed_operation", signature(operation = "blend", layers = "list"), function(operation, layers) {
@@ -23,7 +22,8 @@ setMethod("apply_composed_operation", signature(operation = "blend", layers = "l
   # nothing), and the final layer actually draws each layer and then blends
   # them together
   grob_transform = function(grob) blend_grob(grob, blend = operation@blend, alpha = operation@alpha)
-  transform_layers(layers, grob_transform)
+  check = function() check_blend(operation@blend)
+  transform_layers(layers, grob_transform, check = check)
 })
 
 

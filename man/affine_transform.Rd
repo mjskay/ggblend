@@ -67,7 +67,7 @@ the graphics device if you wish; in the mean time, you can use
 }
 
 \examples{
-
+\dontshow{old_options = options(ggblend.check_affine_transform = FALSE)}
 set.seed(1234)
 
 # a simple dataset:
@@ -86,8 +86,7 @@ data.frame(x = rnorm(100), y = rnorm(100)) |>
     affine_transform(x = unit(100, "pt"), width = 0.5) |> adjust(color = "blue")
   ) +
   xlim(-5, 5)
-
-
+\dontshow{options(old_options)}
 }
 \references{
 Murrell, Paul (2021):

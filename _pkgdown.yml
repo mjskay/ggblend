@@ -19,9 +19,8 @@ template:
         family: "Source Code Pro"
 
 figures:
-  dev: grDevices::png
-  dev.args:
-  - cairo: true
+  dev: svg
+  fig.ext: svg
 
 reference:
 - title: Package overview

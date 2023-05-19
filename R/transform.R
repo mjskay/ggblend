@@ -27,10 +27,14 @@ transform_groblists = function(groblists, grob_transform) {
 #' @param groblists a list of ggplot2::Layers. Should be hidden layers (as
 #' returned by hidden_layer()).
 #' @param grob_transform a function taking a grob and returning a transformed grob
+#' @param check a function to call to check if this transformation is valid (and
+#' throw a warning if necessary)
 #' @return a ggplot2::Layer
 #' @noRd
-transform_layers = function(layers, grob_transform) {
+transform_layers = function(layers, grob_transform, check = function() NULL) {
+  force(layers)
   force(grob_transform)
+  force(check)
 
   # skip over hidden layers when transforming (they should already be incorporated
   # into a TransformedLayer) and elements that aren't layers (e.g. coords, scales, etc)
@@ -43,6 +47,7 @@ transform_layers = function(layers, grob_transform) {
 
   transformed_layer = ggproto("TransformedLayer", geom_blank(inherit.aes = FALSE),
     draw_geom = function(self, data, layout) {
+      check()
       groblists = lapply(layers_to_transform, function(l) {
         groblist = l$ggblend__draw_geom_(layout)
         # do not transform within layers
@@ -61,12 +66,14 @@ transform_layers = function(layers, grob_transform) {
 #' @param layer a ggplot2::Layer
 #' @param grob_transform a function taking a grob and returning a transformed grob
 #' @noRd
-transform_layer = function(layer, grob_transform) {
+transform_layer = function(layer, grob_transform, check = function() NULL) {
   force(layer)
   force(grob_transform)
+  force(check)
 
   ggproto(NULL, layer,
     draw_geom = function(self, data, layout) {
+      check()
       if (is.null(data$partition)) {
         # absent a partition aes, we apply the transform to all grobs in the layer
         groblist = ggproto_parent(layer, self)$draw_geom(data, layout)

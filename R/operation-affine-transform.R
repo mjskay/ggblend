@@ -1,5 +1,4 @@
 new_affine_transform = function(x = 0, y = 0, width = 1, height = 1, angle = 0) {
-  check_affine_transform()
   x = check_unit(x)
   y = check_unit(y)
   width = check_unit(width)
@@ -22,7 +21,7 @@ setMethod("apply_operation", signature(operation = "affine_transform"), function
     width = operation@width, height = operation@height,
     angle = operation@angle
   )
-  layer_apply(layers, transform_layer, grob_transform = grob_transform)
+  layer_apply(layers, transform_layer, grob_transform = grob_transform, check = check_affine_transform)
 })
 
 setMethod("apply_composed_operation", signature(operation = "affine_transform", layers = "list"), function(operation, layers) {
@@ -32,7 +31,7 @@ setMethod("apply_composed_operation", signature(operation = "affine_transform", 
     width = operation@width, height = operation@height,
     angle = operation@angle
   )
-  transform_layers(layers, grob_transform)
+  transform_layers(layers, grob_transform, check = check_affine_transform)
 })
 
 
@@ -93,8 +92,8 @@ check_unit = function(arg) {
 check_affine_transform = function() {
   if (
     getOption("ggblend.check_affine_transform", TRUE) &&
-      grDevices::dev.cur() != 1 &&
-      !isTRUE(grDevices::dev.capabilities()$transformations)
+    grDevices::dev.cur() != 1 &&
+    !isTRUE(grDevices::dev.capabilities()$transformations)
   ) {
     warning0(
       'Your graphics device, ', deparse1(names(grDevices::dev.cur())),

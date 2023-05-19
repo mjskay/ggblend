@@ -51,7 +51,7 @@
 #' \doi{10.17608/k6.auckland.17009120.v1}.
 #'
 #' @examples
-#'
+#' \dontshow{old_options = options(ggblend.check_affine_transform = FALSE)}
 #' set.seed(1234)
 #'
 #' # a simple dataset:
@@ -70,8 +70,7 @@
 #'     affine_transform(x = unit(100, "pt"), width = 0.5) |> adjust(color = "blue")
 #'   ) +
 #'   xlim(-5, 5)
-#'
-#'
+#' \dontshow{options(old_options)}
 #' @name affine_transform
 #' @aliases affine_transform-class
 #' @export
