@@ -43,7 +43,11 @@ and one with all the `"b"` points listed first.
 ```{r data, message=FALSE, warning=FALSE}
 library(ggplot2)
 library(ggblend)
-theme_set(theme_light())
+theme_set(ggdist::theme_ggdist() + theme(
+  plot.title = element_text(size = rel(1), lineheight = 1.1, face = "bold"),
+  plot.subtitle = element_text(face = "italic"),
+  panel.border = element_rect(color = "gray75", fill = NA)
+))
 
 set.seed(1234)
 df_a = data.frame(x = rnorm(500, 0), y = rnorm(500, 1), set = "a")
@@ -65,19 +69,19 @@ versus *b then a*):
 ```{r scatter_noblend}
 df |>
   ggplot(aes(x, y, color = set)) +
-  geom_point(size = 3) +
-  scale_color_brewer(palette = "Set2") +
+  geom_point(size = 3, alpha = 0.5) +
+  scale_color_brewer(palette = "Set1") +
   facet_grid(~ order) +
-  ggtitle("Scatterplot without blending: draw order matters")
+  labs(title = "geom_point() without blending", subtitle = "Draw order matters.")
 ```
 
 A *commutative* blend mode, like `"multiply"` or `"darken"`, is one potential
 solution that does not depend on drawing order. We can apply a `blend()` 
 operation to geom_point()` to achieve this. There three ways to do this:
 
-- `blend(geom_point(...), "darken")` (normal function application)
-- `geom_point(...) |> blend("darken")` (piping)
-- `geom_point(...) * blend("darken")` (algebraic operations)
+- `blend(geom_point(...), "multiply")` (normal function application)
+- `geom_point(...) |> blend("multiply")` (piping)
+- `geom_point(...) * blend("multiply")` (algebraic operations)
 
 Function application and piping are equivalent. **In this case**, all three
 approaches are equivalent. As we will see later, the multiplication approach
@@ -89,64 +93,88 @@ sense).
 ```{r scatter_blend}
 df |>
   ggplot(aes(x, y, color = set)) +
-  geom_point(size = 3) |> blend("darken") +
-  scale_color_brewer(palette = "Set2") +
+  geom_point(size = 3, alpha = 0.5) |> blend("multiply") +
+  scale_color_brewer(palette = "Set1") +
   facet_grid(~ order) +
-  ggtitle("Scatterplot with blend('darken'): draw order does not matter")
+  labs(
+    title = "geom_point(alpha = 0.5) |> blend('multiply')",
+    subtitle = "Draw order does not matter, but color is too dark."
+  )
 ```
 
-Now the output is identical no matter the draw order.
+Now the output is identical no matter the draw order, although the output is quite dark.
 
-## Alpha blending
+## Partitioning layers
 
-One disadvantage of the `"darken"` blend mode is that it doesn't show density within
-each group as well. We could use `"multiply"` instead, though then values can get quite dark:
+Part of the reason the output is very dark above is that all of the points are being
+multiply-blended together. When many objects (here, individual points) are multiply-blended on top of each
+other, the output tends to get dark very quickly.
 
-```{r scatter_multiply}
+However, we really only need the two sets to be multiply-blended with each other.
+Within each set, we can use regular alpha blending. To do that, we can partition the geometry
+by `set` and then blend. Each partition will be blended normally within the set, and
+then the resulting sets will be multiply-blended together just once:
+
+```{r scatter_partition_blend}
 df |>
   ggplot(aes(x, y, color = set)) +
-  geom_point(size = 3) * blend("multiply") +
-  scale_color_brewer(palette = "Set2") +
+  geom_point(size = 3, alpha = 0.5) |> partition(vars(set)) |> blend("multiply") +
+  scale_color_brewer(palette = "Set1") +
   facet_grid(~ order) +
-  ggtitle("Scatterplot with blend('multiply'): a little too dark")
+  labs(
+    title = "geom_point(alpha = 0.5) |> partition(vars(set)) |> blend('multiply')",
+    subtitle = "Light outside the intersection, but still dark inside the intersection."
+  )
 ```
 
+That's getting there: points outside the intersection of the two sets look good,
+but the intersection is still a bit dark.
+
 Let's try combining two blend modes to address this: we'll use a `"lighten"`
-blend mode (which is also commutative, but which makes the overlapping regions
-lighter), and then draw the `"multiply"`-blended version on top at an `alpha`
+blend mode (which is also commutative) to make the overlapping regions
+lighter, and then draw the `"multiply"`-blended version on top at an `alpha`
 of less than 1:
 
 ```{r scatter_lighten_multiply}
 df |>
   ggplot(aes(x, y, color = set)) +
-  geom_point(size = 3) * blend("lighten") +
-  geom_point(size = 3) * blend("multiply", alpha = 0.65) +
-  scale_color_brewer(palette = "Set2") +
+  geom_point(size = 3, alpha = 0.5) |> partition(vars(set)) |> blend("lighten") +
+  geom_point(size = 3, alpha = 0.5) |> partition(vars(set)) |> blend("multiply", alpha = 0.5) +
+  scale_color_brewer(palette = "Set1") +
   facet_grid(~ order) +
-  ggtitle("Scatterplot with blend('lighten') and blend('multiply', alpha = 0.65)")
+  labs(
+    title = 
+      "geom_point(size = 3, alpha = 0.5) |> partition(vars(set)) |> blend('lighten') + \ngeom_point(size = 3, alpha = 0.5) |> partition(vars(set)) |> blend('multiply', alpha = 0.5)",
+    subtitle = 'A good compromise, but a long specification.'
+  ) +
+  theme(plot.subtitle = element_text(lineheight = 1.2))
 ```
 
 Now it's a little easier to see both overlap and density, and the output remains independent of draw order.
 
-It is a little verbose to need to copy out a layer multiple times, as in:
+However, it is a little verbose to need to copy out a layer multiple times:
 
 ```r
-geom_point(size = 3) * blend("lighten") +
-geom_point(size = 3) * blend("multiply", alpha = 0.65)
+geom_point(size = 3, alpha = 0.5) |> partition(vars(set)) * blend("lighten") +
+geom_point(size = 3, alpha = 0.5) |> partition(vars(set)) * blend("multiply", alpha = 0.5) +
 ```
 
-Operations and layers in *ggblend* act as a small algebra. Operations and sums
+We can simplify this is two ways: first, `partition(vars(set))` is equivalent 
+to setting `aes(partition = set)`, so we can move the partition specification
+into the global plot aesthetics, since it is the same on every layer.
+
+Second, operations and layers in *ggblend* act as a small algebra. Operations and sums
 of operations can be multiplied by layers and lists of layers, and those
 operations are distributed over the layers (This is where `*` and `|>` differ:
 `|>` does not distribute operations like `blend()` over layers, which is
 useful if you want to use a blend to combine multiple layers together, rather
 than applying that blend to each layer individually).
 
-For example, we can "factor out"
-the `geom_point(size = 3)` layer from the above expression, yielding this:
+Thus, we can "factor out"
+`geom_point(size = 3, alpha = 0.5)` from the above expression, yielding this:
 
 ```r
-geom_point(size = 3) * (blend("lighten") + blend("multiply", alpha = 0.65))
+geom_point(size = 3, alpha = 0.5) * (blend("lighten") + blend("multiply", alpha = 0.5))
 ```
 
 Both expressions are equivalent. Thus we can rewrite the previous example
@@ -154,11 +182,15 @@ like so:
 
 ```{r scatter_lighten_multiply_stacked}
 df |>
-  ggplot(aes(x, y, color = set)) +
-  geom_point(size = 3) * (blend("lighten") + blend("multiply", alpha = 0.65)) +
-  scale_color_brewer(palette = "Set2") +
+  ggplot(aes(x, y, color = set, partition = set)) +
+  geom_point(size = 3, alpha = 0.5) * (blend("lighten") + blend("multiply", alpha = 0.5)) +
+  scale_color_brewer(palette = "Set1") +
   facet_grid(~ order) +
-  ggtitle("Scatterplot with blend('lighten') + blend('multiply', alpha = 0.65)")
+  labs(
+    title = "aes(partition = set) + geom_point(alpha = 0.5) * (blend('lighten') + blend('multiply', alpha = 0.5))",
+    subtitle = "Two order-independent blends on one layer using the distributive law."
+  ) +
+  theme(plot.subtitle = element_text(lineheight = 1.2))
 ```
 
 ## Blending multiple geometries
@@ -168,22 +200,25 @@ These lists can include already-blended geometries:
 
 ```{r scatter_blend_geom_incorrect}
 df |>
-  ggplot(aes(x, y, color = set)) +
+  ggplot(aes(x, y, color = set, partition = set)) +
   list(
-    geom_point(size = 3) * (blend("lighten") + blend("multiply", alpha = 0.65)),
+    geom_point(size = 3, alpha = 0.5) * (blend("lighten") + blend("multiply", alpha = 0.5)),
     geom_vline(xintercept = 0, color = "gray75", linewidth = 1.5),
     geom_hline(yintercept = 0, color = "gray75", linewidth = 1.5)
   ) |> blend("hard.light") +
-  scale_color_brewer(palette = "Set2") +
+  scale_color_brewer(palette = "Set1") +
   facet_grid(~ order) +
-  labs(title = "Blending multiple geometries together")
+  labs(
+    title = "Blending multiple geometries together in a list",
+    subtitle = "Careful! The point layer blend is incorrect!"
+  )
 ```
 
 Whoops!! If you look closely, the blending of the `geom_point()` layers appears to
 have changed. Recall that this expression:
 
 ```r
-geom_point(size = 3) * (blend("lighten") + blend("multiply", alpha = 0.65))
+geom_point(size = 3, alpha = 0.5) * (blend("lighten") + blend("multiply", alpha = 0.5))
 ```
 
 Is equivalent to specifying two separate layers, one with `blend("lighten")`
@@ -197,22 +232,22 @@ with `|> blend()` prior to applying the hard light blend:
 
 ```{r scatter_blend_geom}
 df |>
-  ggplot(aes(x, y, color = set)) +
+  ggplot(aes(x, y, color = set, partition = set)) +
   list(
-    geom_point(size = 3) * (blend("lighten") + blend("multiply", alpha = 0.65)) |> blend(),
+    geom_point(size = 3, alpha = 0.5) * (blend("lighten") + blend("multiply", alpha = 0.5)) |> blend(),
     geom_vline(xintercept = 0, color = "gray75", linewidth = 1.5),
     geom_hline(yintercept = 0, color = "gray75", linewidth = 1.5)
   ) |> blend("hard.light") +
-  scale_color_brewer(palette = "Set2") +
+  scale_color_brewer(palette = "Set1") +
   facet_grid(~ order) +
   labs(title = "Blending multiple geometries together")
 ```
 
 
-## Blending groups within one geometry
+## Partitioning and blending lineribbons
 
-Sometimes it's useful to have finer-grained control of blending within a given
-geometry. Here, we'll show how to use `blend()` with `stat_lineribbon()`
+Another case where it's useful to have finer-grained control of blending within a given
+geometry is when drawing overlapping uncertainty bands. Here, we'll show how to use `blend()` with `stat_lineribbon()`
 from [ggdist](https://mjskay.github.io/ggdist/)
 to create overlapping gradient ribbons depicting uncertainty.
 
@@ -225,11 +260,11 @@ m_mpg = lm(mpg ~ hp * cyl, data = mtcars)
 And generate some confidence distributions for the mean using [distributional](https://pkg.mitchelloharawild.com/distributional/):
 
 ```{r lineribbon}
-grid = unique(mtcars[ c("cyl", "hp")])
+predictions = unique(mtcars[, c("cyl", "hp")])
 
-predictions = grid |>
-  cbind(predict(m_mpg, newdata = grid, se.fit = TRUE)) |>
-  transform(mu_hat = distributional::dist_student_t(df = df, mu = fit, sigma = se.fit))
+predictions$mu_hat = with(predict(m_mpg, newdata = predictions, se.fit = TRUE), 
+  distributional::dist_student_t(df = df, mu = fit, sigma = se.fit)
+)
 
 predictions
 ```
@@ -249,10 +284,10 @@ predictions |>
   scale_color_brewer(palette = "Dark2") +
   ggdist::scale_fill_ramp_continuous(range = c(1, 0)) +
   labs(
-    title = "Overlapping lineribbons without blending", 
+    title = "ggdist::stat_lineribbon()",
+    subtitle = "Overlapping lineribbons obscure each other.", 
     color = "cyl", fill = "cyl", y = "mpg"
-  ) +
-  ggdist::theme_ggdist()
+  )
 ```
 
 Notice the overlap of the orange (`cyl = 6`) and purple (`cyl = 8`) lines.
@@ -290,14 +325,88 @@ predictions |>
   scale_color_brewer(palette = "Dark2") +
   ggdist::scale_fill_ramp_continuous(range = c(1, 0)) +
   labs(
-    title = "Overlapping lineribbons with aes(partition = cyl) and blend('multiply')", 
+    title = "ggdist::stat_lineribbon() |> partition(vars(cyl)) |> blend('multiply')",
+    subtitle = "Overlapping lineribbons blend together independent of draw order.",
     color = "cyl", fill = "cyl", y = "mpg"
-  ) +
-  ggdist::theme_ggdist()
+  ) 
 ```
 
 Now the overlapping ribbons are blended together.
 
+## Highlighting geoms using `copy_under()`
+
+A common visualization technique to make a layer more salient (especially in the
+presence of many other competing layers) is to add a small outline around 
+it. For some geometries (like `geom_point()`) this is easy; but for others (like `geom_line()`), 
+there's no easy way to do this without manually copying the layer.
+
+*ggblend*'s layer algebra makes this straightforward using the `adjust()` operation
+combined with operator addition and multiplication. For example, given a layer
+like:
+
+```r
+geom_line(linewidth = 1)
+```
+
+To add a white outline, you might want something like:
+
+```r
+geom_line(color = "white", linewidth = 2) + geom_line(linewidth = 1)
+```
+
+However, we'd rather not have to write the `geom_line()` specification twice
+If we factor out the differences between the first and second layer, we can use
+the `adjust()` operation (which lets you change the aesthetics and paremeters 
+of a layer) along with the distributive law to factor out 
+`geom_line(linewidth = 1)` and write the above specification as:
+
+```r
+geom_line(linewidth = 1) * (adjust(color = "white", linewidth = 2) + 1)
+```
+
+The `copy_under(...)` operation, which is a synonym for `adjust(...) + 1`, 
+also implements this pattern:
+
+```r
+geom_line(linewidth = 1) * copy_under(color = "white", linewidth = 2)
+```
+
+Here's an example highlighting the fit lines from our previous lineribbon example:
+
+```{r lineribbon_blend_highlight}
+predictions |>
+  ggplot(aes(x = hp, fill = ordered(cyl), color = ordered(cyl))) +
+  ggdist::stat_ribbon(
+    aes(ydist = mu_hat, fill_ramp = after_stat(.width)),
+    .width = ppoints(40)
+  ) |> partition(vars(cyl)) |> blend("multiply") +
+  geom_line(aes(y = median(mu_hat)), linewidth = 1) |> copy_under(color = "white", linewidth = 2) +
+  geom_point(aes(y = mpg), data = mtcars) +
+  scale_fill_brewer(palette = "Set2") +
+  scale_color_brewer(palette = "Dark2") +
+  ggdist::scale_fill_ramp_continuous(range = c(1, 0)) +
+  labs(
+    title = "geom_line() |> copy_under(color = 'white', linewidth = 2)", 
+    subtitle = "Highlights the line layer without manually copying its specification.",
+    color = "cyl", fill = "cyl", y = "mpg"
+  ) 
+```
+
+Note that the implementation of `copy_under(...)` is simply a synonym for
+`adjust(...) + 1`; we can see this if we look at `copy_under()` itself:
+
+```{r}
+copy_under()
+```
+
+In fact, not that it is particularly useful, but addition and multiplication
+of layer operations is expanded appropriately:
+
+```{r}
+(adjust() + 3) * 2
+```
+
+I hesitate to imagine what that feature might be useful for...
 
 ## Compatibility with other packages
 

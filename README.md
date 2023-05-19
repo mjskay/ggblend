@@ -12,9 +12,13 @@ coverage](https://codecov.io/gh/mjskay/ggblend/branch/main/graph/badge.svg)](htt
 [![R-CMD-check](https://github.com/mjskay/ggblend/workflows/R-CMD-check/badge.svg)](https://github.com/mjskay/ggblend/actions)
 <!-- badges: end -->
 
-*ggblend* adds support for blend modes (like `"multiply"`, `"overlay"`,
-etc) to *ggplot2*. It requires R \>= 4.2, as blending and compositing
-support was added in that version of R.
+*ggblend* is a small algebra of operations for blending, copying,
+adjusting, and compositing layers in *ggplot2*. It allows you to easily
+copy and adjust the aesthetics or parameters of an existing layer, to
+partition a layer into multiple pieces for re-composition, and to
+combine layers (or partitions of layers) using blend modes (like
+`"multiply"`, `"overlay"`, etc). It requires R \>= 4.2, as blending and
+compositing support was added in that version of R.
 
 ## Installation
 
@@ -33,7 +37,11 @@ listed first, and one with all the `"b"` points listed first.
 ``` r
 library(ggplot2)
 library(ggblend)
-theme_set(theme_light())
+theme_set(ggdist::theme_ggdist() + theme(
+  plot.title = element_text(size = rel(1), lineheight = 1.1, face = "bold"),
+  plot.subtitle = element_text(face = "italic"),
+  panel.border = element_rect(color = "gray75", fill = NA)
+))
 
 set.seed(1234)
 df_a = data.frame(x = rnorm(500, 0), y = rnorm(500, 1), set = "a")
@@ -55,10 +63,10 @@ then b* versus *b then a*):
 ``` r
 df |>
   ggplot(aes(x, y, color = set)) +
-  geom_point(size = 3) +
-  scale_color_brewer(palette = "Set2") +
+  geom_point(size = 3, alpha = 0.5) +
+  scale_color_brewer(palette = "Set1") +
   facet_grid(~ order) +
-  ggtitle("Scatterplot without blending: draw order matters")
+  labs(title = "geom_point() without blending", subtitle = "Draw order matters.")
 ```
 
 <img src="man/figures/README-scatter_noblend-1.png" width="672" />
@@ -68,9 +76,9 @@ potential solution that does not depend on drawing order. We can apply a
 `blend()` operation to geom_point()\` to achieve this. There three ways
 to do this:
 
-- `blend(geom_point(...), "darken")` (normal function application)
-- `geom_point(...) |> blend("darken")` (piping)
-- `geom_point(...) * blend("darken")` (algebraic operations)
+- `blend(geom_point(...), "multiply")` (normal function application)
+- `geom_point(...) |> blend("multiply")` (piping)
+- `geom_point(...) * blend("multiply")` (algebraic operations)
 
 Function application and piping are equivalent. **In this case**, all
 three approaches are equivalent. As we will see later, the
@@ -82,46 +90,68 @@ is *distributive* in an algebraic sense).
 ``` r
 df |>
   ggplot(aes(x, y, color = set)) +
-  geom_point(size = 3) |> blend("darken") +
-  scale_color_brewer(palette = "Set2") +
+  geom_point(size = 3, alpha = 0.5) |> blend("multiply") +
+  scale_color_brewer(palette = "Set1") +
   facet_grid(~ order) +
-  ggtitle("Scatterplot with blend('darken'): draw order does not matter")
+  labs(
+    title = "geom_point(alpha = 0.5) |> blend('multiply')",
+    subtitle = "Draw order does not matter, but color is too dark."
+  )
 ```
 
 <img src="man/figures/README-scatter_blend-1.png" width="672" />
 
-Now the output is identical no matter the draw order.
+Now the output is identical no matter the draw order, although the
+output is quite dark.
 
-## Alpha blending
+## Partitioning layers
 
-One disadvantage of the `"darken"` blend mode is that it doesn’t show
-density within each group as well. We could use `"multiply"` instead,
-though then values can get quite dark:
+Part of the reason the output is very dark above is that all of the
+points are being multiply-blended together. When many objects (here,
+individual points) are multiply-blended on top of each other, the output
+tends to get dark very quickly.
+
+However, we really only need the two sets to be multiply-blended with
+each other. Within each set, we can use regular alpha blending. To do
+that, we can partition the geometry by `set` and then blend. Each
+partition will be blended normally within the set, and then the
+resulting sets will be multiply-blended together just once:
 
 ``` r
 df |>
   ggplot(aes(x, y, color = set)) +
-  geom_point(size = 3) * blend("multiply") +
-  scale_color_brewer(palette = "Set2") +
+  geom_point(size = 3, alpha = 0.5) |> partition(vars(set)) |> blend("multiply") +
+  scale_color_brewer(palette = "Set1") +
   facet_grid(~ order) +
-  ggtitle("Scatterplot with blend('multiply'): a little too dark")
+  labs(
+    title = "geom_point(alpha = 0.5) |> partition(vars(set)) |> blend('multiply')",
+    subtitle = "Light outside the intersection, but still dark inside the intersection."
+  )
 ```
 
-<img src="man/figures/README-scatter_multiply-1.png" width="672" />
+<img src="man/figures/README-scatter_partition_blend-1.png" width="672" />
+
+That’s getting there: points outside the intersection of the two sets
+look good, but the intersection is still a bit dark.
 
 Let’s try combining two blend modes to address this: we’ll use a
-`"lighten"` blend mode (which is also commutative, but which makes the
-overlapping regions lighter), and then draw the `"multiply"`-blended
+`"lighten"` blend mode (which is also commutative) to make the
+overlapping regions lighter, and then draw the `"multiply"`-blended
 version on top at an `alpha` of less than 1:
 
 ``` r
 df |>
   ggplot(aes(x, y, color = set)) +
-  geom_point(size = 3) * blend("lighten") +
-  geom_point(size = 3) * blend("multiply", alpha = 0.65) +
-  scale_color_brewer(palette = "Set2") +
+  geom_point(size = 3, alpha = 0.5) |> partition(vars(set)) |> blend("lighten") +
+  geom_point(size = 3, alpha = 0.5) |> partition(vars(set)) |> blend("multiply", alpha = 0.5) +
+  scale_color_brewer(palette = "Set1") +
   facet_grid(~ order) +
-  ggtitle("Scatterplot with blend('lighten') and blend('multiply', alpha = 0.65)")
+  labs(
+    title = 
+      "geom_point(size = 3, alpha = 0.5) |> partition(vars(set)) |> blend('lighten') + \ngeom_point(size = 3, alpha = 0.5) |> partition(vars(set)) |> blend('multiply', alpha = 0.5)",
+    subtitle = 'A good compromise, but a long specification.'
+  ) +
+  theme(plot.subtitle = element_text(lineheight = 1.2))
 ```
 
 <img src="man/figures/README-scatter_lighten_multiply-1.png" width="672" />
@@ -129,27 +159,32 @@ df |>
 Now it’s a little easier to see both overlap and density, and the output
 remains independent of draw order.
 
-It is a little verbose to need to copy out a layer multiple times, as
-in:
+However, it is a little verbose to need to copy out a layer multiple
+times:
 
 ``` r
-geom_point(size = 3) * blend("lighten") +
-geom_point(size = 3) * blend("multiply", alpha = 0.65)
+geom_point(size = 3, alpha = 0.5) |> partition(vars(set)) * blend("lighten") +
+geom_point(size = 3, alpha = 0.5) |> partition(vars(set)) * blend("multiply", alpha = 0.5) +
 ```
 
-Operations and layers in *ggblend* act as a small algebra. Operations
-and sums of operations can be multiplied by layers and lists of layers,
-and those operations are distributed over the layers (This is where `*`
-and `|>` differ: `|>` does not distribute operations like `blend()` over
-layers, which is useful if you want to use a blend to combine multiple
-layers together, rather than applying that blend to each layer
-individually).
+We can simplify this is two ways: first, `partition(vars(set))` is
+equivalent to setting `aes(partition = set)`, so we can move the
+partition specification into the global plot aesthetics, since it is the
+same on every layer.
 
-For example, we can “factor out” the `geom_point(size = 3)` layer from
-the above expression, yielding this:
+Second, operations and layers in *ggblend* act as a small algebra.
+Operations and sums of operations can be multiplied by layers and lists
+of layers, and those operations are distributed over the layers (This is
+where `*` and `|>` differ: `|>` does not distribute operations like
+`blend()` over layers, which is useful if you want to use a blend to
+combine multiple layers together, rather than applying that blend to
+each layer individually).
+
+Thus, we can “factor out” `geom_point(size = 3, alpha = 0.5)` from the
+above expression, yielding this:
 
 ``` r
-geom_point(size = 3) * (blend("lighten") + blend("multiply", alpha = 0.65))
+geom_point(size = 3, alpha = 0.5) * (blend("lighten") + blend("multiply", alpha = 0.5))
 ```
 
 Both expressions are equivalent. Thus we can rewrite the previous
@@ -157,11 +192,15 @@ example like so:
 
 ``` r
 df |>
-  ggplot(aes(x, y, color = set)) +
-  geom_point(size = 3) * (blend("lighten") + blend("multiply", alpha = 0.65)) +
-  scale_color_brewer(palette = "Set2") +
+  ggplot(aes(x, y, color = set, partition = set)) +
+  geom_point(size = 3, alpha = 0.5) * (blend("lighten") + blend("multiply", alpha = 0.5)) +
+  scale_color_brewer(palette = "Set1") +
   facet_grid(~ order) +
-  ggtitle("Scatterplot with blend('lighten') + blend('multiply', alpha = 0.65)")
+  labs(
+    title = "aes(partition = set) + geom_point(alpha = 0.5) * (blend('lighten') + blend('multiply', alpha = 0.5))",
+    subtitle = "Two order-independent blends on one layer using the distributive law."
+  ) +
+  theme(plot.subtitle = element_text(lineheight = 1.2))
 ```
 
 <img src="man/figures/README-scatter_lighten_multiply_stacked-1.png" width="672" />
@@ -173,15 +212,18 @@ We can also blend geometries together by passing a list of geometries to
 
 ``` r
 df |>
-  ggplot(aes(x, y, color = set)) +
+  ggplot(aes(x, y, color = set, partition = set)) +
   list(
-    geom_point(size = 3) * (blend("lighten") + blend("multiply", alpha = 0.65)),
+    geom_point(size = 3, alpha = 0.5) * (blend("lighten") + blend("multiply", alpha = 0.5)),
     geom_vline(xintercept = 0, color = "gray75", linewidth = 1.5),
     geom_hline(yintercept = 0, color = "gray75", linewidth = 1.5)
   ) |> blend("hard.light") +
-  scale_color_brewer(palette = "Set2") +
+  scale_color_brewer(palette = "Set1") +
   facet_grid(~ order) +
-  labs(title = "Blending multiple geometries together")
+  labs(
+    title = "Blending multiple geometries together in a list",
+    subtitle = "Careful! The point layer blend is incorrect!"
+  )
 ```
 
 <img src="man/figures/README-scatter_blend_geom_incorrect-1.png" width="672" />
@@ -190,7 +232,7 @@ Whoops!! If you look closely, the blending of the `geom_point()` layers
 appears to have changed. Recall that this expression:
 
 ``` r
-geom_point(size = 3) * (blend("lighten") + blend("multiply", alpha = 0.65))
+geom_point(size = 3, alpha = 0.5) * (blend("lighten") + blend("multiply", alpha = 0.5))
 ```
 
 Is equivalent to specifying two separate layers, one with
@@ -205,25 +247,26 @@ together with `|> blend()` prior to applying the hard light blend:
 
 ``` r
 df |>
-  ggplot(aes(x, y, color = set)) +
+  ggplot(aes(x, y, color = set, partition = set)) +
   list(
-    geom_point(size = 3) * (blend("lighten") + blend("multiply", alpha = 0.65)) |> blend(),
+    geom_point(size = 3, alpha = 0.5) * (blend("lighten") + blend("multiply", alpha = 0.5)) |> blend(),
     geom_vline(xintercept = 0, color = "gray75", linewidth = 1.5),
     geom_hline(yintercept = 0, color = "gray75", linewidth = 1.5)
   ) |> blend("hard.light") +
-  scale_color_brewer(palette = "Set2") +
+  scale_color_brewer(palette = "Set1") +
   facet_grid(~ order) +
   labs(title = "Blending multiple geometries together")
 ```
 
 <img src="man/figures/README-scatter_blend_geom-1.png" width="672" />
 
-## Blending groups within one geometry
+## Partitioning and blending lineribbons
 
-Sometimes it’s useful to have finer-grained control of blending within a
-given geometry. Here, we’ll show how to use `blend()` with
-`stat_lineribbon()` from [ggdist](https://mjskay.github.io/ggdist/) to
-create overlapping gradient ribbons depicting uncertainty.
+Another case where it’s useful to have finer-grained control of blending
+within a given geometry is when drawing overlapping uncertainty bands.
+Here, we’ll show how to use `blend()` with `stat_lineribbon()` from
+[ggdist](https://mjskay.github.io/ggdist/) to create overlapping
+gradient ribbons depicting uncertainty.
 
 We’ll fit a model:
 
@@ -235,63 +278,39 @@ And generate some confidence distributions for the mean using
 [distributional](https://pkg.mitchelloharawild.com/distributional/):
 
 ``` r
-grid = unique(mtcars[ c("cyl", "hp")])
+predictions = unique(mtcars[, c("cyl", "hp")])
 
-predictions = grid |>
-  cbind(predict(m_mpg, newdata = grid, se.fit = TRUE)) |>
-  transform(mu_hat = distributional::dist_student_t(df = df, mu = fit, sigma = se.fit))
+predictions$mu_hat = with(predict(m_mpg, newdata = predictions, se.fit = TRUE), 
+  distributional::dist_student_t(df = df, mu = fit, sigma = se.fit)
+)
 
 predictions
 ```
 
-    ##                     cyl  hp      fit    se.fit df residual.scale
-    ## Mazda RX4             6 110 20.28825 0.7984429 28       2.973694
-    ## Datsun 710            4  93 25.74371 0.8818612 28       2.973694
-    ## Hornet Sportabout     8 175 15.56144 0.8638133 28       2.973694
-    ## Valiant               6 105 20.54952 0.8045354 28       2.973694
-    ## Duster 360            8 245 14.66678 0.9773475 28       2.973694
-    ## Merc 240D             4  62 28.58736 1.2184598 28       2.973694
-    ## Merc 230              4  95 25.56025 0.9024699 28       2.973694
-    ## Merc 280              6 123 19.60892 0.8423540 28       2.973694
-    ## Merc 450SE            8 180 15.49754 0.8332276 28       2.973694
-    ## Cadillac Fleetwood    8 205 15.17801 0.7674501 28       2.973694
-    ## Lincoln Continental   8 215 15.05021 0.7866649 28       2.973694
-    ## Chrysler Imperial     8 230 14.85849 0.8606705 28       2.973694
-    ## Fiat 128              4  66 28.22044 1.1218796 28       2.973694
-    ## Honda Civic           4  52 29.50466 1.4914670 28       2.973694
-    ## Toyota Corolla        4  65 28.31217 1.1451536 28       2.973694
-    ## Toyota Corona         4  97 25.37679 0.9280143 28       2.973694
-    ## Dodge Challenger      8 150 15.88096 1.0770037 28       2.973694
-    ## Porsche 914-2         4  91 25.92718 0.8665404 28       2.973694
-    ## Lotus Europa          4 113 23.90910 1.2628426 28       2.973694
-    ## Ford Pantera L        8 264 14.42394 1.1660619 28       2.973694
-    ## Ferrari Dino          6 175 16.89163 1.5508852 28       2.973694
-    ## Maserati Bora         8 335 13.51650 2.0458075 28       2.973694
-    ## Volvo 142E            4 109 24.27603 1.1625257 28       2.973694
-    ##                                         mu_hat
-    ## Mazda RX4           t(28, 20.28825, 0.7984429)
-    ## Datsun 710          t(28, 25.74371, 0.8818612)
-    ## Hornet Sportabout   t(28, 15.56144, 0.8638133)
-    ## Valiant             t(28, 20.54952, 0.8045354)
-    ## Duster 360          t(28, 14.66678, 0.9773475)
-    ## Merc 240D             t(28, 28.58736, 1.21846)
-    ## Merc 230            t(28, 25.56025, 0.9024699)
-    ## Merc 280             t(28, 19.60892, 0.842354)
-    ## Merc 450SE          t(28, 15.49754, 0.8332276)
-    ## Cadillac Fleetwood  t(28, 15.17801, 0.7674501)
-    ## Lincoln Continental t(28, 15.05021, 0.7866649)
-    ## Chrysler Imperial   t(28, 14.85849, 0.8606705)
-    ## Fiat 128              t(28, 28.22044, 1.12188)
-    ## Honda Civic          t(28, 29.50466, 1.491467)
-    ## Toyota Corolla       t(28, 28.31217, 1.145154)
-    ## Toyota Corona       t(28, 25.37679, 0.9280143)
-    ## Dodge Challenger     t(28, 15.88096, 1.077004)
-    ## Porsche 914-2       t(28, 25.92718, 0.8665404)
-    ## Lotus Europa          t(28, 23.9091, 1.262843)
-    ## Ford Pantera L       t(28, 14.42394, 1.166062)
-    ## Ferrari Dino         t(28, 16.89163, 1.550885)
-    ## Maserati Bora         t(28, 13.5165, 2.045807)
-    ## Volvo 142E           t(28, 24.27603, 1.162526)
+    ##                     cyl  hp                     mu_hat
+    ## Mazda RX4             6 110 t(28, 20.28825, 0.7984429)
+    ## Datsun 710            4  93 t(28, 25.74371, 0.8818612)
+    ## Hornet Sportabout     8 175 t(28, 15.56144, 0.8638133)
+    ## Valiant               6 105 t(28, 20.54952, 0.8045354)
+    ## Duster 360            8 245 t(28, 14.66678, 0.9773475)
+    ## Merc 240D             4  62   t(28, 28.58736, 1.21846)
+    ## Merc 230              4  95 t(28, 25.56025, 0.9024699)
+    ## Merc 280              6 123  t(28, 19.60892, 0.842354)
+    ## Merc 450SE            8 180 t(28, 15.49754, 0.8332276)
+    ## Cadillac Fleetwood    8 205 t(28, 15.17801, 0.7674501)
+    ## Lincoln Continental   8 215 t(28, 15.05021, 0.7866649)
+    ## Chrysler Imperial     8 230 t(28, 14.85849, 0.8606705)
+    ## Fiat 128              4  66   t(28, 28.22044, 1.12188)
+    ## Honda Civic           4  52  t(28, 29.50466, 1.491467)
+    ## Toyota Corolla        4  65  t(28, 28.31217, 1.145154)
+    ## Toyota Corona         4  97 t(28, 25.37679, 0.9280143)
+    ## Dodge Challenger      8 150  t(28, 15.88096, 1.077004)
+    ## Porsche 914-2         4  91 t(28, 25.92718, 0.8665404)
+    ## Lotus Europa          4 113   t(28, 23.9091, 1.262843)
+    ## Ford Pantera L        8 264  t(28, 14.42394, 1.166062)
+    ## Ferrari Dino          6 175  t(28, 16.89163, 1.550885)
+    ## Maserati Bora         8 335   t(28, 13.5165, 2.045807)
+    ## Volvo 142E            4 109  t(28, 24.27603, 1.162526)
 
 A basic plot based on examples in
 `vignette("freq-uncertainty-vis", package = "ggdist")` and
@@ -310,10 +329,10 @@ predictions |>
   scale_color_brewer(palette = "Dark2") +
   ggdist::scale_fill_ramp_continuous(range = c(1, 0)) +
   labs(
-    title = "Overlapping lineribbons without blending", 
+    title = "ggdist::stat_lineribbon()",
+    subtitle = "Overlapping lineribbons obscure each other.", 
     color = "cyl", fill = "cyl", y = "mpg"
-  ) +
-  ggdist::theme_ggdist()
+  )
 ```
 
 <img src="man/figures/README-lineribbon_noblend-1.png" width="672" />
@@ -357,15 +376,100 @@ predictions |>
   scale_color_brewer(palette = "Dark2") +
   ggdist::scale_fill_ramp_continuous(range = c(1, 0)) +
   labs(
-    title = "Overlapping lineribbons with aes(partition = cyl) and blend('multiply')", 
+    title = "ggdist::stat_lineribbon() |> partition(vars(cyl)) |> blend('multiply')",
+    subtitle = "Overlapping lineribbons blend together independent of draw order.",
     color = "cyl", fill = "cyl", y = "mpg"
-  ) +
-  ggdist::theme_ggdist()
+  ) 
 ```
 
 <img src="man/figures/README-lineribbon_blend-1.png" width="672" />
 
 Now the overlapping ribbons are blended together.
+
+## Highlighting geoms using `copy_under()`
+
+A common visualization technique to make a layer more salient
+(especially in the presence of many other competing layers) is to add a
+small outline around it. For some geometries (like `geom_point()`) this
+is easy; but for others (like `geom_line()`), there’s no easy way to do
+this without manually copying the layer.
+
+*ggblend*’s layer algebra makes this straightforward using the
+`adjust()` operation combined with operator addition and multiplication.
+For example, given a layer like:
+
+``` r
+geom_line(linewidth = 1)
+```
+
+To add a white outline, you might want something like:
+
+``` r
+geom_line(color = "white", linewidth = 2) + geom_line(linewidth = 1)
+```
+
+However, we’d rather not have to write the `geom_line()` specification
+twice If we factor out the differences between the first and second
+layer, we can use the `adjust()` operation (which lets you change the
+aesthetics and paremeters of a layer) along with the distributive law to
+factor out `geom_line(linewidth = 1)` and write the above specification
+as:
+
+``` r
+geom_line(linewidth = 1) * (adjust(color = "white", linewidth = 2) + 1)
+```
+
+The `copy_under(...)` operation, which is a synonym for
+`adjust(...) + 1`, also implements this pattern:
+
+``` r
+geom_line(linewidth = 1) * copy_under(color = "white", linewidth = 2)
+```
+
+Here’s an example highlighting the fit lines from our previous
+lineribbon example:
+
+``` r
+predictions |>
+  ggplot(aes(x = hp, fill = ordered(cyl), color = ordered(cyl))) +
+  ggdist::stat_ribbon(
+    aes(ydist = mu_hat, fill_ramp = after_stat(.width)),
+    .width = ppoints(40)
+  ) |> partition(vars(cyl)) |> blend("multiply") +
+  geom_line(aes(y = median(mu_hat)), linewidth = 1) |> copy_under(color = "white", linewidth = 2) +
+  geom_point(aes(y = mpg), data = mtcars) +
+  scale_fill_brewer(palette = "Set2") +
+  scale_color_brewer(palette = "Dark2") +
+  ggdist::scale_fill_ramp_continuous(range = c(1, 0)) +
+  labs(
+    title = "geom_line() |> copy_under(color = 'white', linewidth = 2)", 
+    subtitle = "Highlights the line layer without manually copying its specification.",
+    color = "cyl", fill = "cyl", y = "mpg"
+  ) 
+```
+
+<img src="man/figures/README-lineribbon_blend_highlight-1.png" width="672" />
+
+Note that the implementation of `copy_under(...)` is simply a synonym
+for `adjust(...) + 1`; we can see this if we look at `copy_under()`
+itself:
+
+``` r
+copy_under()
+```
+
+    ## <operation>: (adjust() + 1)
+
+In fact, not that it is particularly useful, but addition and
+multiplication of layer operations is expanded appropriately:
+
+``` r
+(adjust() + 3) * 2
+```
+
+    ## <operation>: (adjust() + 1 + 1 + 1 + adjust() + 1 + 1 + 1)
+
+I hesitate to imagine what that feature might be useful for…
 
 ## Compatibility with other packages
 
