@@ -37,7 +37,12 @@ using affine transformations, like translation, scale, and rotation. Uses
 the built-in compositing support in graphical devices added in R 4.2.
 }
 \details{
-TODO: current implementation is incomplete; details forthcoming
+Applies an affine transformation (translation, scaling, rotation) to a layer.
+
+\strong{Note:} due to limitations in the implementation of scaling and rotation,
+currently these operations can only be performed relative to the center of
+the plot. In future versions, the translation and rotation origin may be
+configurable.
 }
 \section{Supported devices}{
 
@@ -63,7 +68,25 @@ the graphics device if you wish; in the mean time, you can use
 
 \examples{
 
-# TODO: current implementation is incomplete; examples forthcoming
+set.seed(1234)
+
+# a simple dataset:
+data.frame(x = rnorm(100), y = rnorm(100)) |>
+  ggplot(aes(x, y)) +
+  geom_point() +
+  xlim(-5, 5)
+
+# we could scale and translate copies of the point cloud
+# (though I'm not sure why...)
+data.frame(x = rnorm(100), y = rnorm(100)) |>
+  ggplot(aes(x, y)) +
+  geom_point() * (
+    affine_transform(x = -unit(100, "pt"), width = 0.5) |> adjust(color = "red") +
+    affine_transform(width = 0.5) +
+    affine_transform(x = unit(100, "pt"), width = 0.5) |> adjust(color = "blue")
+  ) +
+  xlim(-5, 5)
+
 
 }
 \references{

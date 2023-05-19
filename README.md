@@ -17,8 +17,10 @@ adjusting, and compositing layers in *ggplot2*. It allows you to easily
 copy and adjust the aesthetics or parameters of an existing layer, to
 partition a layer into multiple pieces for re-composition, and to
 combine layers (or partitions of layers) using blend modes (like
-`"multiply"`, `"overlay"`, etc). It requires R \>= 4.2, as blending and
-compositing support was added in that version of R.
+`"multiply"`, `"overlay"`, etc).
+
+*ggblend* requires R ≥ 4.2, as blending and compositing support was
+added in that version of R.
 
 ## Installation
 
