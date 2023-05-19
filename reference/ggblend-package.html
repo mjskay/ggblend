@@ -81,6 +81,12 @@ device, as reported by <code>dev.capabilities()$compositing</code>. Since this c
 can be unreliable on some devices (they will report not support a blend
 mode that they do support), you can disable this warning by setting this
 option to <code>FALSE</code>.</p></li>
+<li><p><code>"ggblend.check_affine_transform"</code>: If <code>TRUE</code> (default), <code><a href="affine_transform.html">affine_transform()</a></code> will warn if
+you attempt to use a blend mode not supported by the current graphics
+device, as reported by <code>dev.capabilities()$transformation</code>. Since this check
+can be unreliable on some devices (they will report not support a blend
+mode that they do support), you can disable this warning by setting this
+option to <code>FALSE</code>.</p></li>
 </ul></div>
 
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>

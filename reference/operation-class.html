@@ -116,6 +116,31 @@ two layers individually.</p></li>
 <li><p><code>format(operation)</code>: Format an operation for printing.</p></li>
 </ul></div>
 
+    <div class="section level2">
+    <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># operations can stand alone</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="adjust.html">adjust</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>color <span class="op">=</span> <span class="va">x</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;operation&gt;: adjust(aes(colour = ~x))</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># they can also be applied to layers through multiplication or piping</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html" class="external-link">geom_line</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="adjust.html">adjust</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>color <span class="op">=</span> <span class="va">x</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> mapping: colour = ~x </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> geom_line: na.rm = FALSE, orientation = NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> stat_identity: na.rm = FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> position_identity </span>
+<span class="r-in"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html" class="external-link">geom_line</a></span><span class="op">(</span><span class="op">)</span> <span class="op">*</span> <span class="fu"><a href="adjust.html">adjust</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>color <span class="op">=</span> <span class="va">x</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> mapping: colour = ~x </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> geom_line: na.rm = FALSE, orientation = NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> stat_identity: na.rm = FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> position_identity </span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># layer operations act as a small algebra, and can be combined through</span></span></span>
+<span class="r-in"><span><span class="co"># multiplication and addition</span></span></span>
+<span class="r-in"><span><span class="op">(</span><span class="fu"><a href="adjust.html">adjust</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="st">"green"</span><span class="op">)</span> <span class="op">+</span> <span class="fl">1</span><span class="op">)</span> <span class="op">*</span> <span class="fu"><a href="blend.html">blend</a></span><span class="op">(</span><span class="st">"multiply"</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;operation&gt;: (adjust(fill = "green") * blend("multiply") + blend("multiply"))</span>
+<span class="r-in"><span></span></span>
+</code></pre></div>
+    </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside></div>
 
