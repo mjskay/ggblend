@@ -9,3 +9,4 @@
 ^man-roxygen$
 ^pkgdown$
 ^docs$
+^figures-source$

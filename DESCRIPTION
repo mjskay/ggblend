@@ -14,7 +14,10 @@ Depends: R (>= 4.2)
 Imports: methods, grid, ggplot2 (>= 3.4.0), rlang
 Suggests: 
     covr,
-    testthat (>= 3.0.0)
+    testthat (>= 3.0.0),
+    fontquiver,
+    showtext,
+    sysfonts
 Config/testthat/edition: 3
 BugReports: https://github.com/mjskay/ggblend/issues/new
 URL: https://mjskay.github.io/ggblend/, https://github.com/mjskay/ggblend/

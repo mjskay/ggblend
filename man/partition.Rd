@@ -71,7 +71,7 @@ df |>
 # By partitioning (either through |> partition(vars(set)) or aes(partition = set))
 # we will blend using the default blend mode (over) first, then we can apply the
 # "multiply" blend just between the two sets, so the regions outside the
-$ intersection are not blended using "multiply":
+# intersection are not blended using "multiply":
 df |>
   ggplot(aes(x, y, color = set, partition = set)) +
   geom_point(size = 3, alpha = 0.5) |> blend("multiply") +
