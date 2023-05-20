@@ -26,21 +26,9 @@ save_png = function(fig, width = 500, height = 500) {
 }
 
 expect_snapshot_plot = function(title, fig) {
-  # os = tolower(Sys.info()[["sysname"]])
-  # supported_oses = c("windows", "linux")
-  # non_ci_oses = "linux"
-
-  # name_for_os = function(os) {
-    # paste0(gsub("\\.", "_", make.names(name)), "-", os, ".png")
-  # }
-
-  # Announce the files for all platform before skipping and before touching `fig`.
+  # Announce the files for before skipping and before touching `fig`.
   # This way, if `fig` unexpectedly fails or skips (or is not run on this platform),
   # testthat will not auto-delete the corresponding snapshot file.
-  # oses = c(setdiff(supported_oses, os), os) # current os must be announced last
-  # for (os in oses) {
-    # announce_snapshot_file(name = name_for_os(os))
-  # }
   file_name = paste0(gsub("\\.", "_", make.names(title)), ".png")
   announce_snapshot_file(file_name)
 
@@ -48,10 +36,9 @@ expect_snapshot_plot = function(title, fig) {
   skip_if_not_installed("fontquiver")
   skip_if_not_installed("sysfonts")
   skip_if_not_installed("showtext")
-  # skip_if_not(os %in% supported_oses)
-  # if (os %in% non_ci_oses) skip_on_ci()
 
+  # void theme + no panel labels to reduce the amount of potential text /
+  # elements which may be more likely to vary by OS
   path = save_png(fig + theme_void() + theme(panel.border = element_rect(fill = NA), strip.text = element_blank()))
-  # title = name_for_os(os)
   expect_snapshot_file(path, file_name)
 }
