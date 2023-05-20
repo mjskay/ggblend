@@ -7,7 +7,7 @@ test_that("basic casting works", {
   expect_equal(as_layer_list(layer_list(geom_line())), layer_list(geom_line()))
   expect_equal(layer_list(geom_line()) + layer_list(geom_point()), layer_list(geom_line(), geom_point()))
 
-  expect_error(as_layer_list(list("a"), "All objects in a layer_list must be layer-like"))
+  expect_error(as_layer_list(list("a")), "All objects in a layer_list must be layer-like")
 })
 
 
