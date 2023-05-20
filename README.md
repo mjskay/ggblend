@@ -199,7 +199,7 @@ df |>
   scale_color_brewer(palette = "Set1") +
   facet_grid(~ order) +
   labs(
-    title = "aes(partition = set) + geom_point(alpha = 0.5) * (blend('lighten') + blend('multiply', alpha = 0.5))",
+    title = "geom_point(aes(partition = set)) * (blend('lighten') + blend('multiply', alpha = 0.5))",
     subtitle = "Two order-independent blends on one layer using the distributive law."
   ) +
   theme(plot.subtitle = element_text(lineheight = 1.2))
@@ -407,7 +407,7 @@ geom_line(linewidth = 1)
 To add a white outline, you might want something like:
 
 ``` r
-geom_line(color = "white", linewidth = 2) + geom_line(linewidth = 1)
+geom_line(color = "white", linewidth = 2.5) + geom_line(linewidth = 1)
 ```
 
 However, we’d rather not have to write the `geom_line()` specification
@@ -418,14 +418,14 @@ factor out `geom_line(linewidth = 1)` and write the above specification
 as:
 
 ``` r
-geom_line(linewidth = 1) * (adjust(color = "white", linewidth = 2) + 1)
+geom_line(linewidth = 1) * (adjust(color = "white", linewidth = 2.5) + 1)
 ```
 
 The `copy_under(...)` operation, which is a synonym for
 `adjust(...) + 1`, also implements this pattern:
 
 ``` r
-geom_line(linewidth = 1) * copy_under(color = "white", linewidth = 2)
+geom_line(linewidth = 1) * copy_under(color = "white", linewidth = 2.5)
 ```
 
 Here’s an example highlighting the fit lines from our previous
@@ -438,13 +438,13 @@ predictions |>
     aes(ydist = mu_hat, fill_ramp = after_stat(.width)),
     .width = ppoints(40)
   ) |> partition(vars(cyl)) |> blend("multiply") +
-  geom_line(aes(y = median(mu_hat)), linewidth = 1) |> copy_under(color = "white", linewidth = 2) +
+  geom_line(aes(y = median(mu_hat)), linewidth = 1) |> copy_under(color = "white", linewidth = 2.5) +
   geom_point(aes(y = mpg), data = mtcars) +
   scale_fill_brewer(palette = "Set2") +
   scale_color_brewer(palette = "Dark2") +
   ggdist::scale_fill_ramp_continuous(range = c(1, 0)) +
   labs(
-    title = "geom_line() |> copy_under(color = 'white', linewidth = 2)", 
+    title = "geom_line() |> copy_under(color = 'white', linewidth = 2.5)", 
     subtitle = "Highlights the line layer without manually copying its specification.",
     color = "cyl", fill = "cyl", y = "mpg"
   ) 
