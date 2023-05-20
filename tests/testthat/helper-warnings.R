@@ -9,3 +9,12 @@ without_warnings = function(expr) {
 
   options(old_options)
 }
+
+#' helper for running tests in a graphics device that should throw warnings
+with_old_graphics_device = function(expr) {
+  path = tempfile(fileext = ".tex")
+  pictex(path)
+  on.exit(dev.off())
+
+  expr
+}

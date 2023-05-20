@@ -68,6 +68,9 @@ test_that("print works", {
   expect_output(print(blend()), "<operation>: blend()")
 })
 
+
+# operation construction --------------------------------------------------
+
 test_that("operation construction and printing works", {
   setClass("test_operation", slots = list(x = "ANY", y = "ANY"), contains = "operation")
   new_test_operation = function(x = 0, y = 0) {
@@ -76,4 +79,8 @@ test_that("operation construction and printing works", {
   test_operation = make_operation("test_operation", new_test_operation, x)
   expect_equal(format(test_operation()), "test_operation(x = 0, y = 0)")
   expect_equal(format(test_operation(x = 3, y = 2)), "test_operation(x = 3, y = 2)")
+  expect_equal(format(adjust() |> test_operation()), "adjust() |> test_operation(x = 0, y = 0)")
+  expect_error(test_operation(0, x = 0), r'(Cannot\s+provide\s+both.*arguments)')
+  expect_error(geom_blank() |> test_operation(), "Unimplemented layer operation")
+  expect_error(geom_blank() * test_operation(), "Unimplemented layer operation")
 })

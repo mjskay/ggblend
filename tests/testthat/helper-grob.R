@@ -5,10 +5,11 @@ unname_grob = function(x) {
   } else {
     out = x
   }
-  if (inherits(out, "grob")) {
+  if (inherits(out, c("grob", "viewport"))) {
     out$name = NULL
     out$childrenOrder = NULL
     names(out$children) = NULL
+    out$group = NULL
   }
   out
 }

@@ -98,10 +98,9 @@ test_that("format works", {
 # blend capabilities warning ----------------------------------------------
 
 test_that("blend warning works", {
-  pictex()
-  on.exit(dev.off())
-
-  expect_warning(layer_grob(ggplot() + geom_blank() |> blend("multiply")),
-    r"(Your\s+graphics\s+device.+reports\s+that\s+blend.+is\s+not\s+supported)"
-  )
+  with_old_graphics_device({
+    expect_warning(layer_grob(ggplot() + geom_blank() |> blend("multiply")),
+      r"(Your\s+graphics\s+device.+reports\s+that\s+blend.+is\s+not\s+supported)"
+    )
+  })
 })
