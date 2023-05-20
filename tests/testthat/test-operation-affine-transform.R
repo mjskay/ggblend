@@ -26,6 +26,14 @@ test_that("transforming two layers", {
 })
 
 
+# argument checks ---------------------------------------------------------
+
+test_that("unit arguments are checked", {
+  expect_error(affine_transform(x = "a"), r"(must\s+be\s+a\s+numeric\s+or\s+a\s+grid::unit)")
+  expect_error(affine_transform(y = "a"), r"(must\s+be\s+a\s+numeric\s+or\s+a\s+grid::unit)")
+})
+
+
 # empty grobs -------------------------------------------------------------
 
 test_that("transforming an empty grob works", {

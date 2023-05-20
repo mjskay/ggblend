@@ -79,7 +79,7 @@ check_unit = function(arg) {
   } else if (is.numeric(arg)) {
     unit(arg, "npc")
   } else {
-    warning0(
+    stop0(
       deparse1(substitute(arg)), " argument to affine_transform() has class ",
       deparse1(class(arg)), ". It must be a numeric or a grid::unit()."
     )
