@@ -9,6 +9,22 @@ test_that("transforming works", {
   )
 })
 
+test_that("transforming two layers", {
+  expect_snapshot_plot("affine transform on two layers",
+    data.frame(x = 1, y = 0.25) |>
+      ggplot(aes(x, y)) +
+      geom_point(size = 10, shape = 15, alpha = 0.5) +
+      geom_point(aes(y = 0.75), size = 10, shape = 15, alpha = 0.5) +
+      list(
+        geom_point(size = 10, shape = 15, color = "red", alpha = 0.5),
+        geom_point(aes(y = 0.75), size = 10, color = "red", shape = 15, alpha = 0.5)
+      )|>
+      affine_transform(x = unit(10, "pt"), y = unit(-10, "pt"), width = 1, height = 1, angle = 0) +
+      guides(color = "none", shape = "none") +
+      scale_y_continuous(limits = c(0, 1))
+  )
+})
+
 
 # empty grobs -------------------------------------------------------------
 

@@ -16,10 +16,10 @@ transform_grobs = function(..., grob_transform) {
 #' @return a single groblist
 #' @noRd
 transform_groblists = function(groblists, grob_transform) {
-  if (length(groblists) == 0) return(list(zeroGrob()))
-
   groblist = .mapply(transform_grobs, groblists, list(grob_transform = grob_transform))
-  names(groblist) = names(groblists[[1]])
+  if (length(groblists) > 0) {
+    names(groblist) = names(groblists[[1]])
+  }
   groblist
 }
 

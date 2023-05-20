@@ -1,5 +1,5 @@
 
-# basic sums --------------------------------------------------------------
+# basic products --------------------------------------------------------------
 
 test_that("basic products work", {
   expect_equal(
@@ -10,6 +10,17 @@ test_that("basic products work", {
 
 test_that("prod() works", {
   expect_equal(prod(adjust(), blend(), adjust(color = "red")), adjust() * blend() * adjust(color = "red"))
+})
+
+test_that("products of operations are applied correctly", {
+  expect_equal(
+    geom_point() * (adjust(aes(color = "red")) * blend("multiply")),
+    geom_point() |> adjust(aes(color = "red")) |> blend("multiply")
+  )
+  expect_equal(
+    geom_point() * adjust(aes(color = "red")) * blend("multiply"),
+    geom_point() |> adjust(aes(color = "red")) |> blend("multiply")
+  )
 })
 
 

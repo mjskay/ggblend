@@ -5,6 +5,7 @@ test_that("nop works", {
   expect_equal(geom_line() |> nop(), geom_line())
   expect_equal(nop() * (nop() + nop()), nop() + nop())
   expect_equal(nop() * 2, nop() + nop())
+  expect_equal((adjust() + blend()) * nop(), adjust() + blend())
 })
 
 # printing ----------------------------------------------------------------
