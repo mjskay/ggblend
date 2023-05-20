@@ -48,9 +48,32 @@ test_that("multiplying by a layer list works", {
 })
 
 
+# casting -----------------------------------------------------------------
+
+test_that("converting a list to an operation works", {
+  expect_equal(as(list(1, adjust(), adjust() + blend()), "operation"), nop() + adjust() + adjust() + blend())
+})
+
+
 # non-layers throw errors -----------------------------------------------
 
 test_that("multiplying by a non-layer throws an error", {
   expect_error("a" * adjust(), r'(Cannot\s+convert\s+object.*to\s+a\s+layer-like)')
 })
 
+
+# printing ----------------------------------------------------------------
+
+test_that("print works", {
+  expect_output(print(blend()), "<operation>: blend()")
+})
+
+test_that("operation construction and printing works", {
+  setClass("test_operation", slots = list(x = "ANY", y = "ANY"), contains = "operation")
+  new_test_operation = function(x = 0, y = 0) {
+    new("test_operation", x = x, y = y)
+  }
+  test_operation = make_operation("test_operation", new_test_operation, x)
+  expect_equal(format(test_operation()), "test_operation(x = 0, y = 0)")
+  expect_equal(format(test_operation(x = 3, y = 2)), "test_operation(x = 3, y = 2)")
+})

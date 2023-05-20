@@ -15,11 +15,7 @@ setMethod("apply_operation", signature(operation = "operation_composition"), fun
 #' @rdname operation-class
 #' @export
 setMethod("format", signature(x = "operation_composition"), function(x, ...) {
-  if (length(x) == 0) {
-    "0"
-  } else {
-    format1 = format(x@operation1, ...)
-    format2 = format(x@operation2, ...)
-    paste0(format1, " |> ", format2)
-  }
+  format1 = format(x@operation1, ...)
+  format2 = format(x@operation2, ...)
+  paste0(format1, " |> ", format2)
 })
