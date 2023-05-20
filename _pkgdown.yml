@@ -17,6 +17,8 @@ template:
     code_font:
       google:
         family: "Source Code Pro"
+        wght: [400, 700]
+        ital: [0, 1]
 
 figures:
   dev: svg
