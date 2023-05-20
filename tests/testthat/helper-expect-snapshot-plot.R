@@ -33,6 +33,7 @@ expect_snapshot_plot = function(title, fig) {
   announce_snapshot_file(file_name)
 
   skip_on_cran()
+  skip_on_os("mac")  # these tests only work on windows and linux
   skip_if_not_installed("fontquiver")
   skip_if_not_installed("sysfonts")
   skip_if_not_installed("showtext")
