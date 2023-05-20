@@ -2,7 +2,8 @@ test_that("basic blending works", {
   expect_snapshot_plot("multiply blend",
     data.frame(x = c(1,2,2,3), g = c("a", "a", "b", "b")) |>
       ggplot(aes(x, x, color = g, shape = g)) +
-      geom_point(size = 10) * blend("multiply")
+      geom_point(size = 10) * blend("multiply") +
+      guides(color = "none", shape = "none")
   )
 })
 
@@ -10,7 +11,8 @@ test_that("blending without partition works", {
   expect_snapshot_plot("multiply blend without partition",
     data.frame(x = c(1,1.98,2,2.02,2.5,2.52,3), g = c("a", "a", "b", "b", "b", "b", "b")) |>
       ggplot(aes(x, x, color = g, shape = g)) +
-      geom_point(size = 10) |> blend("multiply")
+      geom_point(size = 10) |> blend("multiply")+
+      guides(color = "none", shape = "none")
   )
 })
 
@@ -18,7 +20,8 @@ test_that("blending with partition works", {
   expect_snapshot_plot("multiply blend with partition",
     data.frame(x = c(1,1.98,2,2.02,2.5,2.52,3), g = c("a", "a", "b", "b", "b", "b", "b")) |>
       ggplot(aes(x, x, color = g, shape = g)) +
-      geom_point(size = 10) |> partition(vars(g)) |> blend("multiply")
+      geom_point(size = 10) |> partition(vars(g)) |> blend("multiply") +
+      guides(color = "none", shape = "none")
   )
 })
 
@@ -45,6 +48,7 @@ test_that("complex sequence of blends works", {
         geom_hline(yintercept = 0, color = "gray75", linewidth = 1.5)
       ) |> blend("hard.light") +
       scale_color_brewer(palette = "Set2") +
+      guides(color = "none", shape = "none") +
       facet_grid(~ order)
   )
 })
