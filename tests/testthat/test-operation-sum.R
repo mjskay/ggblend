@@ -8,6 +8,17 @@ test_that("basic sums work", {
   )
 })
 
+test_that("sum() works", {
+  expect_equal(sum(nop(), adjust(), blend()), nop() + adjust() + blend())
+})
+
+
+# casting -----------------------------------------------------------------
+
+test_that("converting a list to an operation sum works", {
+  expect_equal(as(list(1, adjust(), adjust() + blend()), "operation_sum"), nop() + adjust() + adjust() + blend())
+})
+
 
 # multiplication of sums --------------------------------------------------------------
 
@@ -56,3 +67,11 @@ test_that("application of sums preserves structure of input", {
   )
 })
 
+
+# printing ----------------------------------------------------------------
+
+test_that("format works", {
+  expect_equal(format(new_operation_sum(list())), "0")
+  expect_equal(format(new_operation_sum(list(adjust()))), "adjust()")
+  expect_equal(format(new_operation_sum(list(adjust(), nop()))), "(adjust() + 1)")
+})

@@ -52,3 +52,56 @@ test_that("complex sequence of blends works", {
       facet_grid(~ order)
   )
 })
+
+
+# empty grobs -------------------------------------------------------------
+
+test_that("blending an empty grob works", {
+  without_warnings({
+    p = ggplot() + geom_blank() |> blend("multiply")
+
+    expect_equal_grob(layer_grob(p, 1), list(groupGrob(zeroGrob(), "multiply")))
+  })
+})
+
+test_that("blending a list of empty grobs works", {
+  without_warnings({
+    p = ggplot() + list(geom_blank(), geom_blank()) |> blend("multiply")
+
+    expect_equal_grob(layer_grob(p, 1), list(zeroGrob()))
+    expect_equal_grob(layer_grob(p, 2), list(zeroGrob()))
+
+    expect_equal_grob(layer_grob(p, 3),
+      list(groupGrob(
+        grobTree(
+          groupGrob(zeroGrob()),
+          groupGrob(zeroGrob())
+        ),
+        "multiply"
+      ))
+    )
+  })
+})
+
+
+# printing ----------------------------------------------------------------
+
+test_that("format works", {
+  expect_equal(format(blend()), "blend()")
+  expect_equal(format(blend("over")), "blend()")
+  expect_equal(format(blend("multiply")), 'blend("multiply")')
+  expect_equal(format(blend(alpha = 0.1)), 'blend(alpha = 0.1)')
+  expect_equal(format(blend("multiply", alpha = 0.1)), 'blend("multiply", alpha = 0.1)')
+})
+
+
+# blend capabilities warning ----------------------------------------------
+
+test_that("blend warning works", {
+  pictex()
+  on.exit(dev.off())
+
+  expect_warning(layer_grob(ggplot() + geom_blank() |> blend("multiply")),
+    r"(Your\s+graphics\s+device.+reports\s+that\s+blend.+is\s+not\s+supported)"
+  )
+})

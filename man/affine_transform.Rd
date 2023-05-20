@@ -68,9 +68,10 @@ the graphics device if you wish; in the mean time, you can use
 
 \examples{
 \dontshow{old_options = options(ggblend.check_affine_transform = FALSE)}
-set.seed(1234)
+library(ggplot2)
 
 # a simple dataset:
+set.seed(1234)
 data.frame(x = rnorm(100), y = rnorm(100)) |>
   ggplot(aes(x, y)) +
   geom_point() +

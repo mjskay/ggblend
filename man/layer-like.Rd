@@ -54,6 +54,8 @@ it to a \code{"LayerInstance"} or \code{\link[=layer_list]{layer_list()}}.
 
 }}
 \examples{
+library(ggplot2)
+
 is_layer_like(geom_line())
 is_layer_like(list(geom_line()))
 is_layer_like(list(geom_line(), scale_x_continuous()))

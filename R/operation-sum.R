@@ -12,7 +12,7 @@ setMethod("sum", signature(x = "operation"), function(x, ..., na.rm = FALSE) {
 # type conversion ---------------------------------------------------------
 
 setAs("list", "operation_sum", function(from) {
-  new_operation_sum(lapply(from, as, "operation"))
+  new_operation_sum(do.call(c, lapply(from, as, "operation")))
 })
 
 setAs("operation", "operation_sum", function(from) new_operation_sum(list(from)))

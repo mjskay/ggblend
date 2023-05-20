@@ -20,6 +20,8 @@
 #' [layer-like], it can be any of the above object types.
 #'
 #' @examples
+#' library(ggplot2)
+#'
 #' is_layer_like(geom_line())
 #' is_layer_like(list(geom_line()))
 #' is_layer_like(list(geom_line(), scale_x_continuous()))

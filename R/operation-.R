@@ -63,6 +63,10 @@ setAs("numeric", "operation", function(from) {
   from * nop()
 })
 
+setAs("list", "operation", function(from) {
+  as(from, "operation_sum")
+})
+
 
 # operation application ---------------------------------------------------
 

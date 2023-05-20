@@ -30,6 +30,8 @@
 #'   two layers individually.
 #'
 #' @examples
+#' library(ggplot2)
+#'
 #' # operations can stand alone
 #' adjust(aes(color = x))
 #'
