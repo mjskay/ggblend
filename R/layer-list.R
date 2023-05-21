@@ -48,6 +48,21 @@ setMethod("+", signature(e1 = "layer_list", e2 = "layer_list"), function(e1, e2)
 })
 
 
+# layer list flattening ---------------------------------------------------
+
+#' Flatten a list of layers so that nested lists of layers (a la list(..., ..., list(...)))
+#' are flattened into a single level. Unlike unlist(), does not remove type information
+#' of list elements / try to coerce everything to the same vector type
+#' @noRd
+flatten_layer_list = function(layers) {
+  if (is.list(layers)) {
+    do.call(c, lapply(layers, flatten_layer_list))
+  } else {
+    list(layers)
+  }
+}
+
+
 # printing ----------------------------------------------------------------
 
 #' @rdname layer_list

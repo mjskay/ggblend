@@ -414,7 +414,11 @@ I hesitate to imagine what that feature might be useful for...
 
 In theory *ggblend* should be compatible with other packages, though in more
 complex cases (blending lists of geoms or using the `partition` aesthetic)
-it is possible it may fail, as these features are a bit more hackish.
+it is possible it may fail, as these features are a bit more hackish. I have 
+done some testing with a few other layer-manipulating packages---including
+[gganimate](https://gganimate.com/), [ggnewscale](https://eliocamp.github.io/ggnewscale/),
+and [relayer](https://github.com/clauswilke/relayer)---and they appear to be
+compatible.
 
 As a hard test, here is all three features applied to a modified version of the
 Gapminder example used in the [gganimate documentation](https://gganimate.com/):

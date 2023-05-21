@@ -85,3 +85,23 @@ test_that("operation construction and printing works", {
   expect_error(geom_blank() |> test_operation(), "Unimplemented layer operation")
   expect_error(geom_blank() * test_operation(), "Unimplemented layer operation")
 })
+
+
+# compatibility -----------------------------------------------------------
+
+test_that("ggnewscale works with blend", {
+  skip_if_not_installed("ggnewscale")
+
+  expect_snapshot_plot("ggnewscale with blend",
+    data.frame(x = 1, y = 1, g = c("a","b"), h = c("d", "e")) |>
+      ggplot(aes(x, y, shape = g)) +
+      list(
+        geom_point(aes(color = g), size = 20, show.legend = FALSE),
+        scale_color_brewer(palette = "Set1"),
+        ggnewscale::new_scale_color(),
+        geom_point(aes(color = h, x = 1.5), size = 20, show.legend = FALSE)
+      ) * blend("multiply") +
+      scale_color_brewer(palette = "Set2") +
+      coord_cartesian(xlim = c(0.5, 2))
+  )
+})

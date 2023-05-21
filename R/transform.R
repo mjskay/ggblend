@@ -38,7 +38,7 @@ transform_layers = function(layers, grob_transform, check = function() NULL) {
 
   # skip over hidden layers when transforming (they should already be incorporated
   # into a TransformedLayer) and elements that aren't layers (e.g. coords, scales, etc)
-  layers = unlist(layers)
+  layers = flatten_layer_list(layers)
   to_transform =
     vapply(layers, inherits, what = "LayerInstance", logical(1)) &
     !vapply(layers, inherits, what = "HiddenLayer", logical(1))

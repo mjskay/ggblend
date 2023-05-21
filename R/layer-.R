@@ -44,7 +44,7 @@ is_layer_like = function(x) {
 }
 
 .is_layer_list_element = function(x) {
-  inherits(x, "gg") || .is_layer_list_like(x)
+  inherits(x, c("new_aes", "gg")) || .is_layer_list_like(x)
 }
 
 # type conversion ---------------------------------------------------------
