@@ -18,6 +18,8 @@
 #' - If you add an [operation] to a [numeric()] *n*, it is equivalent to
 #'   adding `*` [nop()]s to that [operation].
 #'
+#' @returns An [operation].
+#'
 #' @examples
 #' library(ggplot2)
 #'

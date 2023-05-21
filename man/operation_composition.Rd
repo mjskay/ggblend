@@ -5,6 +5,9 @@
 \alias{operation_composition}
 \alias{operation_composition-class}
 \title{Layer operation composition}
+\value{
+An \link{operation}.
+}
 \description{
 \link{operation}s can be composed together to form chains of operations, which
 when multiplied by (applied to) \link{layer-like} objects, return modified \link{layer-like} objects. In
@@ -12,8 +15,11 @@ contrast to \link{operation_product}s, compositions of operations are not
 distributive over sums of \link{operation}s or \link{layer-like} objects.
 }
 \details{
-Composition of \pkg{ggblend} \link{operation}s depend on the types of
-objects being multiplied:
+Operation composition is achieved through function application, typically
+using the pipe operator (\verb{|>}); e.g. \verb{operation1 |> operation2}.
+
+The output of composing \pkg{ggblend} \link{operation}s depends on the types of
+objects being composed:
 \itemize{
 \item If you compose an \link{operation} with an \link{operation}, they are merged into
 a single \link{operation} that applies each \link{operation} in sequence, without

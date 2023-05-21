@@ -26,6 +26,11 @@ as_layer_like(x)
 \arguments{
 \item{x}{A \link{layer-like} object. See \emph{Details}.}
 }
+\value{
+For \code{is_layer_like()}, a \code{logical}: \code{TRUE} if \code{x} is layer-like, \code{FALSE} otherwise.
+
+For \code{as_layer_like()}, a \code{"LayerInstance"} or a \code{\link[=layer_list]{layer_list()}}.
+}
 \description{
 For technical reasons related to how \pkg{ggplot2} implements layers, there
 is no single class from which all valid \pkg{ggplot2} layers and lists of
@@ -38,7 +43,7 @@ including:
 \itemize{
 \item objects of class \code{"LayerInstance"}; e.g. \code{stat}s and \code{geom}s.
 \item \code{\link[=list]{list()}}s of layer-like objects.
-\item \code{\link[=layer_list]{layer_list()}}s, which are a more typesafe version of \code{\link[=list]{list()}}s of
+\item \code{\link[=layer_list]{layer_list()}}s, which are a more type-safe version of \code{\link[=list]{list()}}s of
 layer-like objects.
 }
 

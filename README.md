@@ -5,9 +5,8 @@
 
 [![Lifecycle:
 experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
-[![CRAN
-status](https://www.r-pkg.org/badges/version/ggblend)](https://CRAN.R-project.org/package=ggblend)
-[![Codecov test
+![CRAN status](https://www.r-pkg.org/badges/version/ggblend) [![Codecov
+test
 coverage](https://codecov.io/gh/mjskay/ggblend/branch/main/graph/badge.svg)](https://app.codecov.io/gh/mjskay/ggblend?branch=main)
 [![R-CMD-check](https://github.com/mjskay/ggblend/workflows/R-CMD-check/badge.svg)](https://github.com/mjskay/ggblend/actions)
 <!-- badges: end -->
@@ -28,6 +27,12 @@ You can install the development version of *ggblend* using:
 
 ``` r
 remotes::install_github("mjskay/ggblend")
+```
+
+If/when *ggblend* is on CRAN, install it using:
+
+``` r
+install.packages("ggblend")
 ```
 
 ## Blending within one geometry
@@ -396,7 +401,7 @@ small outline around it. For some geometries (like `geom_point()`) this
 is easy; but for others (like `geom_line()`), there’s no easy way to do
 this without manually copying the layer.
 
-*ggblend*’s layer algebra makes this straightforward using the
+The *ggblend* layer algebra makes this straightforward using the
 `adjust()` operation combined with operator addition and multiplication.
 For example, given a layer like:
 
@@ -413,7 +418,7 @@ geom_line(color = "white", linewidth = 2.5) + geom_line(linewidth = 1)
 However, we’d rather not have to write the `geom_line()` specification
 twice If we factor out the differences between the first and second
 layer, we can use the `adjust()` operation (which lets you change the
-aesthetics and paremeters of a layer) along with the distributive law to
+aesthetics and parameters of a layer) along with the distributive law to
 factor out `geom_line(linewidth = 1)` and write the above specification
 as:
 

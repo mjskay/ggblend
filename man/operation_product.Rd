@@ -61,6 +61,9 @@
 
 \item{na.rm}{ignored}
 }
+\value{
+An \link{operation}.
+}
 \description{
 \link{operation}s can be multiplied together to form chains of operations, which
 when multiplied by (applied to) \link{layer-like} objects, return modified \link{layer-like} objects.

@@ -6,8 +6,12 @@
 #' distributive over sums of [operation]s or [layer-like] objects.
 #'
 #' @details
-#' Composition of \pkg{ggblend} [operation]s depend on the types of
-#' objects being multiplied:
+#'
+#' Operation composition is achieved through function application, typically
+#' using the pipe operator (`|>`); e.g. `operation1 |> operation2`.
+#'
+#' The output of composing \pkg{ggblend} [operation]s depends on the types of
+#' objects being composed:
 #'
 #' - If you compose an [operation] with an [operation], they are merged into
 #'   a single [operation] that applies each [operation] in sequence, without
@@ -15,6 +19,8 @@
 #' - If you compose an [operation] with a [layer-like] object, that operation is applied
 #'   to the layer, returning a new [layer-like] object. The operation is applied to the
 #'   layer as a whole, not any sub-parts (e.g. sub-layers or graphical objects).
+#'
+#' @returns An [operation].
 #'
 #' @examples
 #' \dontshow{old_options = options(ggblend.check_blend = FALSE)}

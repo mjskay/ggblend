@@ -30,6 +30,9 @@
 
 \item{e2}{an \link{operation} or \code{\link[=numeric]{numeric()}}}
 }
+\value{
+An \link{operation}.
+}
 \description{
 \link{operation}s can be added together to form stacks of operations, which
 when multiplied by (applied to) \link{layer-like} objects, those \link{layer-like} objects are distributed

@@ -94,6 +94,7 @@ setMethod("*", signature(e2 = "operation"), function(e1, e2) {
 # printing ----------------------------------------------------------------
 
 #' @describeIn operation Print an [operation].
+#' @returns For `show()`, an [invisible()] copy of the input.
 #' @export
 setMethod("show", signature(object = "operation"), function(object) {
   cat0("<operation>: ", format(object), "\n")
@@ -101,6 +102,7 @@ setMethod("show", signature(object = "operation"), function(object) {
 })
 
 #' @describeIn operation Format an [operation] for printing.
+#' @returns For `format()`, a character string representing the input.
 #' @export
 setMethod("format", signature(x = "operation"), function(x, ...) {
   arg_names = setdiff(slotNames(x), ".Data")

@@ -37,6 +37,11 @@
 
 \item{...}{Further arguments passed to other methods.}
 }
+\value{
+For \code{show()}, an \code{\link[=invisible]{invisible()}} copy of the input.
+
+For \code{format()}, a character string representing the input.
+}
 \description{
 Layer \link{operation}s are composable transformations that can be applied to \pkg{ggplot2}
 \link{layer-like} objects, such as \code{stat}s, \code{geom}s, and lists of \code{stat}s and

@@ -19,6 +19,8 @@
 #' - If you multiply an [operation] by a [numeric()] *n*, a new [operation] that
 #'   repeats the input [operation] is *n* times is returned.
 #'
+#' @returns An [operation].
+#'
 #' @examples
 #' library(ggplot2)
 #'

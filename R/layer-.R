@@ -13,7 +13,7 @@
 #'
 #' - objects of class `"LayerInstance"`; e.g. `stat`s and `geom`s.
 #' - [list()]s of layer-like objects.
-#' - [layer_list()]s, which are a more typesafe version of [list()]s of
+#' - [layer_list()]s, which are a more type-safe version of [list()]s of
 #'   layer-like objects.
 #'
 #' Anywhere in \pkg{ggblend} where a function parameter is documented as being
@@ -34,6 +34,7 @@ NULL
 # type predicates ---------------------------------------------------------
 
 #' @describeIn layer-like checks if an object is layer-like according to \pkg{ggblend}.
+#' @returns For `is_layer_like()`, a `logical`: `TRUE` if `x` is layer-like, `FALSE` otherwise.
 #' @export
 is_layer_like = function(x) {
   inherits(x, c("LayerInstance", "layer_list")) || .is_layer_list_like(x)
@@ -51,6 +52,7 @@ is_layer_like = function(x) {
 
 #' @describeIn layer-like validates that an object is layer-like and converts
 #'   it to a `"LayerInstance"` or [layer_list()].
+#' @returns For `as_layer_like()`, a `"LayerInstance"` or a [layer_list()].
 #' @export
 as_layer_like = function(x) {
   UseMethod("as_layer_like")
