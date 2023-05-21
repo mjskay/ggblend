@@ -374,7 +374,7 @@
 <div class="section level2">
 <h2 id="compatibility-with-other-packages">Compatibility with other packages<a class="anchor" aria-label="anchor" href="#compatibility-with-other-packages"></a>
 </h2>
-<p>In theory <em>ggblend</em> should be compatible with other packages, though in more complex cases (blending lists of geoms or using the <code>partition</code> aesthetic) it is possible it may fail, as these features are a bit more hackish.</p>
+<p>In theory <em>ggblend</em> should be compatible with other packages, though in more complex cases (blending lists of geoms or using the <code>partition</code> aesthetic) it is possible it may fail, as these features are a bit more hackish. I have done some testing with a few other layer-manipulating packages—including <a href="https://gganimate.com/" class="external-link">gganimate</a>, <a href="https://eliocamp.github.io/ggnewscale/" class="external-link">ggnewscale</a>, and <a href="https://github.com/clauswilke/relayer" class="external-link">relayer</a>—and they appear to be compatible.</p>
 <p>As a hard test, here is all three features applied to a modified version of the Gapminder example used in the <a href="https://gganimate.com/" class="external-link">gganimate documentation</a>:</p>
 <div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://gganimate.com" class="external-link">gganimate</a></span><span class="op">)</span></span>
