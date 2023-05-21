@@ -10,3 +10,4 @@
 ^pkgdown$
 ^docs$
 ^figures-source$
+^CRAN-SUBMISSION$

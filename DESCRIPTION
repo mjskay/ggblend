@@ -23,7 +23,8 @@ Suggests:
     fontquiver,
     showtext,
     sysfonts,
-    ggnewscale
+    ggnewscale,
+    scales
 Config/testthat/edition: 3
 BugReports: https://github.com/mjskay/ggblend/issues/new
 URL: https://mjskay.github.io/ggblend/, https://github.com/mjskay/ggblend/
