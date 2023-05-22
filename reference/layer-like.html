@@ -16,7 +16,7 @@ objects, documented here (see Details).'><meta property="og:image" content="http
     
     <a class="navbar-brand me-2" href="../index.html">ggblend</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -26,6 +26,9 @@ objects, documented here (see Details).'><meta property="og:image" content="http
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto"><li class="active nav-item">
   <a class="nav-link" href="../reference/index.html">Reference</a>
+</li>
+<li class="nav-item">
+  <a class="nav-link" href="../news/index.html">Changelog</a>
 </li>
       </ul><form class="form-inline my-2 my-lg-0" role="search">
         <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="../search.json" id="search-input" placeholder="Search for" autocomplete="off"></form>
@@ -81,11 +84,20 @@ objects, documented here (see <em>Details</em>).</p>
 
 </dl></div>
     <div class="section level2">
+    <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
+    
+
+<p>For <code>is_layer_like()</code>, a <code>logical</code>: <code>TRUE</code> if <code>x</code> is layer-like, <code>FALSE</code> otherwise.</p>
+
+
+<p>For <code>as_layer_like()</code>, a <code>"LayerInstance"</code> or a <code><a href="layer_list.html">layer_list()</a></code>.</p>
+    </div>
+    <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     <p><span class="pkg">ggblend</span> <a href="operation-class.html">operation</a>s can be applied to several <code><a href="https://ggplot2.tidyverse.org/reference/layer.html" class="external-link">ggplot2::layer()</a></code>-like objects,
 including:</p><ul><li><p>objects of class <code>"LayerInstance"</code>; e.g. <code>stat</code>s and <code>geom</code>s.</p></li>
 <li><p><code><a href="https://rdrr.io/r/base/list.html" class="external-link">list()</a></code>s of layer-like objects.</p></li>
-<li><p><code><a href="layer_list.html">layer_list()</a></code>s, which are a more typesafe version of <code><a href="https://rdrr.io/r/base/list.html" class="external-link">list()</a></code>s of
+<li><p><code><a href="layer_list.html">layer_list()</a></code>s, which are a more type-safe version of <code><a href="https://rdrr.io/r/base/list.html" class="external-link">list()</a></code>s of
 layer-like objects.</p></li>
 </ul><p>Anywhere in <span class="pkg">ggblend</span> where a function parameter is documented as being
 layer-like, it can be any of the above object types.</p>

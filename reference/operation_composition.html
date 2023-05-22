@@ -16,7 +16,7 @@ distributive over sums of operations or layer-like objects."><meta property="og:
     
     <a class="navbar-brand me-2" href="../index.html">ggblend</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -26,6 +26,9 @@ distributive over sums of operations or layer-like objects."><meta property="og:
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto"><li class="active nav-item">
   <a class="nav-link" href="../reference/index.html">Reference</a>
+</li>
+<li class="nav-item">
+  <a class="nav-link" href="../news/index.html">Changelog</a>
 </li>
       </ul><form class="form-inline my-2 my-lg-0" role="search">
         <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="../search.json" id="search-input" placeholder="Search for" autocomplete="off"></form>
@@ -57,9 +60,17 @@ distributive over sums of <a href="operation-class.html">operation</a>s or <a hr
 
 
     <div class="section level2">
+    <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
+    
+
+<p>An <a href="operation-class.html">operation</a>.</p>
+    </div>
+    <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p>Composition of <span class="pkg">ggblend</span> <a href="operation-class.html">operation</a>s depend on the types of
-objects being multiplied:</p><ul><li><p>If you compose an <a href="operation-class.html">operation</a> with an <a href="operation-class.html">operation</a>, they are merged into
+    <p>Operation composition is achieved through function application, typically
+using the pipe operator (<code>|&gt;</code>); e.g. <code>operation1 |&gt; operation2</code>.</p>
+<p>The output of composing <span class="pkg">ggblend</span> <a href="operation-class.html">operation</a>s depends on the types of
+objects being composed:</p><ul><li><p>If you compose an <a href="operation-class.html">operation</a> with an <a href="operation-class.html">operation</a>, they are merged into
 a single <a href="operation-class.html">operation</a> that applies each <a href="operation-class.html">operation</a> in sequence, without
 distributing over layers.</p></li>
 <li><p>If you compose an <a href="operation-class.html">operation</a> with a <a href="layer-like.html">layer-like</a> object, that operation is applied
