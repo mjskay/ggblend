@@ -23,16 +23,16 @@ added in that version of R.
 
 ## Installation
 
+You can install *ggblend* from CRAN as follows:
+
+``` r
+install.packages("ggblend")
+```
+
 You can install the development version of *ggblend* using:
 
 ``` r
 remotes::install_github("mjskay/ggblend")
-```
-
-If/when *ggblend* is on CRAN, install it using:
-
-``` r
-install.packages("ggblend")
 ```
 
 ## Blending within one geometry
