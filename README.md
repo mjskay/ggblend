@@ -10,6 +10,7 @@ status](https://www.r-pkg.org/badges/version/ggblend)](https://CRAN.R-project.or
 [![Codecov test
 coverage](https://codecov.io/gh/mjskay/ggblend/branch/main/graph/badge.svg)](https://app.codecov.io/gh/mjskay/ggblend?branch=main)
 [![R-CMD-check](https://github.com/mjskay/ggblend/workflows/R-CMD-check/badge.svg)](https://github.com/mjskay/ggblend/actions)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7963886.svg)](https://doi.org/10.5281/zenodo.7963886)
 <!-- badges: end -->
 
 *ggblend* is a small algebra of operations for blending, copying,

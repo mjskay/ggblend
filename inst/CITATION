@@ -1,0 +1,12 @@
+year <- sub("-.*", "", meta$Date)
+note <- sprintf("R package version %s", meta$Version)
+
+bibentry(
+  bibtype = "Manual",
+  title = paste("{ggblend}: Blending and Compositing Algebra for {ggplot2}"),
+  author = c(person("Matthew", "Kay")),
+  year = year,
+  note = note,
+  url = "https://mjskay.github.io/ggblend/",
+  doi = "10.5281/zenodo.7963886"
+)
