@@ -23,7 +23,7 @@ setMethod("apply_operation", signature(operation = "adjust"), function(operation
 
     l$mapping[names(mapping)] = mapping
     if (!is.null(l$mapping)) {
-      class(l$mapping) = "uneval"
+      l$mapping = aes(!!!l$mapping)
     }
 
     aes_param_names = intersect(names(params), l$geom$aesthetics())
