@@ -40,6 +40,10 @@ expect_snapshot_plot = function(title, fig) {
 
   # void theme + no panel labels to reduce the amount of potential text /
   # elements which may be more likely to vary by OS
-  path = save_png(fig + theme_void() + theme(panel.border = element_rect(fill = NA), strip.text = element_blank()))
+  path = save_png(
+    fig + 
+      theme_void() + 
+      theme(panel.border = element_rect(fill = NA, color = NA), strip.text = element_blank())
+  )
   expect_snapshot_file(path, file_name)
 }
