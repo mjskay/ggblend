@@ -462,4 +462,3 @@ p = gapminder |>
 
 animate(p, type = "cairo", width = 600, height = 400, res = 100)
 ```
-
