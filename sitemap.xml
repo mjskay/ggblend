@@ -1,63 +1,23 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>https://mjskay.github.io/ggblend/404.html</loc>
-  </url>
-  <url>
-    <loc>https://mjskay.github.io/ggblend/LICENSE-text.html</loc>
-  </url>
-  <url>
-    <loc>https://mjskay.github.io/ggblend/LICENSE.html</loc>
-  </url>
-  <url>
-    <loc>https://mjskay.github.io/ggblend/authors.html</loc>
-  </url>
-  <url>
-    <loc>https://mjskay.github.io/ggblend/index.html</loc>
-  </url>
-  <url>
-    <loc>https://mjskay.github.io/ggblend/news/index.html</loc>
-  </url>
-  <url>
-    <loc>https://mjskay.github.io/ggblend/reference/adjust.html</loc>
-  </url>
-  <url>
-    <loc>https://mjskay.github.io/ggblend/reference/affine_transform.html</loc>
-  </url>
-  <url>
-    <loc>https://mjskay.github.io/ggblend/reference/blend.html</loc>
-  </url>
-  <url>
-    <loc>https://mjskay.github.io/ggblend/reference/copy.html</loc>
-  </url>
-  <url>
-    <loc>https://mjskay.github.io/ggblend/reference/ggblend-package.html</loc>
-  </url>
-  <url>
-    <loc>https://mjskay.github.io/ggblend/reference/index.html</loc>
-  </url>
-  <url>
-    <loc>https://mjskay.github.io/ggblend/reference/layer-like.html</loc>
-  </url>
-  <url>
-    <loc>https://mjskay.github.io/ggblend/reference/layer_list.html</loc>
-  </url>
-  <url>
-    <loc>https://mjskay.github.io/ggblend/reference/nop.html</loc>
-  </url>
-  <url>
-    <loc>https://mjskay.github.io/ggblend/reference/operation-class.html</loc>
-  </url>
-  <url>
-    <loc>https://mjskay.github.io/ggblend/reference/operation_composition.html</loc>
-  </url>
-  <url>
-    <loc>https://mjskay.github.io/ggblend/reference/operation_product.html</loc>
-  </url>
-  <url>
-    <loc>https://mjskay.github.io/ggblend/reference/operation_sum.html</loc>
-  </url>
-  <url>
-    <loc>https://mjskay.github.io/ggblend/reference/partition.html</loc>
-  </url>
+<urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
+<url><loc>https://mjskay.github.io/ggblend/404.html</loc></url>
+<url><loc>https://mjskay.github.io/ggblend/LICENSE-text.html</loc></url>
+<url><loc>https://mjskay.github.io/ggblend/LICENSE.html</loc></url>
+<url><loc>https://mjskay.github.io/ggblend/authors.html</loc></url>
+<url><loc>https://mjskay.github.io/ggblend/index.html</loc></url>
+<url><loc>https://mjskay.github.io/ggblend/news/index.html</loc></url>
+<url><loc>https://mjskay.github.io/ggblend/reference/adjust.html</loc></url>
+<url><loc>https://mjskay.github.io/ggblend/reference/affine_transform.html</loc></url>
+<url><loc>https://mjskay.github.io/ggblend/reference/blend.html</loc></url>
+<url><loc>https://mjskay.github.io/ggblend/reference/copy.html</loc></url>
+<url><loc>https://mjskay.github.io/ggblend/reference/ggblend-package.html</loc></url>
+<url><loc>https://mjskay.github.io/ggblend/reference/index.html</loc></url>
+<url><loc>https://mjskay.github.io/ggblend/reference/layer-like.html</loc></url>
+<url><loc>https://mjskay.github.io/ggblend/reference/layer_list.html</loc></url>
+<url><loc>https://mjskay.github.io/ggblend/reference/nop.html</loc></url>
+<url><loc>https://mjskay.github.io/ggblend/reference/operation-class.html</loc></url>
+<url><loc>https://mjskay.github.io/ggblend/reference/operation_composition.html</loc></url>
+<url><loc>https://mjskay.github.io/ggblend/reference/operation_product.html</loc></url>
+<url><loc>https://mjskay.github.io/ggblend/reference/operation_sum.html</loc></url>
+<url><loc>https://mjskay.github.io/ggblend/reference/partition.html</loc></url>
 </urlset>
+
