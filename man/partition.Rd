@@ -17,7 +17,7 @@ partition(object, partition)
 
 \item{partition}{One of:
 \itemize{
-\item A list of quosures, such as returned by \code{\link[=vars]{vars()}}, giving a (possibly multi-)
+\item A list of quosures, such as returned by \code{\link[dplyr:vars]{dplyr::vars()}}, giving a (possibly multi-)
 column expression for the \code{partition} aesthetic. These expressions are
 combined using \code{\link[=interaction]{interaction()}} to be passed on to \code{aes(partition = ...)}
 \item A one-sided formula, giving a single-column expression for the \code{partition}

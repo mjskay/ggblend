@@ -1,6 +1,5 @@
 #' Blending and compositing for ggplot2
 #'
-#' @docType package
 #' @name ggblend-package
 #' @aliases ggblend
 #'
@@ -59,4 +58,4 @@
 #' @import grid
 #' @import ggplot2
 #' @import methods
-NULL
+"_PACKAGE"

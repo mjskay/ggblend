@@ -1,7 +1,7 @@
 Package: ggblend
 Title: Blending and Compositing Algebra for 'ggplot2'
 Version: 0.1.0.9000
-Date: 2023-05-23
+Date: 2025-10-03
 Authors@R: 
     person("Matthew", "Kay", , "mjskay@northwestern.edu", role = c("aut", "cre", "cph"),
            comment = c(ORCID = "0000-0001-9446-0419"))
@@ -27,8 +27,8 @@ Suggests:
     ggnewscale,
     scales
 Config/testthat/edition: 3
-BugReports: https://github.com/mjskay/ggblend/issues/new
+BugReports: https://github.com/mjskay/ggblend/issues/
 URL: https://mjskay.github.io/ggblend/, https://github.com/mjskay/ggblend/
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.2.3
+RoxygenNote: 7.3.3

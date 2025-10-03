@@ -36,7 +36,7 @@ An object of class \code{"layer_list"}.
 }
 \description{
 A list of \link{layer-like} objects, which can be used in layer \link{operation}s
-(through function application or multiplication) or added to a \code{\link[=ggplot2]{ggplot2()}}
+(through function application or multiplication) or added to a \code{\link[ggplot2:ggplot2-package]{ggplot2::ggplot2()}}
 object.
 }
 \details{

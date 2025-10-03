@@ -11,8 +11,8 @@
 }
 \details{
 The primary support for blending is provided by the \code{blend()} function,
-which can be used to augment \code{\link[=ggplot]{ggplot()}} layers/geoms or lists of
-layers/geoms in a \code{\link[=ggplot]{ggplot()}} specification.
+which can be used to augment \code{\link[ggplot2:ggplot]{ggplot2::ggplot()}} layers/geoms or lists of
+layers/geoms in a \code{\link[ggplot2:ggplot]{ggplot2::ggplot()}} specification.
 
 For example, one can replace something like this:
 
@@ -55,3 +55,16 @@ option to \code{FALSE}.
 }
 }
 
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://mjskay.github.io/ggblend/}
+  \item \url{https://github.com/mjskay/ggblend/}
+  \item Report bugs at \url{https://github.com/mjskay/ggblend/issues/}
+}
+
+}
+\author{
+\strong{Maintainer}: Matthew Kay \email{mjskay@northwestern.edu} (\href{https://orcid.org/0000-0001-9446-0419}{ORCID}) [copyright holder]
+
+}
