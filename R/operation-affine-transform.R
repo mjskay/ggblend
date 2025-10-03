@@ -93,22 +93,27 @@ check_affine_transform = function() {
   if (
     getOption("ggblend.check_affine_transform", TRUE) &&
     grDevices::dev.cur() != 1 &&
-    !isTRUE(grDevices::dev.capabilities()$transformations)
+    !check_device("transformations", action = "test")
   ) {
-    warning0(
-      'Your graphics device, ', deparse1(names(grDevices::dev.cur())),
-      ', reports that affine transformations are not supported.\n',
-      bullet('If the transformed output IS NOT as expected (e.g. geoms are not being
-        drawn), then you must switch to a graphics device that supports transformations,
-        like png(type = "cairo"), svg(), or cairo_pdf().
-      '), "\n",
-      bullet('If the transformed output IS as expected despite this warning, this is likely a
-        bug *in the graphics device*. Unfortunately, several graphics do not correctly
-        report their capabilities. You may wish to a report a bug to the authors of the
-        graphics device. In the mean time, you can disable this
-        warning via options(ggblend.check_affine_transform = FALSE).
-      '), "\n",
-      bullet("For more information, see the Supported Devices section of help('affine_transform').")
+    rlang::warn(
+      c(
+        'Your graphics device, {.field {names(grDevices::dev.cur())}}, 
+        reports that it does not support affine transformations.',
+        "i" = 'If the transformed output IS NOT as expected (e.g. geoms are not being
+          drawn), then you must switch to a graphics device that supports transformations,
+          like {.help png}(type = "cairo"), {.help svg}, or {.help cairo_pdf}.
+        ',
+        "i" = 'If the transformed output IS as expected despite this warning, this is likely a
+          bug {.emph in the graphics device}. Unfortunately, several devices do not correctly
+          report their capabilities. You may wish to a report a bug to the authors of the
+          graphics device. In the mean time, you can disable this
+          warning via {.run options(ggblend.check_affine_transform = FALSE)}.
+        ',
+        ">" = 'For more information, see the {.emph Supported Devices} section of 
+          {.topic affine_transform}.
+        '
+      ),
+      class = "ggblend_transformations_not_supported_warning"
     )
   }
   invisible(NULL)

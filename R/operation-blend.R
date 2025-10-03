@@ -67,22 +67,27 @@ check_blend = function(blend) {
   if (
     getOption("ggblend.check_blend", TRUE) &&
     grDevices::dev.cur() != 1 &&
-    !isTRUE(blend %in% grDevices::dev.capabilities()$compositing)
+    !check_device("blending", op = blend, action = "test")
   ) {
-    warning0(
-      'Your graphics device, ', deparse1(names(grDevices::dev.cur())),
-      ', reports that blend = ', deparse1(blend), ' is not supported.\n',
-      bullet('If the blending output IS NOT as expected (e.g. geoms are not being
-        drawn), then you must switch to a graphics device that supports blending,
-        like png(type = "cairo"), svg(), or cairo_pdf().
-      '), "\n",
-      bullet('If the blending output IS as expected despite this warning, this is likely a
-        bug *in the graphics device*. Unfortunately, several graphics do not correctly
-        report their capabilities. You may wish to a report a bug to the authors of the
-        graphics device. In the mean time, you can disable this
-        warning via options(ggblend.check_blend = FALSE).
-      '), "\n",
-      bullet("For more information, see the Supported Devices section of help('blend').")
+    rlang::warn(
+      c(
+        'Your graphics device, {.field {names(grDevices::dev.cur())}}, 
+        reports that blend = {.str {blend}} is not supported',
+        "i" = 'If the blending output IS NOT as expected (e.g. geoms are not being
+          drawn), then you must switch to a graphics device that supports blending,
+          like {.help png}(type = "cairo"), {.help svg}, or {.help cairo_pdf}.
+        ',
+        "i" = 'If the blending output IS as expected despite this warning, this is likely a
+          bug {.emph in the graphics device}. Unfortunately, several devices do not correctly
+          report their capabilities. You may wish to a report a bug to the authors of the
+          graphics device. In the mean time, you can disable this
+          warning via {.run options(ggblend.check_blend = FALSE)}.
+        ',
+        ">" = 'For more information, see the {.emph Supported Devices} section of 
+          {.topic blend}.
+        '
+      ),
+      class = "ggblend_blend_not_supported_warning"
     )
   }
   invisible(blend)
