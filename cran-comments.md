@@ -1,3 +1,9 @@
+## Resubmission comments
+
+I (stupidly) forgot to add revdep to .Rbuildignore after running revdep checks, which is now fixed (re-ran all checks to be sure).
+
+## Original submission comments
+
 This is a minor release fixing some errors on CRAN due to (1) test failures due to changes in ggplot2 4.0.0 and (2) package anchors in links in documentation.
 
 ## R CMD check results

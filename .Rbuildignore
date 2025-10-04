@@ -8,6 +8,7 @@
 ^_pkgdown\.yml$
 ^man-roxygen$
 ^pkgdown$
+^revdep$
 ^docs$
 ^figures-source$
 ^CRAN-SUBMISSION$

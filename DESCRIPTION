@@ -1,6 +1,6 @@
 Package: ggblend
 Title: Blending and Compositing Algebra for 'ggplot2'
-Version: 0.1.1
+Version: 0.1.2
 Date: 2025-10-03
 Authors@R: 
     person("Matthew", "Kay", , "mjskay@northwestern.edu", role = c("aut", "cre", "cph"),
