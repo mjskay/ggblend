@@ -59,8 +59,8 @@ option to \code{FALSE}.
 Useful links:
 \itemize{
   \item \url{https://mjskay.github.io/ggblend/}
-  \item \url{https://github.com/mjskay/ggblend/}
-  \item Report bugs at \url{https://github.com/mjskay/ggblend/issues/}
+  \item \url{https://github.com/mjskay/ggblend}
+  \item Report bugs at \url{https://github.com/mjskay/ggblend/issues}
 }
 
 }
