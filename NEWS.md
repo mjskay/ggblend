@@ -1,3 +1,5 @@
+# ggblend (development version)
+
 # ggblend 0.1.2
 
 * Minor fixes for `{ggplot2}` 4.0.0.
